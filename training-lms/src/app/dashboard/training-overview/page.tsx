@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { TrainingOverview } from '@/components/training'
-import { useRouter } from 'next/navigation'
+import { OnboardingChecklist } from '@/components/training'
 
 export default function TrainingOverviewPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -11,11 +10,10 @@ export default function TrainingOverviewPage() {
     roleName: string
     roleCode: string
     totalDays: number
-    currentDay: number
+    traineeName: string
   } | null>(null)
 
   const supabase = createClient()
-  const router = useRouter()
 
   useEffect(() => {
     async function fetchData() {
@@ -26,10 +24,10 @@ export default function TrainingOverviewPage() {
           return
         }
 
-        // Fetch user profile to get training role
+        // Fetch user profile to get training role and name
         const { data: profile } = await supabase
           .from('profiles')
-          .select('training_role')
+          .select('training_role, full_name')
           .eq('id', user.id)
           .single()
 
@@ -43,30 +41,17 @@ export default function TrainingOverviewPage() {
         if (response.ok) {
           const data = await response.json()
 
-          // Calculate current day based on progress
-          let currentDay = 0
-          if (data.trainingDays && data.trainingDays.length > 0) {
-            // Check completed activities to determine progress
-            const progressResponse = await fetch(`/api/training/performance?email=${encodeURIComponent(user.email || '')}`)
-            const progressData = progressResponse.ok ? await progressResponse.json() : { performance: [] }
-
-            if (progressData.performance && progressData.performance.length > 0) {
-              // Find the highest day with completed activities
-              const completedDays = new Set(progressData.performance.map((p: { day_number: number }) => p.day_number))
-              currentDay = Math.max(...Array.from(completedDays) as number[], 0)
-
-              // If they have progress, they're at least on day 1
-              if (currentDay === 0 && progressData.performance.length > 0) {
-                currentDay = 1
-              }
-            }
-          }
+          // Get trainee name from profile or user metadata
+          const traineeName = profile?.full_name
+            || user.user_metadata?.full_name
+            || user.email?.split('@')[0]
+            || 'there'
 
           setTraineeData({
             roleName: data.role.name,
             roleCode: data.role.shortCode,
             totalDays: data.role.totalDays,
-            currentDay: currentDay,
+            traineeName: traineeName.split(' ')[0], // Use first name only
           })
         }
       } catch (error) {
@@ -79,16 +64,12 @@ export default function TrainingOverviewPage() {
     fetchData()
   }, [supabase])
 
-  const handleViewSchedule = () => {
-    router.push('/dashboard/my-training')
-  }
-
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-[var(--sh-orange)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[var(--neutral-400)]">Loading your training overview...</p>
+          <div className="w-16 h-16 border-4 border-[var(--sh-orange)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[var(--neutral-400)] text-lg">Preparing your training overview...</p>
         </div>
       </div>
     )
@@ -96,7 +77,7 @@ export default function TrainingOverviewPage() {
 
   if (!traineeData) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50">
         <div className="text-center">
           <p className="text-[var(--neutral-400)]">Unable to load training data.</p>
         </div>
@@ -105,19 +86,11 @@ export default function TrainingOverviewPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-[var(--sh-black)]">Training Overview</h1>
-        <p className="text-[var(--neutral-400)]">Everything you need to know about your training journey</p>
-      </div>
-
-      <TrainingOverview
-        roleName={traineeData.roleName}
-        roleCode={traineeData.roleCode}
-        totalDays={traineeData.totalDays}
-        currentDay={traineeData.currentDay}
-        onViewSchedule={handleViewSchedule}
-      />
-    </div>
+    <OnboardingChecklist
+      roleName={traineeData.roleName}
+      roleCode={traineeData.roleCode}
+      totalDays={traineeData.totalDays}
+      traineeName={traineeData.traineeName}
+    />
   )
 }

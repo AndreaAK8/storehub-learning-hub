@@ -45,7 +45,8 @@ export async function updateSession(request: NextRequest) {
   // Redirect logged-in users away from login page
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
+    // Default to training-overview for trainees (they can navigate to dashboard from there)
+    url.pathname = '/dashboard/training-overview'
     return NextResponse.redirect(url)
   }
 
