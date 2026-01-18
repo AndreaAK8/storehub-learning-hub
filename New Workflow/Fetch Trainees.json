@@ -1,0 +1,101 @@
+{
+  "name": "Fetch Trainees",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "trainees",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c51fd33b-205f-4d79-a5d3-ea891b9de99a",
+      "name": "Fetch List",
+      "webhookId": "cdcb3aa8-2795-4f71-934a-6611cbc8f899"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "list",
+          "cachedResultName": "Training LMS Master - 2026",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ef08a74c-aeaf-42e0-9ee7-b1058b550dbc",
+      "name": "Trainees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        400,
+        0
+      ],
+      "id": "c06be357-9407-4e6f-9615-482cc3280838",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Fetch List": {
+      "main": [
+        [
+          {
+            "node": "Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trainees": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "99f51eee-66a9-4ec2-98d9-d0b5a3f81ce5",
+  "meta": {
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "e35zvfSNGpdOjyf2",
+  "tags": []
+}

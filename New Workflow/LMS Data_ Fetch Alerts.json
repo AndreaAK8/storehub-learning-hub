@@ -1,0 +1,67 @@
+{
+  "name": "LMS Data: Fetch Alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "alerts",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "webhook-alerts",
+      "name": "GET /alerts",
+      "webhookId": "alerts-webhook"
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Alert_Log", "mode": "name" }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [250, 0],
+      "id": "get-alerts",
+      "name": "Get Alert_Log",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter alerts by coach email and optional filters from query params\nconst coachEmail = $('GET /alerts').first().json.query?.coachEmail?.toLowerCase() || '';\nconst alertType = $('GET /alerts').first().json.query?.alertType || ''; // RED, ORANGE, or empty for all\nconst daysBack = parseInt($('GET /alerts').first().json.query?.daysBack) || 7;\n\nconst allAlerts = $input.all();\nconst cutoffDate = new Date();\ncutoffDate.setDate(cutoffDate.getDate() - daysBack);\n\nconst filteredAlerts = allAlerts.filter(item => {\n  const email = (item.json['Coach Email'] || '').toLowerCase();\n  const type = item.json['Alert Type'] || '';\n  const createdAt = new Date(item.json['Created At'] || 0);\n  \n  // Filter by coach email if provided\n  if (coachEmail && email !== coachEmail) return false;\n  \n  // Filter by alert type if provided\n  if (alertType && type !== alertType) return false;\n  \n  // Filter by date range\n  if (createdAt < cutoffDate) return false;\n  \n  return true;\n});\n\n// Transform to expected format\nconst alerts = filteredAlerts.map(item => ({\n  'Alert ID': item.json['Alert ID'],\n  'Alert Type': item.json['Alert Type'],\n  'Trainee Email': item.json['Trainee Email'],\n  'Trainee Name': item.json['Trainee Name'],\n  'Coach Email': item.json['Coach Email'],\n  'Coach Name': item.json['Coach Name'],\n  'Issue': item.json['Issue'],\n  'Days Behind': item.json['Days Behind'],\n  'Failed Assessments': item.json['Failed Assessments'],\n  'Status': item.json['Status'] || 'Active',\n  'Created At': item.json['Created At'],\n  'Resolved At': item.json['Resolved At'] || null\n}));\n\n// Sort by created date, most recent first\nalerts.sort((a, b) => {\n  const dateA = new Date(a['Created At'] || 0).getTime();\n  const dateB = new Date(b['Created At'] || 0).getTime();\n  return dateB - dateA;\n});\n\nreturn [{ json: { alerts, count: alerts.length } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 0],
+      "id": "filter-alerts",
+      "name": "Filter by Coach & Type"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [750, 0],
+      "id": "respond",
+      "name": "Respond"
+    }
+  ],
+  "connections": {
+    "GET /alerts": {
+      "main": [[{"node": "Get Alert_Log", "type": "main", "index": 0}]]
+    },
+    "Get Alert_Log": {
+      "main": [[{"node": "Filter by Coach & Type", "type": "main", "index": 0}]]
+    },
+    "Filter by Coach & Type": {
+      "main": [[{"node": "Respond", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

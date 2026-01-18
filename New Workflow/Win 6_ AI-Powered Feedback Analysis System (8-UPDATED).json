@@ -1,0 +1,665 @@
+{
+  "name": "Win 6: AI-Powered Feedback Analysis System",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -224
+      ],
+      "id": "38031296-19cb-4eb1-8bfe-6e4044e319ff",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -224
+      ],
+      "id": "cc0d9972-0ffa-4929-9b0a-b40b76c71e2c",
+      "name": "Get All Trainees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// WIN 6: SMART SURVEY TRIGGER LOGIC (IMPROVED)\n\nconsole.log('=== SURVEY TRIGGER ANALYSIS STARTED ===');\n\nconst inputData = $input.all();\nconsole.log('Input data length:', inputData.length);\n\nlet trainees = [];\nif (inputData.length > 0) {\n  trainees = inputData.map(item => item.json);\n}\n\nconsole.log('Total trainees found:', trainees.length);\n\nconst now = new Date();\nconst surveysToSend = [];\n\n// Survey timing: 7 days after training completion\nconst SURVEY_TIMING_DAYS = 7;\n\ntrainees.forEach((trainee, index) => {\n  console.log(`Processing trainee ${index + 1}: ${trainee['Full Name']}`);\n  \n  // IMPROVED: Check if training is actually complete\n  const totalRequired = parseInt(trainee['Total Assessments Required']) || 0;\n  const totalCompleted = parseInt(trainee['Total Assessments Completed']) || 0;\n  const totalIncomplete = parseInt(trainee['Total Assessments Incomplete']) || 0;\n  \n  const isTrainingComplete = trainee.Status === 'Training Complete' || \n                            trainee.Status === 'Report Sent' ||\n                            (totalRequired > 0 && totalCompleted >= totalRequired && totalIncomplete === 0);\n  \n  if (!isTrainingComplete) {\n    console.log(`${trainee['Full Name']}: Training not complete (${totalCompleted}/${totalRequired} completed), skipping`);\n    return;\n  }\n  \n  // Calculate days since training completion\n  let daysSinceCompletion = 0;\n  if (trainee['Training Start Date']) {\n    const daysSinceStart = parseInt(trainee['Days since Training Start ']) || 0;\n    \n    // Role-specific training durations\n    const trainingDurations = {\n      'Business Consultant': 6,\n      'Merchant Care': 4,\n      'Marketing': 3,\n      'Merchant Onboarding Manager': 6,\n      'Customer Success Manager': 5,\n      'Onboarding Specialist': 6\n    };\n    \n    const trainingDuration = trainingDurations[trainee.Department] || 7;\n    daysSinceCompletion = Math.max(0, daysSinceStart - trainingDuration);\n  }\n  \n  console.log(`${trainee['Full Name']}: ${daysSinceCompletion} days since completion`);\n  \n  // Check if survey should be sent\n  const shouldSendSurvey = daysSinceCompletion >= SURVEY_TIMING_DAYS;\n  \n  // Check if survey already sent (note: column name has typo \"Suvery\")\n  const surveySent = trainee['Suvery Sent Date'] && trainee['Suvery Sent Date'] !== '';\n  \n  if (shouldSendSurvey && !surveySent) {\n    surveysToSend.push({\n      traineeName: trainee['Full Name'],\n      traineeEmail: trainee['Email Address'],\n      department: trainee.Department,\n      coachName: trainee['Coach Name'],\n      trainingStartDate: trainee['Training Start Date'],\n      daysSinceCompletion: daysSinceCompletion,\n      surveyType: 'Graduate Feedback',\n      priority: daysSinceCompletion > 14 ? 'High' : 'Normal',\n      formUrl: `https://forms.gle/qX1Sr3MrsUT8wnzi7`,\n      personalizedSubject: `Your training feedback matters - Help us improve!`,\n      rowIndex: index + 2\n    });\n    \n    console.log(`${trainee['Full Name']}: Survey scheduled for sending`);\n  } else if (surveySent) {\n    console.log(`${trainee['Full Name']}: Survey already sent on ${trainee['Suvery Sent Date']}`);\n  } else {\n    console.log(`${trainee['Full Name']}: Too early for survey (${SURVEY_TIMING_DAYS - daysSinceCompletion} days remaining)`);\n  }\n});\n\nconsole.log(`=== SURVEY TRIGGER ANALYSIS COMPLETE ===`);\nconsole.log(`Total surveys to send: ${surveysToSend.length}`);\n\nif (surveysToSend.length === 0) {\n  console.log('No surveys ready to send at this time');\n  return [{ json: { message: 'No surveys ready', surveysReady: false } }];\n}\n\nreturn [{\n  json: {\n    surveysReady: true,\n    totalSurveys: surveysToSend.length,\n    surveys: surveysToSend,\n    timestamp: now.toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -224
+      ],
+      "id": "326b650a-9028-4dd6-930a-bf2a6d0c4696",
+      "name": "Survey Trigger Logic"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a6b8ed16-eebb-4da9-ba7a-cd894ad296c4",
+              "leftValue": "={{ $json.surveysReady }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -224
+      ],
+      "id": "8b7cad16-9621-42b9-986a-0aa2354b25bb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "surveys",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -288
+      ],
+      "id": "000ee024-84c3-4616-8aa9-7cf0e4c440f7",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.traineeEmail }}",
+        "subject": "={{ $json.personalizedSubject }}",
+        "emailType": "text",
+        "message": "=Hi {{ $json.traineeName }},  \n\nCongratulations on completing your {{ $json.department }} training program!   \n\nYour feedback is valuable to us. We'd love to hear about your training experience through this quick 3-4 minute survey.  \n\nCOMPLETE YOUR FEEDBACK SURVEY: {{ $json.formUrl }}  \n\nWhat your feedback helps us achieve: \n\n• Enhance training content and delivery methods \n\n• Improve coach and trainer effectiveness   \n\n• Better support future new hires \n\n• Identify successful training patterns  \n\nSurvey Details: \n\n• Time Required: 3-4 minutes \n\n• Questions: 8 focused questions \n\n• Your Coach: {{ $json.coachName }} \n\n• Training Started: {{ $json.trainingStartDate }} \n\n• Survey Deadline: 21 days from today  \n\n\nThank you for being part of our training excellence journey!  \n\nBest regards,  \nAndrea K. \nSr. Training & KB Specialist StoreHub Training Team  \n\nQuestions? Reply to this email or contact the Training team.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        -288
+      ],
+      "id": "49083bdb-7bfc-4c1d-8eaf-b085c144ba78",
+      "name": "Send a message",
+      "webhookId": "0a3c174b-b886-4961-8ae6-bb8a7728e169",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Suvery Sent Date": "={{ new Date().toISOString().split('T')[0] }}",
+            "Email Address": "={{ $('Split Out').item.json.traineeEmail }}"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suvery Sent Date",
+              "displayName": "Suvery Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1344,
+        -288
+      ],
+      "id": "1c8f44e0-8b5f-4a9d-90a9-1889d74df830",
+      "name": "Update Survey Sent Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Survey_Responses",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cf34388e-9d2c-4548-9c50-d6afc4711ce3",
+      "name": "New Survey Response Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "5RdjBLcNZ5y3PeRk",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze this training feedback survey and provide structured insights in JSON format:\n\nEmail: {{ $json[\"Email Address\"] }}\nOverall Satisfaction: {{ $json[\"How satisfied are you with your overall training experience?\"] }}\nRole Confidence: {{ $json[\"How confident do you feel performing your role after completing training?\"] }}\nContent Quality: {{ $json[\"Rate the relevance and quality of the training content for your role.\"] }}\nSupport Quality: {{ $json[\"How would you rate the support provided by your trainer and coach?\"] }}\nMost Valuable: {{ $json[\"What was the most valuable part of your training experience?\"] }}\nNeeds Improvement: {{ $json[\"What aspect of the training needs the most improvement?\"] }}\nAdditional Comments: {{ $json[\"Any other comments or suggestions to help us improve?\"] }}\n\nReturn only valid JSON in this exact format:\n{\n  \"overallSentiment\": \"Positive/Neutral/Negative\",\n  \"keyThemes\": [\"theme1\", \"theme2\", \"theme3\"],\n  \"improvementSuggestions\": [\"suggestion1\", \"suggestion2\"],\n  \"urgencyLevel\": \"Low/Medium/High\",\n  \"successPatterns\": [\"pattern1\", \"pattern2\"],\n  \"aiSummary\": \"Brief summary of key insights\",\n  \"confidenceScore\": 0.85\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "86fdcb27-5128-463f-90d2-5c9992d481d0",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "5Ibvre55X1yS7uUg",
+          "name": "AK's Gemini Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract and parse JSON from Gemini response\n\nconsole.log('AI Response Parser Started');\n\ntry {\n  const geminiResponse = $input.first().json;\n  const jsonText = geminiResponse.content.parts[0].text;\n  \n  console.log('Response length:', jsonText.length);\n  \n  let analysisData;\n  \n  // Try direct parse first\n  try {\n    analysisData = JSON.parse(jsonText);\n    console.log('Direct parse OK');\n  } catch (e) {\n    console.log('Trying to extract JSON from text');\n    \n    // Find the first { and last }\n    const startIdx = jsonText.indexOf('{');\n    const endIdx = jsonText.lastIndexOf('}');\n    \n    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {\n      const extracted = jsonText.substring(startIdx, endIdx + 1);\n      analysisData = JSON.parse(extracted);\n      console.log('Extracted JSON OK');\n    } else {\n      throw new Error('No JSON found in response');\n    }\n  }\n  \n  // Get survey data\n  const survey = $('New Survey Response Trigger').item.json;\n  \n  // Build result\n  return [{\n    json: {\n      \"Timestamp\": new Date().toISOString(),\n      \"Trainee Name\": survey[\"Full Name\"] || \"Unknown\",\n      \"Email\": survey[\"Email Address\"] || \"unknown@example.com\",\n      \"Department\": survey[\"Department\"] || \"Not Specified\",\n      \"Overall Sentiment\": analysisData.overallSentiment || \"Neutral\",\n      \"Key Themes\": JSON.stringify(analysisData.keyThemes || []),\n      \"Improvement Suggestions\": JSON.stringify(analysisData.improvementSuggestions || []),\n      \"Urgency Level\": analysisData.urgencyLevel || \"Low\",\n      \"AI Summary\": analysisData.aiSummary || \"No summary\",\n      \"Confidence Score\": ((analysisData.confidenceScore || 0) * 100).toFixed(1) + \"%\",\n      \"Status\": \"New\"\n    }\n  }];\n  \n} catch (error) {\n  console.error('Error:', error.message);\n  \n  const survey = $('New Survey Response Trigger').item.json;\n  \n  return [{\n    json: {\n      \"Timestamp\": new Date().toISOString(),\n      \"Trainee Name\": survey[\"Full Name\"] || \"Unknown\",\n      \"Email\": survey[\"Email Address\"] || \"unknown@example.com\",\n      \"Department\": survey[\"Department\"] || \"Not Specified\",\n      \"Overall Sentiment\": \"Error\",\n      \"Key Themes\": \"[]\",\n      \"Improvement Suggestions\": \"[]\",\n      \"Urgency Level\": \"High\",\n      \"AI Summary\": \"Error: \" + error.message,\n      \"Confidence Score\": \"0%\",\n      \"Status\": \"Error\"\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        0
+      ],
+      "id": "8ee75d09-5288-4ca1-a1b4-da0394d99c0b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "AI_Feedback_Analysis",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.Timestamp }}",
+            "Trainee Name": "={{ $json['Trainee Name'] }}",
+            "Email": "={{ $json.Email }}",
+            "Department": "={{ $json.Department }}",
+            "Overall Sentiment": "={{ $json['Overall Sentiment'] }}",
+            "Key Themes": "={{ $json['Key Themes'] }}",
+            "Improvement Suggestions": "={{ $json['Improvement Suggestions'] }}",
+            "Urgency Level": "={{ $json['Urgency Level'] }}",
+            "AI Summary": "={{ $json['AI Summary'] }}",
+            "Confidence Score": "={{ $json['Confidence Score'] }}",
+            "Status": "={{ $json.Status }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Trainee Name",
+              "displayName": "Trainee Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Overall Sentiment",
+              "displayName": "Overall Sentiment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Key Themes",
+              "displayName": "Key Themes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Improvement Suggestions",
+              "displayName": "Improvement Suggestions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Urgency Level",
+              "displayName": "Urgency Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Confidence Score",
+              "displayName": "Confidence Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        0
+      ],
+      "id": "d1d0957a-3ac9-4491-8144-850e4e23a11a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "feedback/analysis",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        280
+      ],
+      "id": "webhook-feedback-analysis",
+      "name": "Dashboard Webhook",
+      "webhookId": "feedback-analysis-dashboard"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "AI_Feedback_Analysis",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        280
+      ],
+      "id": "get-feedback-for-dashboard",
+      "name": "Get AI Feedback Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate feedback data for dashboard\n// Returns format expected by Next.js dashboard\n\nconst feedbackRecords = $input.all().map(item => item.json);\n\nconsole.log(`Processing ${feedbackRecords.length} feedback records`);\n\n// Count sentiments\nconst sentimentCounts = {\n  positive: 0,\n  neutral: 0,\n  negative: 0\n};\n\n// Collect all themes with their sentiments\nconst themesMap = new Map();\n\n// Build feedback entries\nconst feedbackEntries = [];\n\nfeedbackRecords.forEach((record, index) => {\n  // Skip header row if present\n  if (record['Overall Sentiment'] === 'Positive/Neutral/Negative' || \n      record['Trainee Name'] === 'Who submitted the feedback') {\n    return;\n  }\n  \n  const sentiment = (record['Overall Sentiment'] || 'Neutral').toLowerCase();\n  \n  // Count sentiment\n  if (sentiment === 'positive') sentimentCounts.positive++;\n  else if (sentiment === 'negative') sentimentCounts.negative++;\n  else sentimentCounts.neutral++;\n  \n  // Parse themes\n  let themes = [];\n  try {\n    const themesRaw = record['Key Themes'];\n    if (themesRaw && themesRaw !== '[]') {\n      themes = JSON.parse(themesRaw);\n    }\n  } catch (e) {\n    console.log('Could not parse themes:', record['Key Themes']);\n  }\n  \n  // Aggregate themes\n  themes.forEach(theme => {\n    if (!themesMap.has(theme)) {\n      themesMap.set(theme, { count: 0, sentiment: sentiment });\n    }\n    themesMap.get(theme).count++;\n  });\n  \n  // Build entry\n  feedbackEntries.push({\n    id: String(index + 1),\n    trainee_name: record['Trainee Name'] || 'Unknown',\n    trainee_email: record['Email'] || '',\n    feedback_text: record['AI Summary'] || 'No feedback text available',\n    sentiment: sentiment,\n    themes: themes,\n    submitted_at: record['Timestamp'] || new Date().toISOString(),\n    ai_summary: record['AI Summary'] || ''\n  });\n});\n\n// Convert themes map to array\nconst keyThemes = Array.from(themesMap.entries())\n  .map(([theme, data]) => ({\n    theme: theme,\n    count: data.count,\n    sentiment: data.sentiment\n  }))\n  .sort((a, b) => b.count - a.count)\n  .slice(0, 10); // Top 10 themes\n\n// Generate AI insights summary\nconst total = sentimentCounts.positive + sentimentCounts.neutral + sentimentCounts.negative;\nconst positivePercent = total > 0 ? Math.round((sentimentCounts.positive / total) * 100) : 0;\n\nlet aiInsights = '';\nif (total > 0) {\n  aiInsights = `Overall sentiment is ${positivePercent >= 60 ? 'positive' : positivePercent >= 40 ? 'mixed' : 'concerning'} (${positivePercent}% positive).\\n\\n`;\n  \n  if (keyThemes.length > 0) {\n    const topPositive = keyThemes.filter(t => t.sentiment === 'positive').slice(0, 2);\n    const topNegative = keyThemes.filter(t => t.sentiment === 'negative').slice(0, 2);\n    \n    if (topPositive.length > 0) {\n      aiInsights += `Key strengths: ${topPositive.map(t => t.theme).join(', ')}\\n`;\n    }\n    if (topNegative.length > 0) {\n      aiInsights += `Areas for improvement: ${topNegative.map(t => t.theme).join(', ')}`;\n    }\n  }\n} else {\n  aiInsights = 'No feedback data available yet. Insights will appear once trainees submit survey responses.';\n}\n\n// Sort entries by date (newest first)\nfeedbackEntries.sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));\n\nreturn [{\n  json: {\n    sentiment_counts: sentimentCounts,\n    key_themes: keyThemes,\n    feedback_entries: feedbackEntries.slice(0, 20), // Latest 20\n    ai_insights: aiInsights,\n    last_updated: new Date().toISOString(),\n    total_responses: total\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        280
+      ],
+      "id": "aggregate-feedback-data",
+      "name": "Aggregate Feedback Data"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        280
+      ],
+      "id": "respond-to-dashboard",
+      "name": "Respond to Dashboard"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get All Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Trainees": {
+      "main": [
+        [
+          {
+            "node": "Survey Trigger Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Survey Trigger Logic": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Update Survey Sent Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Survey Response Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get AI Feedback Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get AI Feedback Sheet": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Feedback Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Feedback Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8-updated-with-dashboard-webhook",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "g2UuuBYp92Y09Zxc",
+  "tags": []
+}

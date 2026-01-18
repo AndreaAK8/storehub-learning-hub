@@ -1,0 +1,32 @@
+Department,Country,Manager,Manager Email,Coach Name,Coach Email,Role,Abbrevation
+Sales,MY,Sheng Jun Koo,shengjun.koo@storehub.com,Nicholas Eng,nicholas.eng@storehub.com,Business Consultant,BC
+Sales,MY,Sheng Jun Koo,shengjun.koo@storehub.com,Javelyn Hee,javelyn.hee@storehub.com,Business Consultant,BC
+Sales,MY,Sheng Jun Koo,shengjun.koo@storehub.com,Iwin Tay,iwin.tay@storehub.com,Business Consultant,BC
+Sales,MY,Sheng Jun Koo,shengjun.koo@storehub.com,Victor Teng,victor.teng@storehub.com,Sales Coordinator,SC
+Sales,PH,Sheng Jun Koo,shengjun.koo@storehub.com,Joshua ,joshua.guevarra@storehub.com,Business Consultant,BC
+Sales,PH,Sheng Jun Koo,shengjun.koo@storehub.com,Louise Christine Escribano,louise.escribano@storehub.com,Business Consultant,BC
+Sales,PH,Sheng Jun Koo,shengjun.koo@storehub.com,Chester Reyes,chester.reyes@storehub.com,Sales Coordinator,SC
+Sales,TH,Sheng Jun Koo,shengjun.koo@storehub.com,Gun,kannika.k@storehub.com,Business Consultant,BC
+Sales,TH,Sheng Jun Koo,shengjun.koo@storehub.com,Gun,kannika.k@storehub.com,Sales Coordinator,SC
+Onboarding,MY,Christopher Tan,christopher.tan@storehub.com,Izzuddin,izzuddin.azizol@storehub.com,Merchant Onboarding Manager,MOM
+Onboarding,MY,Christopher Tan,christopher.tan@storehub.com,Izzuddin,izzuddin.azizol@storehub.com,Onboarding Specialist,OS
+Onboarding,MY,Christopher Tan,christopher.tan@storehub.com,Izzuddin,izzuddin.azizol@storehub.com,Onboarding Coordinator,OC
+Customer Success,MY,Christopher Tan,christopher.tan@storehub.com,Izzuddin,izzuddin.azizol@storehub.com,Customer Success Manager,CSM
+Customer Success,MY,Christopher Tan,christopher.tan@storehub.com,Izzuddin,izzuddin.azizol@storehub.com,Billing Executive,BE
+Customer Care,MY,Christopher Tan,christopher.tan@storehub.com,William Yew,william.yew@storehub.com,Merchant Care,Care
+Onboarding,PH,Sheryll Ramos,sheryll.ramos@storehub.com,Danjho,francis.cayabyab@storehub.com,Merchant Onboarding Manager,MOM
+Onboarding,PH,Sheryll Ramos,sheryll.ramos@storehub.com,Danjho,francis.cayabyab@storehub.com,Onboarding Specialist,OS
+Onboarding,PH,Sheryll Ramos,sheryll.ramos@storehub.com,Danjho,francis.cayabyab@storehub.com,Onboarding Coordinator,OC
+Customer Success,PH,Sheryll Ramos,sheryll.ramos@storehub.com,Sheryll Ramos,sheryll.ramos@storehub.com,Customer Success Manager,CSM
+Customer Success,PH,Sheryll Ramos,sheryll.ramos@storehub.com,Sheryll Ramos,sheryll.ramos@storehub.com,Billing Executive,BE
+Customer Care,PH,Sheryll Ramos,sheryll.ramos@storehub.com,Daisy Lady Garrido,daisy.garrido@storehub.com,Merchant Care,Care
+Onboarding,TH,Taii (Patiya Kulladakornphong),patiya.kul@storehub.com,Taii,patiya.kul@storehub.com,Merchant Onboarding Manager,MOM
+Onboarding,TH,Taii (Patiya Kulladakornphong),patiya.kul@storehub.com,Taii,patiya.kul@storehub.com,Onboarding Specialist,OS
+Onboarding,TH,Taii (Patiya Kulladakornphong),patiya.kul@storehub.com,Taii,patiya.kul@storehub.com,Onboarding Coordinator,OC
+Customer Success,TH,Taii (Patiya Kulladakornphong),patiya.kul@storehub.com,Taii,patiya.kul@storehub.com,Customer Success Manager,CSM
+Customer Success,TH,Taii (Patiya Kulladakornphong),patiya.kul@storehub.com,Taii,patiya.kul@storehub.com,Billing Executive,BE
+Customer Care,TH,Taii (Patiya Kulladakornphong),patiya.kul@storehub.com,Lookkaew,srijira.k@storehub.com,Merchant Care,Care
+Product,MY,Andrea Kaur,andrea.kaur@storehub.com,Elwin Chia,elwin.chia@storehub.com,Product Manager,PM
+Marketing,MY,Jonathan Nyst,jonathan.nyst@storehub.com,Keeve Wong,keeve.wong@storehub.com,Marketing,Marketing
+Finance,MY,Andrea Kaur,andrea.kaur@storehub.com,Nikita Lim,nikita.lim@storehub.com,Finance,Finance
+Ops,MY,Andrea Kaur,andrea.kaur@storehub.com,Andrea Kaur,andrea.kaur@storehub.com,Ops,Ops

@@ -1,0 +1,271 @@
+{
+  "name": "Win 2.1: Daily Assessment Digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 9 * * 1-5"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "id": "schedule-trigger",
+      "name": "Daily 9:30 AM (Mon-Fri)"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [220, 0],
+      "id": "fetch-trainees",
+      "name": "Fetch Active Trainees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Assessment_Config",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [220, 200],
+      "id": "fetch-assessment-config",
+      "name": "Fetch Assessment Config",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Schedule_Adjustments",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [220, 400],
+      "id": "fetch-adjustments",
+      "name": "Fetch Schedule Adjustments",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Notification_Log",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [220, 600],
+      "id": "fetch-notification-log",
+      "name": "Fetch Notification Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [500, 200],
+      "id": "merge-data",
+      "name": "Merge All Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build daily assessment digest - grouped by COACH\nconst trainees = $('Fetch Active Trainees').all();\nconst assessments = $('Fetch Assessment Config').all();\nconst adjustments = $('Fetch Schedule Adjustments').all();\nconst notificationLog = $('Fetch Notification Log').all();\n\nconst today = new Date();\nconst todayStr = today.toISOString().split('T')[0];\n\nconsole.log('=== DAILY DIGEST BUILD ===');\nconsole.log(`Date: ${todayStr}`);\nconsole.log(`Trainees: ${trainees.length}`);\nconsole.log(`Assessment Configs: ${assessments.length}`);\nconsole.log(`Adjustments: ${adjustments.length}`);\n\n// Helper: Check if assessment was rescheduled for this trainee\nfunction getAdjustedDay(traineeEmail, assessmentName, originalDay) {\n  const adjustment = adjustments.find(adj => \n    adj.json.trainee_email === traineeEmail &&\n    adj.json.activity_name === assessmentName\n  );\n  \n  if (adjustment) {\n    return parseInt(adjustment.json.new_day);\n  }\n  return originalDay;\n}\n\n// Helper: Check if digest already sent today\nfunction digestAlreadySent(coachEmail) {\n  return notificationLog.some(log => {\n    const logData = log.json;\n    return logData.recipient_email === coachEmail &&\n           logData.notification_type === 'daily_digest' &&\n           logData.sent_at && logData.sent_at.startsWith(todayStr);\n  });\n}\n\n// Group assessments by coach\nconst coachDigests = {};\n\ntrainees.forEach(trainee => {\n  const t = trainee.json;\n  \n  // Skip if not in training\n  if (t.status !== 'in_progress') return;\n  if (!t.training_start_date) return;\n  \n  // Calculate current training day\n  const startDate = new Date(t.training_start_date);\n  const diffDays = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));\n  const currentDay = diffDays + 1; // Day 1 = first day\n  \n  if (currentDay < 1 || currentDay > 10) return; // Skip if outside training period\n  \n  console.log(`\\n${t.full_name} (${t.role_code}, Day ${currentDay})`);\n  \n  // Find assessments due today for this trainee\n  const todayAssessments = assessments.filter(a => {\n    const config = a.json;\n    if (config.role_code !== t.role_code) return false;\n    \n    const originalDay = parseInt(config.schedule_day);\n    const effectiveDay = getAdjustedDay(t.email, config.assessment_name, originalDay);\n    \n    return effectiveDay === currentDay;\n  });\n  \n  if (todayAssessments.length === 0) {\n    console.log('  No assessments due today');\n    return;\n  }\n  \n  console.log(`  ${todayAssessments.length} assessment(s) due`);\n  \n  // Add to coach's digest\n  const coachEmail = t.coach_email;\n  const coachName = t.coach_name;\n  \n  if (!coachDigests[coachEmail]) {\n    coachDigests[coachEmail] = {\n      coachName,\n      coachEmail,\n      trainees: []\n    };\n  }\n  \n  coachDigests[coachEmail].trainees.push({\n    traineeName: t.full_name,\n    traineeEmail: t.email,\n    role: t.role,\n    roleCode: t.role_code,\n    currentDay,\n    assessments: todayAssessments.map(a => ({\n      name: a.json.assessment_name,\n      formLink: a.json.form_link,\n      instructions: a.json.instructions,\n      deadlineTime: a.json.deadline_time || '18:30'\n    }))\n  });\n});\n\n// Filter out coaches who already received digest today\nconst digestsToSend = Object.values(coachDigests).filter(digest => {\n  if (digestAlreadySent(digest.coachEmail)) {\n    console.log(`\\nSKIP: ${digest.coachName} already received digest today`);\n    return false;\n  }\n  return true;\n});\n\nconsole.log(`\\n=== DIGESTS TO SEND: ${digestsToSend.length} ===`);\n\nif (digestsToSend.length === 0) {\n  console.log('No digests to send today');\n  return [];\n}\n\nreturn digestsToSend.map(d => ({ json: d }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 200],
+      "id": "build-digest",
+      "name": "Build Daily Digest by Coach"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format email content for each coach\nconst digest = $input.item.json;\n\nconst coachName = digest.coachName;\nconst coachEmail = digest.coachEmail;\nconst trainees = digest.trainees;\n\n// Count totals\nlet totalAssessments = 0;\ntrainees.forEach(t => { totalAssessments += t.assessments.length; });\n\n// Build trainee sections\nlet traineeSection = '';\ntrainees.forEach(trainee => {\n  traineeSection += `\\n${trainee.traineeName} (${trainee.role}, Day ${trainee.currentDay})\\n`;\n  traineeSection += '─'.repeat(50) + '\\n';\n  \n  trainee.assessments.forEach((assessment, idx) => {\n    traineeSection += `  ${idx + 1}. ${assessment.name}\\n`;\n    traineeSection += `     Instructions: ${assessment.instructions}\\n`;\n    traineeSection += `     Form: ${assessment.formLink}\\n\\n`;\n  });\n});\n\n// Get today's date formatted\nconst today = new Date();\nconst dateFormatted = today.toLocaleDateString('en-US', { \n  weekday: 'long', \n  year: 'numeric', \n  month: 'long', \n  day: 'numeric' \n});\n\nconst subject = `Today's Assessments - ${dateFormatted} (${trainees.length} trainee${trainees.length > 1 ? 's' : ''}, ${totalAssessments} assessment${totalAssessments > 1 ? 's' : ''})`;\n\nconst emailBody = `Good morning ${coachName.split(' ')[0]}!\n\nHere are today's scheduled assessments for your trainees:\n\n${'═'.repeat(50)}\n${traineeSection}\n${'═'.repeat(50)}\n\nTOTAL: ${totalAssessments} assessment${totalAssessments > 1 ? 's' : ''} across ${trainees.length} trainee${trainees.length > 1 ? 's' : ''}\n\n⏰ DEADLINE: Please submit all scores by 6:30 PM today.\n\n📅 Need to reschedule an assessment?\n   → Update via LMS Dashboard or reply to this email with details.\n\n---\n\nBest regards,\nTraining LMS\n\n---\nThis is an automated daily digest from the Training LMS.`;\n\nreturn {\n  json: {\n    coachName,\n    coachEmail,\n    subject,\n    emailBody,\n    traineeCount: trainees.length,\n    assessmentCount: totalAssessments,\n    trainees: trainees\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, 200],
+      "id": "format-email",
+      "name": "Format Digest Email"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.coachEmail }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1160, 200],
+      "id": "send-email",
+      "name": "Send Digest Email",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "Gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare log entries for each email sent\nconst emailData = $('Format Digest Email').item.json;\nconst today = new Date().toISOString();\n\nconst logEntries = [];\n\n// One log entry per trainee in the digest\nemailData.trainees.forEach(trainee => {\n  trainee.assessments.forEach(assessment => {\n    logEntries.push({\n      json: {\n        'log_id': `LOG-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,\n        'notification_type': 'daily_digest',\n        'recipient_email': emailData.coachEmail,\n        'trainee_email': trainee.traineeEmail,\n        'subject': emailData.subject,\n        'sent_at': today,\n        'status': 'sent'\n      }\n    });\n  });\n});\n\nreturn logEntries;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1380, 200],
+      "id": "prepare-log",
+      "name": "Prepare Log Entries"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Notification_Log",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [1600, 200],
+      "id": "write-log",
+      "name": "Write to Notification Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1820, 200],
+      "id": "done",
+      "name": "Done"
+    }
+  ],
+  "connections": {
+    "Daily 9:30 AM (Mon-Fri)": {
+      "main": [
+        [
+          {"node": "Fetch Active Trainees", "type": "main", "index": 0},
+          {"node": "Fetch Assessment Config", "type": "main", "index": 0},
+          {"node": "Fetch Schedule Adjustments", "type": "main", "index": 0},
+          {"node": "Fetch Notification Log", "type": "main", "index": 0}
+        ]
+      ]
+    },
+    "Fetch Active Trainees": {
+      "main": [[{"node": "Merge All Data", "type": "main", "index": 0}]]
+    },
+    "Fetch Assessment Config": {
+      "main": [[{"node": "Merge All Data", "type": "main", "index": 1}]]
+    },
+    "Fetch Schedule Adjustments": {
+      "main": [[{"node": "Merge All Data", "type": "main", "index": 2}]]
+    },
+    "Fetch Notification Log": {
+      "main": [[{"node": "Merge All Data", "type": "main", "index": 3}]]
+    },
+    "Merge All Data": {
+      "main": [[{"node": "Build Daily Digest by Coach", "type": "main", "index": 0}]]
+    },
+    "Build Daily Digest by Coach": {
+      "main": [[{"node": "Format Digest Email", "type": "main", "index": 0}]]
+    },
+    "Format Digest Email": {
+      "main": [[{"node": "Send Digest Email", "type": "main", "index": 0}]]
+    },
+    "Send Digest Email": {
+      "main": [[{"node": "Prepare Log Entries", "type": "main", "index": 0}]]
+    },
+    "Prepare Log Entries": {
+      "main": [[{"node": "Write to Notification Log", "type": "main", "index": 0}]]
+    },
+    "Write to Notification Log": {
+      "main": [[{"node": "Done", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}

@@ -1,0 +1,608 @@
+{
+  "name": "Win 2: Assessment Scheduler",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0,30 8-17 * * 1-5"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0d3b3f22-1d74-4c1e-b262-b5ee53391917",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:T"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8c9b3f76-0b66-41af-b60f-1c96f7aa8743",
+      "name": "Fetch New Hire List",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Match trainees to their scheduled assessments with multi-coach support\nconst trainees = $('Filter Valid Trainees').all();\nconst assessmentConfigs = $('Fetch Assessment Schedule Config').all();\nconst coachDirectory = $('Fetch Coach Directory').all();  // ← Need this!\n\n// Handle empty notification log gracefully\nlet notificationLog = [];\ntry {\n  const logInput = $('Fetch Notification Log').all();\n  if (logInput && logInput.length > 0) {\n    notificationLog = logInput.filter(item => item.json && item.json['Trainee Email']);\n  }\n} catch (error) {\n  console.log('ℹ️  Notification Log is empty (first run)');\n}\n\nconst today = new Date().toISOString().split('T')[0];\nconst matches = [];\n\nconsole.log('\\n=== ASSESSMENT MATCHING START ===');\nconsole.log(`Trainees: ${trainees.length}`);\nconsole.log(`Assessment Configs: ${assessmentConfigs.length}`);\nconsole.log(`Coach Directory: ${coachDirectory.length}`);\nconsole.log(`Notification Log: ${notificationLog.length}`);\n\n// Helper: Find ALL coaches for a given role and country\nfunction findCoachesForRole(role, country) {\n  console.log(`  🔍 Looking for coaches: Role=\"${role}\", Country=\"${country}\"`);\n  \n  const coaches = coachDirectory.filter(entry => {\n    const e = entry.json;\n    const roleMatch = e.Role === role;\n    const countryMatch = e.Country === country;\n    \n    if (roleMatch && countryMatch) {\n      console.log(`    ✓ Match: ${e['Coach Name']} (${e['Coach Email']})`);\n    }\n    \n    return roleMatch && countryMatch;\n  }).map(entry => ({\n    name: entry.json['Coach Name'],\n    email: entry.json['Coach Email']\n  }));\n  \n  console.log(`  📊 Found ${coaches.length} coach(es) for ${role} in ${country}`);\n  \n  // Fallback if no coaches found\n  return coaches.length > 0 ? coaches : [{ \n    name: 'Andrea Kaur', \n    email: 'andrea.kaur@storehub.com' \n  }];\n}\n\n// Process each trainee\ntrainees.forEach(trainee => {\n  const traineeData = trainee.json;\n  const traineeName = traineeData['Full Name'];\n  const traineeEmail = traineeData['Email Address'];\n  const traineeRole = traineeData['Department'];\n  const traineeCountry = traineeData['Country'];\n  const trainingDay = parseInt(traineeData['Days since Training Start '] || traineeData['Days since Training Start']);\n  \n  console.log(`\\n--- ${traineeName} (${traineeRole}, ${traineeCountry}, Day ${trainingDay}) ---`);\n  \n  // Get ALL coaches for this role and country\n  const coaches = findCoachesForRole(traineeRole, traineeCountry);\n  \n  // Find matching assessments for this trainee's role and day\n  const matchingAssessments = assessmentConfigs.filter(config => {\n    const configData = config.json;\n    return configData['Role'] === traineeRole && \n           parseInt(configData['Schedule Day']) === trainingDay;\n  });\n  \n  console.log(`  Found ${matchingAssessments.length} assessment(s) for Day ${trainingDay}`);\n  \n  // For EACH coach, create assessment entries\n  coaches.forEach(coach => {\n    matchingAssessments.forEach(assessmentItem => {\n      const assessment = assessmentItem.json;\n      const assessmentName = assessment['Assessment Name'];\n      \n      // Check if already sent to THIS COACH\n      const alreadySent = notificationLog.some(log => {\n        const logData = log.json;\n        return logData['Trainee Email'] === traineeEmail &&\n               logData['Assessment Name'] === assessmentName &&\n               logData['Coach Email'] === coach.email &&\n               parseInt(logData['Training Day']) === trainingDay;\n      });\n      \n      if (alreadySent) {\n        console.log(`  ⏭️  SKIP: \"${assessmentName}\" → ${coach.name} (already sent)`);\n      } else {\n        console.log(`  ✅ MATCH: \"${assessmentName}\" → ${coach.name}`);\n        matches.push({\n          json: {\n            traineeName,\n            traineeEmail,\n            traineeRole,\n            traineeCountry,\n            trainingDay,\n            coachName: coach.name,\n            coachEmail: coach.email,\n            assessmentName: assessment['Assessment Name'],\n            formLink: assessment['Form Link'],\n            instructions: assessment['Instructions'],\n            matchDate: today\n          }\n        });\n      }\n    });\n  });\n});\n\nconsole.log(`\\n=== MATCHING COMPLETE ===`);\nconsole.log(`Total assessment entries: ${matches.length}`);\n\nif (matches.length === 0) {\n  console.log('⚠️  No assessments due today or all already sent');\n  return [];\n}\n\nreturn matches;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "2042e87b-2953-4f33-80d4-e867b245cb45",
+      "name": "Match Assessments to Trainees"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter eligible trainees for assessment scheduling\nconst allTrainees = $input.all();\n\nconst eligible = allTrainees.filter(item => {\n  const data = item.json;\n  \n  // Check 1: Full Name exists\n  const hasName = data['Full Name'] && data['Full Name'].trim() !== '';\n  \n  // Check 2: Status is \"Email Sent\"\n  const isEmailSent = data.Status === 'Email Sent';\n  \n  // Check 3: Training Start Date exists\n  const hasStartDate = data['Training Start Date'] && data['Training Start Date'].trim() !== '';\n  \n  // Check 4: Days since Training Start <= 10\n  const daysString = data['Days since Training Start '] || data['Days since Training Start'];\n  const days = parseInt(daysString);\n  const isWithinTrainingPeriod = !isNaN(days) && days <= 10;\n  \n  // Return true only if ALL checks pass\n  return hasName && isEmailSent && hasStartDate && isWithinTrainingPeriod;\n});\n\nconsole.log(`Filtered down to ${eligible.length} eligible trainee(s)`);\n\nreturn eligible;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "19803ab2-33ba-4153-9b8f-b5fc10d9abc5",
+      "name": "Filter Valid Trainees"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1266489538,
+          "mode": "list",
+          "cachedResultName": "Assessment Schedule Configuration",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1266489538"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:F"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        -192
+      ],
+      "id": "3ddf4752-d0d7-484a-b9ea-c2e42da1f3c4",
+      "name": "Fetch Assessment Schedule Config",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1999880273,
+          "mode": "list",
+          "cachedResultName": "Notification Log Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1999880273"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:H"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        192
+      ],
+      "id": "a5c34308-904d-47ce-beb2-918d312d6a84",
+      "name": "Fetch Notification Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1409163176,
+          "mode": "list",
+          "cachedResultName": "Coach & Managers Directory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1409163176"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:H"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "f4116c37-88c3-4834-93e6-56cfe66a83b4",
+      "name": "Fetch Coach Directory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        928,
+        -16
+      ],
+      "id": "82b0701a-6784-4b11-968d-eeeaed8b00b4",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group assessments by TRAINEE (to send one email to all coaches)\nconst matches = $input.all();\n\nconsole.log(`\\n=== GROUPING BY TRAINEE ===`);\nconsole.log(`Total matches: ${matches.length}`);\n\n// Group by trainee\nconst groupedByTrainee = {};\n\nmatches.forEach(match => {\n  const data = match.json;\n  const traineeEmail = data.traineeEmail;\n  \n  // Initialize trainee entry if doesn't exist\n  if (!groupedByTrainee[traineeEmail]) {\n    groupedByTrainee[traineeEmail] = {\n      traineeName: data.traineeName,\n      traineeEmail: data.traineeEmail,\n      traineeRole: data.traineeRole,\n      traineeCountry: data.traineeCountry,\n      trainingDay: data.trainingDay,\n      coaches: new Set(),\n      coachEmails: new Set(),\n      assessments: new Map() // Use Map to avoid duplicates\n    };\n  }\n  \n  // Add coach to set (automatically deduplicates)\n  groupedByTrainee[traineeEmail].coaches.add(data.coachName);\n  groupedByTrainee[traineeEmail].coachEmails.add(data.coachEmail);\n  \n  // Add assessment to map (automatically deduplicates by name)\n  groupedByTrainee[traineeEmail].assessments.set(data.assessmentName, {\n    name: data.assessmentName,\n    link: data.formLink,\n    instructions: data.instructions\n  });\n});\n\n// Convert to array format\nconst grouped = Object.values(groupedByTrainee).map(group => ({\n  json: {\n    traineeName: group.traineeName,\n    traineeEmail: group.traineeEmail,\n    traineeRole: group.traineeRole,\n    traineeCountry: group.traineeCountry,\n    trainingDay: group.trainingDay,\n    coaches: Array.from(group.coaches),\n    coachEmails: Array.from(group.coachEmails).join(', '),\n    assessments: Array.from(group.assessments.values())\n  }\n}));\n\nconsole.log(`\\nGrouped into ${grouped.length} trainee(s):`);\ngrouped.forEach(g => {\n  console.log(`  - ${g.json.traineeName}: ${g.json.coaches.length} coach(es), ${g.json.assessments.length} assessment(s)`);\n});\n\nreturn grouped;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        0
+      ],
+      "id": "3b4b9cb6-76ef-4f12-ac04-d9d9f4c9936f",
+      "name": "Group by Coach"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build email content for assessment notifications\nconst data = $input.item.json;\n\nconst traineeName = data.traineeName;\nconst traineeEmail = data.traineeEmail;\nconst traineeRole = data.traineeRole;\nconst trainingDay = data.trainingDay;\nconst coaches = data.coaches;\nconst coachEmails = data.coachEmails;\nconst assessments = data.assessments;\n\n// Build assessment list for email body\nlet assessmentList = '';\nassessments.forEach((assessment, index) => {\n  assessmentList += `\n${index + 1}. ${assessment.name}\n   📋 Instructions: ${assessment.instructions}\n   🔗 Form Link: ${assessment.link}\n`;\n});\n\n// Build email subject\nconst subject = `Assessment${assessments.length > 1 ? 's' : ''} Due - ${traineeName} (Training Day ${trainingDay})`;\n\n// Build email body\nconst emailBody = `Hi ${coaches.join(' / ')}!\n\nThe following assessment${assessments.length > 1 ? 's are' : ' is'} due today for ${traineeName} (${traineeRole}).\n\n📅 Training Day: ${trainingDay}\n📊 Total Assessments: ${assessments.length}\n\n${assessmentList}\n⏰ Deadline: End of Day\n\nPlease complete the assessment${assessments.length > 1 ? 's' : ''} and submit the score${assessments.length > 1 ? 's' : ''} via the form link${assessments.length > 1 ? 's' : ''} provided above.\n\n---\n\nBest regards,\n\nAndrea K.\nSr. Training & KB Specialist\nStoreHub\n\n---\nThis is an automated notification from the Training Assessment Scheduler.`;\n\nconsole.log(`\\n=== EMAIL BUILT ===`);\nconsole.log(`To: ${coachEmails}`);\nconsole.log(`Subject: ${subject}`);\nconsole.log(`Assessments: ${assessments.length}`);\n\nreturn {\n  json: {\n    // Original data\n    traineeName,\n    traineeEmail,\n    traineeRole,\n    trainingDay,\n    coaches,\n    coachEmails,\n    assessments,\n    // Email content\n    emailSubject: subject,\n    emailBody: emailBody,\n    emailTo: coachEmails,\n    ccEmail: 'andrea.kaur@storehub.com'\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1584,
+        0
+      ],
+      "id": "a696fc92-bb7a-403b-8108-ad3771190f15",
+      "name": "Build Email to Coach"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.emailTo }}",
+        "subject": "={{ $json.emailSubject }}",
+        "emailType": "text",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "ccList": "={{ $json.ccEmail }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1792,
+        0
+      ],
+      "id": "3e27b057-8c87-4b83-a955-2322940c59ab",
+      "name": "Send a message",
+      "webhookId": "3888d2dc-511c-410a-9649-e1d17520236f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare individual log entries for Notification Log\nconst data = $('Build Email to Coach').item.json;\n\nconst traineeName = data.traineeName;\nconst traineeEmail = data.traineeEmail;\nconst traineeRole = data.traineeRole;\nconst trainingDay = data.trainingDay;\nconst coaches = data.coaches;\nconst coachEmailsString = data.coachEmails;\nconst assessments = data.assessments;\n\nconst today = new Date().toISOString().split('T')[0];\nconst logEntries = [];\n\nconsole.log('\\n=== PREPARING LOG ENTRIES ===');\nconsole.log(`Trainee: ${traineeName}`);\nconsole.log(`Coaches: ${coaches.length}`);\nconsole.log(`Assessments: ${assessments.length}`);\n\nconst coachEmailsArray = coachEmailsString.split(', ').map(e => e.trim());\n\nassessments.forEach(assessment => {\n  coachEmailsArray.forEach((coachEmail) => {\n    logEntries.push({\n      json: {\n        'Trainee Name': traineeName,\n        'Trainee Email': traineeEmail,\n        'Role': traineeRole,\n        'Assessment Name': assessment.name,\n        'Training Day': trainingDay,\n        'Coach Email': coachEmail,\n        'Date Sent': today,\n        'Status': 'Sent'\n      }\n    });\n  });\n});\n\nconsole.log(`\\n📝 Created ${logEntries.length} log entries`);\nconsole.log(`   (${assessments.length} assessments × ${coachEmailsArray.length} coaches)`);\n\nreturn logEntries;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        0
+      ],
+      "id": "39eaccf6-8a81-43bb-84d4-1b0159c8f8e0",
+      "name": "Prepare Log Entries"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1999880273,
+          "mode": "list",
+          "cachedResultName": "Notification Log Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1999880273"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Trainee Name",
+              "displayName": "Trainee Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Trainee Email",
+              "displayName": "Trainee Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Assessment Name",
+              "displayName": "Assessment Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Training Day",
+              "displayName": "Training Day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Email",
+              "displayName": "Coach Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2208,
+        0
+      ],
+      "id": "e159c3c2-11ea-4547-a389-95699465e60d",
+      "name": "Loop - Write to Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        2496,
+        0
+      ],
+      "id": "472122c7-8073-48c4-b2ea-94159664e8c5",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "andrea.kaur@storehub.com",
+        "subject": "=🚨 Assessment Scheduler Error - {{ $now.format('YYYY-MM-DD HH:mm') }}",
+        "emailType": "text",
+        "message": "=An error occurred in the Assessment Scheduler workflow.  \n\nError Details: {{ $json.execution.error.message }}\n\nNode: {{ $json.error.node.name }}  \n\nTime:{{ $now }} \n\nPlease check the workflow execution in n8n.  \n\n--- Automated Error Alert",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2656,
+        0
+      ],
+      "id": "a9c4c61d-2455-4afd-b88e-72144e78d0fb",
+      "name": "Send Error Alert",
+      "webhookId": "f70a669a-1b7d-4d0f-9a93-4623883117f4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch New Hire List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch New Hire List": {
+      "main": [
+        [
+          {
+            "node": "Filter Valid Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Valid Trainees": {
+      "main": [
+        [
+          {
+            "node": "Fetch Assessment Schedule Config",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Coach Directory",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Notification Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Assessment Schedule Config": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Notification Log": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Fetch Coach Directory": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Match Assessments to Trainees": {
+      "main": [
+        [
+          {
+            "node": "Group by Coach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Match Assessments to Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group by Coach": {
+      "main": [
+        [
+          {
+            "node": "Build Email to Coach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Email to Coach": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Prepare Log Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Log Entries": {
+      "main": [
+        [
+          {
+            "node": "Loop - Write to Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "uG0OajlgeyolJzTX"
+  },
+  "versionId": "e61a2599-a131-45fa-81ca-8f1da092036b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "uG0OajlgeyolJzTX",
+  "tags": []
+}

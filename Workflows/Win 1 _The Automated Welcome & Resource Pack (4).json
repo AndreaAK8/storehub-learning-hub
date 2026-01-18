@@ -1,0 +1,650 @@
+{
+  "name": "Win 1 :The Automated Welcome & Resource Pack",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email Address'] }}",
+        "subject": "=\"Welcome to the Team,  {{ $json['Full Name'] }}",
+        "emailType": "text",
+        "message": "=Hi {{$json[\"Full Name\"]}},\n\nWelcome to the StoreHub training program! I'm Andrea, and I'll be guiding you through your learning journey as you settle into your new role. We're excited to have you on board and can't wait to see what you'll accomplish.\n\n🗓 Your training begins on: {{$json[\"Training Start Date\"]}}.\n\n🎯 Essential Pre-Training Resources:\n\n• Training Lark Wiki: https://storehub.sg.larksuite.com/wiki/V1Dqw3SnbibdDdkQKpmlNQGygef\n\n• Meet the Organization: https://storehub.sg.larksuite.com/wiki/V1Dqw3SnbibdDdkQKpmlNQGygef#share-LsQ0dCwVWoBYZqxOXwYl17fEgyS\n\n\n📚 Your Training Journey:\n• Days 1–2: Product Training (Self-Study with Andrea)\n• Days 3–6: Role-Specific Training\n• Week 2 onwards: Hands-on application & mentorship\n\n\n💻 Technical Requirements:\nMake sure your company-issued MacBook and iPad are ready to go - fully set up and charged. You'll be using them throughout the self-study modules and live syncs.\n\nNote: If you do not have an iPad, you may request to borrow one from HR for training purposes.\n\n\n❓ Quick Start FAQ:\n\nQ: How should I prepare for Day 1?\n\nA: A: Review the Meet the Organization page and confirm your devices are ready. You'll be starting with product training via self-study.\n\nQ: What if I have technical issues during training?\n\nA: You can reach me directly at andrea.kaur@storehub.com or contact your manager {{$json[\"Manager Name\"]}}.\n\nQ: Will there be opportunities to ask questions during training?\n\nA: Absolutely! Each session includes dedicated Q&A time, and I'm always available for additional support.\n\n🚀 Pro Tip:\nStart exploring the Training Wiki before Day 1 to get a head start on the fundamentals.\n\nLooking forward to meeting you and supporting your success at StoreHub!\n\nBest regards,\nAndrea K.\nSenior Training & Knowledge Base Specialist\nStoreHub\n\n---\nP.S. Your manager {{$json[\"Manager Name\"]}} will also be in touch regarding your overall onboarding timeline.",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -848,
+        48
+      ],
+      "id": "958256f8-f3e8-4ecc-8724-c1282b1a9ff8",
+      "name": "Send a message",
+      "webhookId": "f5f740d7-4e8c-45ce-ba60-049e9b7dfdd6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "09e7ef4a-9bc2-477f-8ccb-debaa8bf16b9",
+              "leftValue": "={{$json[\"Status\"]}}",
+              "rightValue": "New",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1040,
+        208
+      ],
+      "id": "e6aedb2c-415d-4010-8310-44c0e8873737",
+      "name": "Status = New?"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Sent Date": "={{$now}}",
+            "Email Address": "={{ $('Status = New?').item.json['Email Address'] }}",
+            "Timestamp": "={{$now.format('yyyy-MM-dd HH:mm:ss')}}",
+            "Full Name": "={{ $('Status = New?').item.json['Full Name'] }}",
+            "Department": "={{ $('Status = New?').item.json.Department }}",
+            "Training Start Date": "={{ $('Status = New?').item.json['Training Start Date'] }}",
+            "Status": "Email Sent"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Training Start Date",
+              "displayName": "Training Start Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Name",
+              "displayName": "Coach Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Coach Email",
+              "displayName": "Coach Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent Date",
+              "displayName": "Email Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role Overview Sent Date",
+              "displayName": "Role Overview Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Assessments Required",
+              "displayName": "Total Assessments Required",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Assessments Completed",
+              "displayName": "Total Assessments Completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Assessments Incomplete",
+              "displayName": "Total Assessments Incomplete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Days since Training Start ",
+              "displayName": "Days since Training Start ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Last Reminder Sent",
+              "displayName": "Last Reminder Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reminder Count",
+              "displayName": "Reminder Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Suvery Sent Date",
+              "displayName": "Suvery Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -624,
+        48
+      ],
+      "id": "851f8c61-429c-4145-a591-e6818c619462",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1d39mGpPzA3EcxfS",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Convert Excel serial date to ISO date string\nconst items = $input.all();\n\nreturn items.map(item => {\n  const trainingStartDate = item.json[\"Training Start Date\"];\n  let dateValue;\n  \n  // Handle different data formats\n  if (Array.isArray(trainingStartDate)) {\n    dateValue = trainingStartDate[0];\n  } else {\n    dateValue = trainingStartDate;\n  }\n  \n  // If it's already a proper date string (YYYY-MM-DD), keep it\n  if (typeof dateValue === 'string' && dateValue.match(/^\\d{4}-\\d{2}-\\d{2}$/)) {\n    return {\n      json: {\n        ...item.json,\n        \"Training Start Date\": [dateValue]\n      }\n    };\n  }\n  \n  // Convert Excel serial date to JavaScript date\n  if (typeof dateValue === 'number' && dateValue > 0) {\n    // Excel epoch starts from 1899-12-30\n    const excelEpoch = new Date(1899, 11, 30); // Month is 0-indexed\n    const jsDate = new Date(excelEpoch.getTime() + dateValue * 24 * 60 * 60 * 1000);\n    \n    // Format as YYYY-MM-DD\n    const year = jsDate.getFullYear();\n    const month = String(jsDate.getMonth() + 1).padStart(2, '0');\n    const day = String(jsDate.getDate()).padStart(2, '0');\n    const isoDate = `${year}-${month}-${day}`;\n    \n    return {\n      json: {\n        ...item.json,\n        \"Training Start Date\": [isoDate]\n      }\n    };\n  }\n  \n  // Fallback: return original value\n  return {\n    json: {\n      ...item.json,\n      \"Training Start Date\": Array.isArray(trainingStartDate) ? trainingStartDate : [trainingStartDate]\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        48
+      ],
+      "id": "b2dd463e-8820-4f0b-8e82-41a3a0bf0380",
+      "name": "Convert Dates"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "Training Start Date"
+            },
+            {
+              "fieldToAggregate": "Full Name"
+            },
+            {
+              "fieldToAggregate": "Department"
+            },
+            {
+              "fieldToAggregate": "Email Address"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        48
+      ],
+      "id": "507ef582-3c1a-4037-a141-2ebe848a66ae",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "andrea.kaur@storehub.com",
+          "mode": "list",
+          "cachedResultName": "andrea.kaur@storehub.com"
+        },
+        "start": "={{$json[\"Training Start Date\"][0]}}T14:00:00+08:00",
+        "end": "={{$json[\"Training Start Date\"][0]}}T18:30:00+08:00",
+        "additionalFields": {
+          "attendees": [
+            "={{$json[\"Email Address\"].join(\",\")}}"
+          ],
+          "description": "=Product Training (Self-Study) with Andrea K.\n\nThis self-paced session is designed to help you build a solid understanding of our product from the ground up. By the end of the day, you'll be more confident navigating our software, hardware, and key features.\n\n✅ Pre-Training Checklist:\n\nMacBook ready\n\niPad ready\n\nWiki access confirmed\n\n🗂 Agenda Overview:\n\nTraining Briefing\n\nSoftware Module\n\nHardware Module\n\nFeature Module\n\nFeel free to explore each module at your own pace, and don't hesitate to reach out if you have questions along the way.",
+          "summary": "[Day 1] Product Training "
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        48
+      ],
+      "id": "5b2fcfe9-9864-4a03-9b30-7865980eff3c",
+      "name": "Day 1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YGAVuwZbDHVnRq2K",
+          "name": "AK;s"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "andrea.kaur@storehub.com",
+          "mode": "list",
+          "cachedResultName": "andrea.kaur@storehub.com"
+        },
+        "start": "={{$json[\"start\"][\"dateTime\"].split('T')[0].split('-')[0]}}-{{$json[\"start\"][\"dateTime\"].split('T')[0].split('-')[1]}}-{{String(Number($json[\"start\"][\"dateTime\"].split('T')[0].split('-')[2]) + 1).padStart(2, '0')}}T09:30:00+08:00",
+        "end": "={{$json[\"start\"][\"dateTime\"].split('T')[0].split('-')[0]}}-{{$json[\"start\"][\"dateTime\"].split('T')[0].split('-')[1]}}-{{String(Number($json[\"start\"][\"dateTime\"].split('T')[0].split('-')[2]) + 1).padStart(2, '0')}}T18:30:00+08:00",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.attendees.map(att => att.email).join(',') }}"
+          ],
+          "description": "📅 Day 2: Product Training (Self-Study) with Andrea K.\n\nYou're halfway through product training - great job so far! By now, you should have completed the first three modules. Today, we'll shift focus to navigating the system and understanding how our tools come to life through real merchant setups.\n\n🗂 Agenda Overview:\n• System Navigation Module (BackOffice account must be created beforehand)\n• Merchant Profile Module\n\nTake your time exploring each module at your own pace. If anything's unclear or you need support, feel free to reach out - I'm here to help!\n\n",
+          "summary": "[Day 2] Product Training"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        48
+      ],
+      "id": "5b8ed3a3-a1de-41a2-b8b9-ee1dd86d6a2e",
+      "name": "Day 2",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YGAVuwZbDHVnRq2K",
+          "name": "AK;s"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "andrea.kaur@storehub.com",
+          "mode": "list",
+          "cachedResultName": "andrea.kaur@storehub.com"
+        },
+        "start": "={{$json[\"start\"][\"dateTime\"].split('T')[0]}}T15:00:00+08:00",
+        "end": "={{$json[\"start\"][\"dateTime\"].split('T')[0]}}T17:30:00+08:00",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.attendees.map(att => att.email).join(',') }}"
+          ],
+          "description": "This is a key milestone in your training journey. In this live session, we'll bring everything together — recap what you've learned, demo essential hardware, and answer any questions you've been holding onto. It's your chance to clarify doubts and get fully equipped before diving into your role-specific training.  \n\n🗂 Agenda Overview: \n• Recap of All Modules \n• Hardware Demo \n• Quiz Debrief \n• Role-Specific Expectations  \n\nCome prepared with your questions — this session is all about making sure you're confident moving forward.",
+          "summary": "[Day 2] Product Demo & Debrief"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        512,
+        48
+      ],
+      "id": "0bf6eb2e-4267-4ae0-9920-b13c67a05348",
+      "name": "Product Demo & Debrief",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YGAVuwZbDHVnRq2K",
+          "name": "AK;s"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1328,
+        48
+      ],
+      "id": "1b0cadae-ebda-4514-86b0-1d40972ac6d9",
+      "name": "New Hire Master List",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "5RdjBLcNZ5y3PeRk",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger/welcome",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1536,
+        208
+      ],
+      "id": "1c5ed74d-2311-4e65-9aac-b2d9ba2cfa4c",
+      "name": "Webhook",
+      "webhookId": "0e3ac85c-7076-43c6-a752-1286f5da2bd3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "353cd945-e7e9-4326-a965-3ebaa813f815",
+              "name": "Email Address",
+              "value": "={{ $json.traineeEmail }}",
+              "type": "string"
+            },
+            {
+              "id": "3f7e2d18-be1c-4438-af09-81d5bbca1f7c",
+              "name": "Full Name",
+              "value": "={{ $json.traineeName }}",
+              "type": "string"
+            },
+            {
+              "id": "c1b0edc6-88f5-4708-baa1-04c6440207f4",
+              "name": "Status",
+              "value": "New",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1312,
+        208
+      ],
+      "id": "f1a2256b-6a95-4d84-b5cd-bb4cd0dca39d",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status = New?": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Convert Dates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Dates": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Day 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Day 1": {
+      "main": [
+        [
+          {
+            "node": "Day 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Day 2": {
+      "main": [
+        [
+          {
+            "node": "Product Demo & Debrief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Hire Master List": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Status = New?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ae63e381-2b12-4bc4-bba8-fb23e3b03a12",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "u33e1m0ts25P7xwp",
+  "tags": []
+}

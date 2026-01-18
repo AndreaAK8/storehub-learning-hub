@@ -1,0 +1,173 @@
+{
+  "name": "Win 4: Final Report (UNIFIED - LMS Triggered)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "final-report",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "webhook-trigger",
+      "name": "Final Report Webhook",
+      "webhookId": "final-report-webhook"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.body }}",
+        "options": {
+          "ccList": "={{ $json.cc || 'andrea.kaur@storehub.com' }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [250, 0],
+      "id": "send-email",
+      "name": "Send Final Report Email",
+      "credentials": { "gmailOAuth2": { "id": "M8WHs7W6uy2BUq7w", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Notification_Log", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Notification ID": "={{ 'REPORT-' + $now.format('yyyyMMdd-HHmmss') + '-' + Math.random().toString(36).substr(2, 5) }}",
+            "Type": "Final Report",
+            "Recipient Email": "={{ $json.to }}",
+            "Recipient Name": "={{ $json.traineeName }}",
+            "Subject": "={{ $json.subject }}",
+            "Sent At": "={{ $now.toISO() }}",
+            "Sent By": "={{ $json.sentBy || 'LMS System' }}",
+            "Status": "Sent",
+            "Notes": "={{ 'Final Score: ' + $json.finalScore + '% | ' + $json.overallStatus }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "Notification ID", "displayName": "Notification ID", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Type", "displayName": "Type", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Recipient Email", "displayName": "Recipient Email", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Recipient Name", "displayName": "Recipient Name", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Subject", "displayName": "Subject", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Sent At", "displayName": "Sent At", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Sent By", "displayName": "Sent By", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Status", "displayName": "Status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Notes", "displayName": "Notes", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [500, 0],
+      "id": "log-notification",
+      "name": "Log to Notification_Log",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Performance_Summary", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Trainee Email": "={{ $json.traineeEmail }}",
+            "Trainee Name": "={{ $json.traineeName }}",
+            "Role": "={{ $json.role }}",
+            "Country": "={{ $json.country }}",
+            "Training Start Date": "={{ $json.trainingStartDate }}",
+            "Learning Score": "={{ $json.learningScore }}",
+            "Participation Score": "={{ $json.participationScore }}",
+            "Final Score": "={{ $json.finalScore }}",
+            "Status": "={{ $json.overallStatus }}",
+            "Report Sent Date": "={{ $now.toISO() }}",
+            "Highlights": "={{ $json.highlights }}",
+            "Lowlights": "={{ $json.lowlights }}"
+          },
+          "matchingColumns": ["Trainee Email"],
+          "schema": [
+            {"id": "Trainee Email", "displayName": "Trainee Email", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Trainee Name", "displayName": "Trainee Name", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Role", "displayName": "Role", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Country", "displayName": "Country", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Training Start Date", "displayName": "Training Start Date", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Learning Score", "displayName": "Learning Score", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Participation Score", "displayName": "Participation Score", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Final Score", "displayName": "Final Score", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Status", "displayName": "Status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Report Sent Date", "displayName": "Report Sent Date", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Highlights", "displayName": "Highlights", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Lowlights", "displayName": "Lowlights", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [500, 200],
+      "id": "update-performance",
+      "name": "Update Performance_Summary",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "success", "value": "true" },
+            { "name": "message", "value": "Final report sent successfully" }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [750, 100],
+      "id": "set-response",
+      "name": "Set Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [950, 100],
+      "id": "respond",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Final Report Webhook": {
+      "main": [[{"node": "Send Final Report Email", "type": "main", "index": 0}]]
+    },
+    "Send Final Report Email": {
+      "main": [[
+        {"node": "Log to Notification_Log", "type": "main", "index": 0},
+        {"node": "Update Performance_Summary", "type": "main", "index": 0}
+      ]]
+    },
+    "Log to Notification_Log": {
+      "main": [[{"node": "Set Response", "type": "main", "index": 0}]]
+    },
+    "Update Performance_Summary": {
+      "main": [[{"node": "Set Response", "type": "main", "index": 0}]]
+    },
+    "Set Response": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

@@ -67,10 +67,10 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
             <div className="flex items-center gap-8">
               <div className="flex-1">
                 <h3 className="text-2xl font-bold text-[var(--sh-black)] mb-4 tracking-wide">
-                  Welcome to Your {roleCode} Journey!
+                  Welcome to StoreHub Training!
                 </h3>
                 <p className="text-slate-600 text-base leading-7 tracking-wide">
-                  {getWelcomeMessage()}
+                  You're about to embark on an exciting learning journey that will equip you with everything you need to succeed in your role. This overview covers your training program—the foundation that every StoreHub team member builds upon.
                 </p>
               </div>
               {/* Rocket Illustration */}
@@ -85,6 +85,221 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   <circle cx="60" cy="55" r="4" fill="#ff630f"/>
                 </svg>
               </div>
+            </div>
+          </div>
+
+          {/* How This Training Works: The Self-Study Philosophy */}
+          <div className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--sh-orange)] to-[var(--sh-orange-dark)] flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-[var(--sh-black)] tracking-wide">How This Training Works</h3>
+                <p className="text-base text-[var(--neutral-400)]">The Self-Study Philosophy</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* You're in Control */}
+              <div className="p-5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">🎯</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-green-800 mb-2">You're in Control</h4>
+                    <p className="text-sm text-green-700 leading-relaxed">
+                      This is a self-paced journey, and you're in the driver's seat. Your proactivity and accountability will shape your success. There's no trainer watching over your shoulder—you own your learning pace and outcomes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* We've Got Your Back */}
+              <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">🤝</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-blue-800 mb-2">We've Got Your Back</h4>
+                    <p className="text-sm text-blue-700 leading-relaxed">
+                      While you're learning independently, you're not alone: daily check-ins with your trainer, a questions sheet for your burning questions, and trainer review sessions built into the schedule.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Time Matters */}
+              <div className="p-5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">⏰</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-amber-800 mb-2">Time Matters!</h4>
+                    <p className="text-sm text-amber-700 leading-relaxed">
+                      Every task has a set time limit, so managing your schedule is key. Check the training agenda to stay on track. If you fall behind, tasks can pile up—fast.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Some Parts Might Get Tricky */}
+              <div className="p-5 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">🧩</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-purple-800 mb-2">Some Parts Might Get Tricky</h4>
+                    <p className="text-sm text-purple-700 leading-relaxed">
+                      Stay engaged, take notes, and don't hesitate to ask questions. Your trainer will go through them during check-ins—no question is too big or too small.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Click Everything - Full Width */}
+            <div className="p-5 rounded-xl bg-gradient-to-r from-[var(--orange-100)] to-[var(--blue-100)] border border-[var(--orange-200)]">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <span className="text-2xl">🔗</span>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-[var(--sh-black)] mb-1">Click Everything!</h4>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    Throughout your training materials, there are hyperlinks hidden like Easter eggs. Instead of chocolate, they're packed with valuable insights. Don't miss out!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Understanding Your Training Performance Score */}
+          <div className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--sh-blue)] to-blue-600 flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 12H18L15 21L9 3L6 12H2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-[var(--sh-black)] tracking-wide">Understanding Your Training Performance Score</h3>
+                <p className="text-base text-[var(--neutral-400)]">How your performance is measured</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Learning Score */}
+              <div className="p-5 rounded-xl bg-white border-2 border-[var(--sh-orange)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[var(--sh-orange)] text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  80%
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-full bg-[var(--orange-100)] flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">📚</span>
+                  </div>
+                  <div className="flex-1 pt-2">
+                    <h4 className="font-bold text-[var(--sh-black)] text-lg mb-2">Learning Score</h4>
+                    <p className="text-sm text-slate-600 mb-3">Your formal assessments contribute to this score:</p>
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      <li className="flex items-start gap-2">
+                        <span className="text-[var(--sh-orange)] mt-0.5">•</span>
+                        <span><strong>All-in-One Quiz</strong> (Day 2) - Weighted based on your role</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-[var(--sh-orange)] mt-0.5">•</span>
+                        <span><strong>Role-Specific Assessments</strong> (Day 3+) - Details in your role overview</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Participation Score */}
+              <div className="p-5 rounded-xl bg-white border-2 border-[var(--sh-blue)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[var(--sh-blue)] text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                  5-20%
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-full bg-[var(--blue-100)] flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl">⭐</span>
+                  </div>
+                  <div className="flex-1 pt-2">
+                    <h4 className="font-bold text-[var(--sh-black)] text-lg mb-2">Participation Score</h4>
+                    <p className="text-sm text-slate-600 mb-3">Evaluated daily by your trainer across:</p>
+                    <ul className="space-y-2 text-sm text-slate-600">
+                      <li className="flex items-start gap-2">
+                        <span className="text-[var(--sh-blue)] mt-0.5">•</span>
+                        <span><strong>Task Completion</strong> (5%) - Engagement & assignment completion</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-[var(--sh-blue)] mt-0.5">•</span>
+                        <span><strong>Culture Code Alignment</strong> (10%) - Collaboration & Impact</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-[var(--sh-blue)] mt-0.5">•</span>
+                        <span><strong>Attendance</strong> (5%) - Punctuality & presence</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Participation Levels */}
+            <div className="p-5 rounded-xl bg-slate-50 border border-slate-200">
+              <h4 className="font-semibold text-[var(--sh-black)] mb-4">Participation Levels</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="p-3 rounded-lg bg-white border border-red-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-red-500 text-lg">🔴</span>
+                    <span className="font-semibold text-red-700">5%</span>
+                  </div>
+                  <p className="text-xs text-red-600">Passive & Non-Responsive</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white border border-yellow-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-yellow-500 text-lg">🟡</span>
+                    <span className="font-semibold text-yellow-700">10%</span>
+                  </div>
+                  <p className="text-xs text-yellow-600">Passive & Somewhat Responsive</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white border border-blue-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-blue-500 text-lg">🔵</span>
+                    <span className="font-semibold text-blue-700">15%</span>
+                  </div>
+                  <p className="text-xs text-blue-600">Neutral - Regular participation</p>
+                </div>
+                <div className="p-3 rounded-lg bg-white border border-green-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-green-500 text-lg">🟢</span>
+                    <span className="font-semibold text-green-700">20%</span>
+                  </div>
+                  <p className="text-xs text-green-600">Go-Getter - Fully engaged</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Final Score Formula */}
+            <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--sh-orange)] to-[var(--sh-orange-dark)] text-white">
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                <span className="font-medium">Your Final Score =</span>
+                <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">Learning Score (80%)</span>
+                <span>+</span>
+                <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">Participation Score (5-20%)</span>
+              </div>
+              <p className="text-center text-sm mt-3 text-white/90">
+                💡 Pro Tip: High participation can boost your overall score and provide insurance against weaker assessments!
+              </p>
             </div>
           </div>
 

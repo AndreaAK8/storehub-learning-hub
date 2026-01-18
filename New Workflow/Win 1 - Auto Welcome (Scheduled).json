@@ -1,0 +1,163 @@
+{
+  "name": "Win 1 - Auto Welcome (Scheduled)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "id": "schedule-trigger",
+      "name": "Every 30 Minutes"
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Trainees", "mode": "name" },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [250, 0],
+      "id": "get-trainees",
+      "name": "Get Trainees",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "version": 2 },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "New",
+              "operator": { "type": "string", "operation": "equals" }
+            },
+            {
+              "leftValue": "={{ $json['Email Address'] }}",
+              "rightValue": "",
+              "operator": { "type": "string", "operation": "notEmpty" }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [500, 0],
+      "id": "filter-new",
+      "name": "Filter Status = New"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email Address'] }}",
+        "subject": "🎉 Welcome to StoreHub Training, {{ $json['Full Name'] }}!",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;\">\n    <h1 style=\"color: white; margin: 0;\">Welcome to StoreHub! 🚀</h1>\n  </div>\n  \n  <div style=\"padding: 30px; background: #f9fafb; border: 1px solid #e5e7eb;\">\n    <p style=\"font-size: 16px;\">Hi <strong>{{ $json['Full Name'] }}</strong>,</p>\n    \n    <p>We're excited to have you join the StoreHub team! Your training journey as a <strong>{{ $json.Role }}</strong> begins on <strong>{{ $json['Training Start Date'] }}</strong>.</p>\n    \n    <div style=\"background: white; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #667eea;\">\n      <h3 style=\"margin-top: 0; color: #667eea;\">📋 Your Training Details</h3>\n      <ul style=\"line-height: 1.8;\">\n        <li><strong>Role:</strong> {{ $json.Role }}</li>\n        <li><strong>Country:</strong> {{ $json.Country }}</li>\n        <li><strong>Start Date:</strong> {{ $json['Training Start Date'] }}</li>\n        <li><strong>Your Coach:</strong> {{ $json['Coach Name'] }} ({{ $json['Coach Email'] }})</li>\n      </ul>\n    </div>\n    \n    <div style=\"background: #ecfdf5; border-radius: 8px; padding: 20px; margin: 20px 0;\">\n      <h3 style=\"margin-top: 0; color: #059669;\">🎯 Getting Started</h3>\n      <p>Access your personalized training dashboard here:</p>\n      <a href=\"https://training.storehub.com/dashboard/my-training\" style=\"display: inline-block; background: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 10px;\">Open Learning Hub →</a>\n    </div>\n    \n    <p>Your coach <strong>{{ $json['Coach Name'] }}</strong> will guide you through your training. Don't hesitate to reach out if you have any questions!</p>\n    \n    <p style=\"margin-top: 30px;\">Best of luck,<br><strong>The StoreHub Training Team</strong></p>\n  </div>\n  \n  <div style=\"background: #f3f4f6; padding: 15px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 10px 10px;\">\n    <p style=\"margin: 0;\">StoreHub Training LMS | Questions? Contact your coach or andrea.kaur@storehub.com</p>\n  </div>\n</div>",
+        "options": {
+          "ccList": "={{ $json['Coach Email'] }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [750, 0],
+      "id": "send-email",
+      "name": "Send Welcome Email",
+      "credentials": { "gmailOAuth2": { "id": "M8WHs7W6uy2BUq7w", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Trainees", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Address": "={{ $json['Email Address'] }}",
+            "Status": "Email Sent",
+            "Email Sent Date": "={{ $now.toISO() }}"
+          },
+          "matchingColumns": ["Email Address"],
+          "schema": [
+            {"id": "Email Address", "displayName": "Email Address", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Status", "displayName": "Status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Email Sent Date", "displayName": "Email Sent Date", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1000, 0],
+      "id": "update-status",
+      "name": "Update Status to Email Sent",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Notification_Log", "mode": "name" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Log ID": "={{ 'WELCOME-' + $now.format('yyyyMMdd-HHmmss') }}",
+            "Notification Type": "Welcome Email",
+            "Recipient Email": "={{ $json['Email Address'] }}",
+            "Trainee Email": "={{ $json['Email Address'] }}",
+            "Subject": "={{ 'Welcome to StoreHub Training, ' + $json['Full Name'] + '!' }}",
+            "Sent At": "={{ $now.toISO() }}",
+            "Status": "Sent"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {"id": "Log ID", "displayName": "Log ID", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Notification Type", "displayName": "Notification Type", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Recipient Email", "displayName": "Recipient Email", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Trainee Email", "displayName": "Trainee Email", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Subject", "displayName": "Subject", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Sent At", "displayName": "Sent At", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "Status", "displayName": "Status", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1250, 0],
+      "id": "log-notification",
+      "name": "Log to Notification_Log",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    }
+  ],
+  "connections": {
+    "Every 30 Minutes": {
+      "main": [[{"node": "Get Trainees", "type": "main", "index": 0}]]
+    },
+    "Get Trainees": {
+      "main": [[{"node": "Filter Status = New", "type": "main", "index": 0}]]
+    },
+    "Filter Status = New": {
+      "main": [[{"node": "Send Welcome Email", "type": "main", "index": 0}]]
+    },
+    "Send Welcome Email": {
+      "main": [[{"node": "Update Status to Email Sent", "type": "main", "index": 0}]]
+    },
+    "Update Status to Email Sent": {
+      "main": [[{"node": "Log to Notification_Log", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

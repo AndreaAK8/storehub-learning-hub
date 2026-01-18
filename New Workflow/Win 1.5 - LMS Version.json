@@ -1,0 +1,655 @@
+{
+  "name": "Win 1.5: Role Overview - Day 2 Sender (LMS Version)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 16 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "789b6584-eb9f-446e-a07e-e15a1c0c08e8",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:R"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e8bc9825-dcb1-4aaa-bb75-2e00bfb58db4",
+      "name": "Read Master New Hire List",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter for Day 2 trainees who need role-specific overview\nconst items = $input.all();\nconst today = new Date();\ntoday.setHours(0, 0, 0, 0); // Reset to midnight for accurate day comparison\n\nconst filteredItems = [];\n\nfor (const item of items) {\n  const trainingStartDate = item.json['Training Start Date'];\n  const roleOverviewSent = item.json['Role Overview Sent Date'];\n  const department = item.json['Department'];\n  \n  // Skip if Training Start Date is missing\n  if (!trainingStartDate || trainingStartDate === '') {\n    continue;\n  }\n  \n  // Skip if Role Overview already sent (has a date value)\n  if (roleOverviewSent && roleOverviewSent !== '') {\n    continue;\n  }\n  \n  // Skip if not one of the target roles\n  if (!['Customer Success Manager', 'Onboarding Coordinator', 'Sales Coordinator'].includes(department)) {\n    continue;\n  }\n  \n  // Parse training start date (format: YYYY-MM-DD)\n  const startDate = new Date(trainingStartDate);\n  startDate.setHours(0, 0, 0, 0);\n  \n  // Calculate days since training start\n  const daysDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));\n  \n  // Check if today is Day 2\n  let shouldSend = false;\n  \n  if (daysDiff === 1) {\n    // Check if Day 2 is a weekday (Mon-Fri)\n    const day2Date = new Date(startDate);\n    day2Date.setDate(day2Date.getDate() + 1);\n    const dayOfWeek = day2Date.getDay(); // 0=Sunday, 6=Saturday\n    \n    if (dayOfWeek >= 1 && dayOfWeek <= 5) {\n      // Day 2 is a weekday, send today\n      shouldSend = true;\n    }\n  } else if (daysDiff === 2) {\n    // Check if Day 2 was Sunday, send on Monday (Day 3)\n    const day2Date = new Date(startDate);\n    day2Date.setDate(day2Date.getDate() + 1);\n    if (day2Date.getDay() === 0) { // Day 2 was Sunday\n      shouldSend = true;\n    }\n  } else if (daysDiff === 3) {\n    // Check if Day 2 was Saturday, send on Monday (Day 4)\n    const day2Date = new Date(startDate);\n    day2Date.setDate(day2Date.getDate() + 1);\n    if (day2Date.getDay() === 6) { // Day 2 was Saturday\n      shouldSend = true;\n    }\n  }\n  \n  if (shouldSend) {\n    filteredItems.push({\n      json: {\n        ...item.json,\n        'Days Since Training Start': daysDiff\n      }\n    });\n  }\n}\n\nreturn filteredItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "b7994eff-d4f6-4718-b3a0-cd62fa4885f1",
+      "name": "Date Calculation & Filtering"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Department }}",
+                    "rightValue": "Customer Success Manager",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e4791a12-b58b-46ca-a4e6-8d60a3179f3f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CSM"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "36b09b5e-3e5e-45b5-8d76-828059ecf438",
+                    "leftValue": "={{ $json.Department }}",
+                    "rightValue": "Onboarding Coordinator",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "OC"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ae7a5913-4267-4e72-a66b-925699a572f8",
+                    "leftValue": "={{ $json.Department }}",
+                    "rightValue": "Sales Coordinator",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SC"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        640,
+        -16
+      ],
+      "id": "43dd4a2a-34b9-4ec3-a3ac-7aa3069dca56",
+      "name": "Route by Role"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email Address'] }}",
+        "subject": "=Your Customer Success Manager Training Journey Starts Tomorrow!",
+        "emailType": "text",
+        "message": "=Hi {{ $json[\"Full Name\"] }},\n\nGreat work completing Day 1-2!\n\nYou've built a strong foundation in product knowledge.\n\nTomorrow, you'll begin your Customer Success Manager-specific training.\n\nTo help you prepare, I've created a comprehensive overview that covers:\n\n- Your role's mission and core responsibilities\n- Day-by-day training schedule with exact timings\n- Assessment breakdown and weightage\n- Your assigned coach and support contacts\n- Pro tips for success\n\nAccess Your Training Dashboard\n------------------------------\nhttps://training-lms.vercel.app/dashboard/my-training\n\nLog in with your @storehub.com Google account to see your personalized training schedule, track your progress, and access all training materials.\n\nPro Tip: Review your schedule tonight so you arrive Day 3 ready to hit the ground running!\n\nSee you tomorrow!\n\nBest regards,\nAndrea K.\nSenior Training & Knowledge Base Specialist",
+        "options": {
+          "ccList": "={{ $json[\"Coach Email\"] }}, andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1024,
+        -176
+      ],
+      "id": "ccd36b25-ce89-4a65-8e3a-86c44753c24c",
+      "name": "CSM Email",
+      "webhookId": "792a33b1-3c95-47c4-91ff-bc0ee5abaf63",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email Address'] }}",
+        "subject": "Your Onboarding Coordinator Training Journey Starts Tomorrow!",
+        "emailType": "text",
+        "message": "=Hi {{ $json[\"Full Name\"] }},\n\nGreat work completing Day 1-2!\n\nYou've built a strong foundation in product knowledge.\n\nTomorrow, you'll begin your Onboarding Coordinator-specific training.\n\nTo help you prepare, I've created a comprehensive overview that covers:\n\n- Your role's mission and core responsibilities\n- Day-by-day training schedule with exact timings\n- Assessment breakdown and weightage\n- Your assigned coach and support contacts\n- Pro tips for success\n\nAccess Your Training Dashboard\n------------------------------\nhttps://training-lms.vercel.app/dashboard/my-training\n\nLog in with your @storehub.com Google account to see your personalized training schedule, track your progress, and access all training materials.\n\nPro Tip: Review your schedule tonight so you arrive Day 3 ready to hit the ground running!\n\nSee you tomorrow!\n\nBest regards,\nAndrea K.\nSenior Training & Knowledge Base Specialist",
+        "options": {
+          "ccList": "={{ $json[\"Coach Email\"] }}, andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "e9dca681-103c-42db-84f1-b279c22e219b",
+      "name": "OC Email",
+      "webhookId": "fae3c522-c1a9-46d7-9116-8843479dfcc8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json[\"Email Address\"] }}",
+        "subject": "Your Sales Coordinator Training Journey Starts Tomorrow!",
+        "emailType": "text",
+        "message": "=Hi {{ $json[\"Full Name\"] }},\n\nGreat work completing Day 1-2!\n\nYou've built a strong foundation in product knowledge.\n\nTomorrow, you'll begin your Sales Coordinator-specific training.\n\nTo help you prepare, I've created a comprehensive overview that covers:\n\n- Your role's mission and core responsibilities\n- Day-by-day training schedule with exact timings\n- Assessment breakdown and weightage\n- Your assigned coach and support contacts\n- Pro tips for success\n\nAccess Your Training Dashboard\n------------------------------\nhttps://training-lms.vercel.app/dashboard/my-training\n\nLog in with your @storehub.com Google account to see your personalized training schedule, track your progress, and access all training materials.\n\nPro Tip: Review your schedule tonight so you arrive Day 3 ready to hit the ground running!\n\nSee you tomorrow!\n\nBest regards,\nAndrea K.\nSenior Training & Knowledge Base Specialist",
+        "options": {
+          "ccList": "={{ $json[\"Coach Email\"] }}, andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1024,
+        176
+      ],
+      "id": "cb224d71-8107-4dbc-97ec-fc6c3e78b0bc",
+      "name": "SC Email",
+      "webhookId": "eac5d8b4-0be9-4451-bb75-246498949257",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        -176
+      ],
+      "id": "6d7fc8bc-556a-4663-be97-5f5d197e9b7a",
+      "name": "Pass Through CSM"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        0
+      ],
+      "id": "94978619-9866-4d95-a303-b68ab0a28b3b",
+      "name": "Pass Through OC"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        176
+      ],
+      "id": "adeb9648-683b-4c60-b2ca-e2b04f674a4c",
+      "name": "Pass Through SC"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        -16
+      ],
+      "id": "a9a0008a-783e-495f-9dc5-4471be096061",
+      "name": "Combine"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Role Overview Sent Date": "={{ $now.toISO() }}",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Training Start Date",
+              "displayName": "Training Start Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Name",
+              "displayName": "Coach Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Email",
+              "displayName": "Coach Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent Date",
+              "displayName": "Email Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role Overview Sent Date",
+              "displayName": "Role Overview Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Required",
+              "displayName": "Total Assessments Required",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Completed",
+              "displayName": "Total Assessments Completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Incomplete",
+              "displayName": "Total Assessments Incomplete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Days since Training Start ",
+              "displayName": "Days since Training Start ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Reminder Sent",
+              "displayName": "Last Reminder Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reminder Count",
+              "displayName": "Reminder Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suvery Sent Date",
+              "displayName": "Suvery Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1776,
+        0
+      ],
+      "id": "33a8b3c3-a25c-4d2d-8eb4-f5a25ed01def",
+      "name": "Update All send dates",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Master New Hire List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Master New Hire List": {
+      "main": [
+        [
+          {
+            "node": "Date Calculation & Filtering",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date Calculation & Filtering": {
+      "main": [
+        [
+          {
+            "node": "Route by Role",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Role": {
+      "main": [
+        [
+          {
+            "node": "CSM Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OC Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "SC Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CSM Email": {
+      "main": [
+        [
+          {
+            "node": "Pass Through CSM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OC Email": {
+      "main": [
+        [
+          {
+            "node": "Pass Through OC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SC Email": {
+      "main": [
+        [
+          {
+            "node": "Pass Through SC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pass Through CSM": {
+      "main": [
+        [
+          {
+            "node": "Combine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pass Through OC": {
+      "main": [
+        [
+          {
+            "node": "Combine",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Pass Through SC": {
+      "main": [
+        [
+          {
+            "node": "Combine",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Combine": {
+      "main": [
+        [
+          {
+            "node": "Update All send dates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "lms-version-1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "Xph0OBhq3vXvy9uB",
+  "tags": []
+}

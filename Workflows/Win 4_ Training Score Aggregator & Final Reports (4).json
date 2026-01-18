@@ -1,0 +1,869 @@
+{
+  "name": "Win 4: Training Score Aggregator & Final Reports",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        -16
+      ],
+      "id": "7006c895-0c2c-4964-b656-8253b6e1366e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2122986852,
+          "mode": "list",
+          "cachedResultName": "Individual Progress",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=2122986852"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        -16
+      ],
+      "id": "b4ae3490-67bc-49b1-80bb-879d022eafbe",
+      "name": "Get Individual Progress",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1330781560,
+          "mode": "list",
+          "cachedResultName": "Training Completion & Final Score",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=1330781560"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        -208
+      ],
+      "id": "4cb2c2e2-0dda-44e8-b7de-68c53878a6fb",
+      "name": "Get Training Completion Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1844692346,
+          "mode": "list",
+          "cachedResultName": "Learning Score Weightage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1844692346"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        176
+      ],
+      "id": "9d39dccc-341c-4950-aa81-9f325918a971",
+      "name": "Get Learning Score Weightage",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        -400
+      ],
+      "id": "b69a371a-e1bb-4a24-8aae-1447ec01f1e0",
+      "name": "Get Master New Hire List",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 5
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        432,
+        -64
+      ],
+      "id": "77532a12-aa3f-4d81-b374-6d8c8ae6b0db",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ================================================================\n// WIN 4: TRAINING SCORE AGGREGATOR & FINAL REPORTS\n// WITH FULL ATTEMPT BREAKDOWN IN EMAIL\n// ================================================================\n\nconsole.log('=== WIN 4 STARTING ===');\n\n// STEP 1: Extract all input data\nconst allInputs = $input.all();\nconsole.log('Total inputs received:', allInputs.length);\n\nlet individualProgress = [];\nlet trainingCompletion = [];\nlet learningWeightage = [];\nlet masterList = [];\n\nallInputs.forEach((input, index) => {\n  const data = input.json;\n  \n  if (data['Assessment Name'] && data['Trainee Name']) {\n    individualProgress.push(data);\n  } else if (data['Training Status']) {\n    trainingCompletion.push(data);\n  } else if (data['Learning Score Weightage']) {\n    learningWeightage.push(data);\n  } else if (data['Status'] && data['Email Sent Date'] !== undefined) {\n    masterList.push(data);\n  }\n});\n\nconsole.log('Individual Progress records:', individualProgress.length);\nconsole.log('Training Completion records:', trainingCompletion.length);\nconsole.log('Learning Weightage records:', learningWeightage.length);\nconsole.log('Master List records:', masterList.length);\n\n// STEP 1B: Get Coach Directory\nconst coachDirectory = $('Get Coach Directory').all();\nconsole.log('Coach Directory records:', coachDirectory.length);\n\n// STEP 2: Build weightage lookup map\nconst weightageMap = new Map();\nlearningWeightage.forEach(item => {\n  const key = `${item.Role}_${item['Assessment Name']}`;\n  \n  let weight = 0;\n  const weightValue = item['Learning Score Weightage'];\n  \n  if (typeof weightValue === 'string') {\n    weight = parseFloat(weightValue.replace('%', '')) / 100;\n  } else if (typeof weightValue === 'number') {\n    if (weightValue <= 1) {\n      weight = weightValue;\n    } else {\n      weight = weightValue / 100;\n    }\n  }\n  \n  weightageMap.set(key, weight);\n});\n\nconsole.log('Weightage map built with', weightageMap.size, 'entries');\n\n// STEP 3: Count completions per trainee\nconst completionCounts = new Map();\n\nindividualProgress.forEach(record => {\n  const email = record.Email?.toLowerCase().trim();\n  if (!email) return;\n  \n  if (!completionCounts.has(email)) {\n    completionCounts.set(email, {\n      email: email,\n      trainee_name: record['Trainee Name'],\n      completed: 0,\n      assessments: []\n    });\n  }\n  \n  const traineeData = completionCounts.get(email);\n  traineeData.completed++;\n  traineeData.assessments.push({\n    name: record['Assessment Name'],\n    score: record.Score\n  });\n});\n\nconsole.log('Counted completions for', completionCounts.size, 'trainees');\n\n// STEP 4: Prepare Master List updates\nconst masterListUpdates = [];\n\nmasterList.forEach(trainee => {\n  if (trainee.Status !== 'Email Sent') return;\n  \n  const email = trainee['Email Address']?.toLowerCase().trim();\n  if (!email) return;\n  \n  const completionData = completionCounts.get(email);\n  const newCompleted = completionData ? completionData.completed : 0;\n  \n  let currentCompleted = trainee['Total Assessments Completed'];\n  if (currentCompleted === '' || currentCompleted === null || currentCompleted === undefined) {\n    currentCompleted = 0;\n  } else {\n    currentCompleted = parseInt(currentCompleted) || 0;\n  }\n  \n  if (newCompleted !== currentCompleted) {\n    const totalRequired = parseInt(trainee['Total Assessments Required']) || 0;\n    const newIncomplete = Math.max(0, totalRequired - newCompleted);\n    \n    masterListUpdates.push({\n      email: trainee['Email Address'],\n      trainee_name: trainee['Full Name'],\n      old_completed: currentCompleted,\n      new_completed: newCompleted,\n      new_incomplete: newIncomplete,\n      update_type: 'completion_count'\n    });\n  }\n});\n\nconsole.log('Master List updates needed:', masterListUpdates.length);\n\n// STEP 5: Process trainees ready for final report\nconst finalReports = [];\n\ntrainingCompletion.forEach(trainee => {\n  if (trainee['Training Status'] !== 'Ready for Final Report') {\n    return;\n  }\n  \n  const email = trainee.Email?.toLowerCase().trim();\n  if (!email) return;\n  \n  const participationScore = trainee['Participation Score'];\n  const highlights = trainee.Highlights;\n  const lowlights = trainee.Lowlights;\n  \n  if (!participationScore || !highlights || !lowlights) {\n    console.log(`Skipping ${trainee['Trainee Name']} - missing required fields`);\n    return;\n  }\n  \n  console.log(`\\n=== Processing final report for: ${trainee['Trainee Name']} ===`);\n  \n  const traineeScores = individualProgress.filter(record => \n    record.Email?.toLowerCase().trim() === email\n  );\n  \n  console.log(`Found ${traineeScores.length} assessment records`);\n  \n  if (traineeScores.length === 0) {\n    console.log(`WARNING: No scores found`);\n    return;\n  }\n  \n  const role = trainee['Department/Role'];\n  const country = trainee.Country;\n  \n  // ========================================\n  // 🆕 STEP 5A: COLLECT ALL ATTEMPTS FOR EACH ASSESSMENT\n  // ========================================\n  const allAttempts = new Map(); // key = assessment name, value = array of all attempts\n  const latestAttempts = new Map(); // key = assessment name, value = record with highest attempt\n  \n  traineeScores.forEach(record => {\n    const assessmentName = record['Assessment Name'];\n    const attemptNumber = parseInt(record['Attempt Number']) || 1;\n    \n    // Parse score\n    let scoreValue = 0;\n    const scoreString = record.Score;\n    if (typeof scoreString === 'string') {\n      scoreValue = parseFloat(scoreString.replace('%', ''));\n    } else {\n      scoreValue = parseFloat(scoreString);\n    }\n    if (scoreValue <= 1) {\n      scoreValue = scoreValue * 100;\n    }\n    \n    // Store all attempts\n    if (!allAttempts.has(assessmentName)) {\n      allAttempts.set(assessmentName, []);\n    }\n    allAttempts.get(assessmentName).push({\n      attempt: attemptNumber,\n      score: scoreValue,\n      record: record\n    });\n    \n    // Track latest attempt\n    const existing = latestAttempts.get(assessmentName);\n    if (!existing || attemptNumber > existing.attempt) {\n      latestAttempts.set(assessmentName, {\n        attempt: attemptNumber,\n        score: scoreValue,\n        record: record\n      });\n    }\n  });\n  \n  // Sort all attempts by attempt number\n  allAttempts.forEach((attempts, name) => {\n    attempts.sort((a, b) => a.attempt - b.attempt);\n  });\n  \n  console.log(`Using ${latestAttempts.size} unique assessments (latest attempts only)`);\n  \n  // STEP 5B: Define mock test groups\n  const mockTestGroups = {\n    'Business Consultant': {\n      groupName: 'Mock Test',\n      patterns: ['BC Mock Test - F&B', 'BC Mock Test - Retail']\n    },\n    'Sales Coordinator': {\n      groupName: 'SC Mock Test',\n      patterns: ['SC Mock Test - F&B', 'SC Mock Test - Retail']\n    },\n    'Onboarding Specialist': {\n      groupName: 'Mock Test',\n      patterns: ['Training Mock Test (F&B)', 'Training Mock Test (Retail)']\n    },\n    'Customer Success Manager': {\n      groupName: 'Mock Test',\n      patterns: ['CSM Roleplay Assessment - 1', 'CSM Roleplay Assessment - 2']\n    },\n    'Merchant Onboarding Manager': {\n      groupName: 'Mock Test',\n      patterns: ['Welcome Call Assessment', 'Go Live Assessment', 'Training Mock Test (F&B)', 'Training Mock Test (Retail)']\n    }\n  };\n  \n  const mockGroup = mockTestGroups[role];\n  \n  // STEP 5C: Group and calculate scores (using latest attempts only)\n  const assessmentGroups = new Map();\n  const processedAssessments = new Set();\n  \n  latestAttempts.forEach((latestData, assessmentName) => {\n    // Skip BC SPIN Trial\n    if (assessmentName === 'BC SPIN Trial Session') {\n      console.log(`Skipping ${assessmentName} (trial only)`);\n      return;\n    }\n    \n    // Check if part of mock test group\n    let groupKey = assessmentName;\n    let isMockTest = false;\n    \n    if (mockGroup && mockGroup.patterns.includes(assessmentName)) {\n      groupKey = mockGroup.groupName;\n      isMockTest = true;\n    }\n    \n    if (!assessmentGroups.has(groupKey)) {\n      assessmentGroups.set(groupKey, []);\n    }\n    \n    // Get all attempts for this assessment\n    const attempts = allAttempts.get(assessmentName) || [];\n    \n    assessmentGroups.get(groupKey).push({\n      name: assessmentName,\n      score: latestData.score,\n      isMockTest: isMockTest,\n      finalAttempt: latestData.attempt,\n      totalAttempts: attempts.length,\n      attemptHistory: attempts\n    });\n    \n    processedAssessments.add(assessmentName);\n  });\n  \n  console.log(`\\nGrouped into ${assessmentGroups.size} assessment groups`);\n  \n  // STEP 5D: Calculate weighted scores\n  let totalWeightedScore = 0;\n  const assessmentBreakdown = [];\n  let itemNumber = 1;\n  \n  assessmentGroups.forEach((assessments, groupKey) => {\n    console.log(`\\nProcessing group: ${groupKey}`);\n    \n    // Get weight from map\n    const weightKey = `${role}_${groupKey}`;\n    const weight = weightageMap.get(weightKey);\n    \n    console.log(`Looking for: ${weightKey}, Found: ${weight ? (weight * 100) + '%' : 'NOT FOUND'}`);\n    \n    if (!weight) {\n      console.log(`WARNING: No weightage found for ${weightKey}`);\n      \n      assessments.forEach(a => {\n        assessmentBreakdown.push(\n          `${itemNumber++}. ${a.name}: ${Math.round(a.score)}% (Weight: N/A)`\n        );\n        \n        // Show attempt history if multiple attempts\n        if (a.totalAttempts > 1) {\n          a.attemptHistory.forEach((att, idx) => {\n            const icon = att.score >= 80 ? '✅' : '❌';\n            const isFinal = att.attempt === a.finalAttempt ? ' ← Final' : '';\n            const prefix = idx === a.attemptHistory.length - 1 ? '   └─' : '   ├─';\n            assessmentBreakdown.push(\n              `${prefix} Attempt ${att.attempt}: ${Math.round(att.score)}% ${icon}${isFinal}`\n            );\n          });\n        }\n      });\n      return;\n    }\n    \n    // Calculate average if multiple assessments in group\n    const avgScore = assessments.reduce((sum, a) => sum + a.score, 0) / assessments.length;\n    const weightedScore = (avgScore / 100) * weight * 100;\n    totalWeightedScore += weightedScore;\n    \n    console.log(`${groupKey}: Avg ${Math.round(avgScore)}% × ${Math.round(weight * 100)}% = ${Math.round(weightedScore)}%`);\n    \n    // Format for breakdown\n    if (assessments.length > 1 && assessments[0].isMockTest) {\n      // Mock test group - show all components first\n      assessments.forEach(a => {\n        const passIcon = a.score >= 80 ? '✅' : '❌';\n        const attemptInfo = a.totalAttempts > 1 ? ` (${a.totalAttempts} attempts)` : '';\n        assessmentBreakdown.push(\n          `     ├─ ${a.name}: ${Math.round(a.score)}% ${passIcon}${attemptInfo}`\n        );\n        \n        // Show attempt history if multiple attempts\n        if (a.totalAttempts > 1) {\n          a.attemptHistory.forEach((att, idx) => {\n            const icon = att.score >= 80 ? '✅' : '❌';\n            const isFinal = att.attempt === a.finalAttempt ? ' ← Final' : '';\n            const prefix = idx === a.attemptHistory.length - 1 ? '        └─' : '        ├─';\n            assessmentBreakdown.push(\n              `${prefix} Attempt ${att.attempt}: ${Math.round(att.score)}% ${icon}${isFinal}`\n            );\n          });\n        }\n      });\n      \n      const avgIcon = avgScore >= 80 ? '✅' : '❌';\n      assessmentBreakdown.push(\n        `${itemNumber++}. → Mock Test (Average): ${Math.round(avgScore)}% (Weight: ${Math.round(weight * 100)}%) → ${Math.round(weightedScore)}% ${avgIcon}`\n      );\n    } else {\n      // Single assessment\n      const a = assessments[0];\n      const passIcon = a.score >= 80 ? '✅' : '❌';\n      const attemptInfo = a.totalAttempts > 1 ? ` (${a.totalAttempts} attempts)` : '';\n      \n      assessmentBreakdown.push(\n        `${itemNumber++}. ${a.name}: ${Math.round(a.score)}% ${passIcon}${attemptInfo}`\n      );\n      assessmentBreakdown.push(\n        `   (Weight: ${Math.round(weight * 100)}%) → ${Math.round(weightedScore)}%`\n      );\n      \n      // 🆕 Show attempt history if multiple attempts\n      if (a.totalAttempts > 1) {\n        a.attemptHistory.forEach((att, idx) => {\n          const icon = att.score >= 80 ? '✅' : '❌';\n          const isFinal = att.attempt === a.finalAttempt ? ' ← Final' : '';\n          const prefix = idx === a.attemptHistory.length - 1 ? '   └─' : '   ├─';\n          assessmentBreakdown.push(\n            `${prefix} Attempt ${att.attempt}: ${Math.round(att.score)}% ${icon}${isFinal}`\n          );\n        });\n      }\n    }\n  });\n  \n  // STEP 5E: Calculate final scores with 80/20 weighting\n  const rawLearningScore = totalWeightedScore;\n  const learningScoreContribution = rawLearningScore * 0.8;\n  \n  console.log(`\\nRaw Learning Score: ${Math.round(rawLearningScore)}%`);\n  console.log(`Learning Score Contribution (80% weight): ${Math.round(learningScoreContribution)}%`);\n  \n  // Calculate Participation\n  const participationValue = parseFloat(participationScore);\n  const participationPercentage = (participationValue / 20) * 100;\n  const participationContribution = participationPercentage * 0.2;\n  \n  console.log(`Participation: ${participationValue}/20 = ${Math.round(participationPercentage)}% → ${Math.round(participationContribution)}% contribution`);\n  \n  // Final Score\n  const finalScore = learningScoreContribution + participationContribution;\n  console.log(`Final Score: ${Math.round(learningScoreContribution)}% + ${Math.round(participationContribution)}% = ${Math.round(finalScore)}%`);\n  \n  const overallStatus = finalScore >= 80 ? 'PASS ✅' : 'FAIL ❌';\n  \n  // STEP 5F: Look up all coaches for this Role + Country\n  const matchingCoaches = coachDirectory.filter(c => {\n    const coachRole = c.json['Role']?.trim();\n    const coachCountry = c.json['Country']?.trim();\n    return coachRole === role && coachCountry === country;\n  });\n  \n  const coachEmails = matchingCoaches\n    .map(c => c.json['Coach Email'])\n    .filter(email => email && email.trim())\n    .join(', ');\n  \n  const coachNames = matchingCoaches\n    .map(c => c.json['Coach Name'])\n    .filter(name => name && name.trim())\n    .join(', ');\n  \n  console.log(`Coaches for ${role} (${country}): ${coachNames || 'None found'}`);\n  \n  // Fallback to assigned coach if no matches\n  const finalCoachEmails = coachEmails || trainee['Coach Email'];\n  const finalCoachNames = coachNames || trainee['Coach Name'];\n  \n  // Build assessment list string\n  const assessmentList = assessmentBreakdown.join('\\n');\n  \n  finalReports.push({\n    trainee_name: trainee['Trainee Name'],\n    trainee_email: trainee.Email,\n    role: role,\n    country: country,\n    training_start_date: trainee['Training Start Date'],\n    assigned_coach_name: trainee['Coach Name'],\n    assigned_coach_email: trainee['Coach Email'],\n    coach_emails: finalCoachEmails,\n    coach_names: finalCoachNames,\n    raw_learning_score: Math.round(rawLearningScore),\n    learning_score: Math.round(learningScoreContribution),\n    participation_contribution: Math.round(participationContribution),\n    final_score: Math.round(finalScore),\n    overall_status: overallStatus,\n    highlights: highlights,\n    lowlights: lowlights,\n    assessment_breakdown: assessmentList,\n    total_assessments: processedAssessments.size,\n    update_type: 'final_report'\n  });\n});\n\nconsole.log('\\n=== WIN 4 COMPLETE ===');\nconsole.log('Final reports:', finalReports.length);\n\nconst allOutputs = [...masterListUpdates, ...finalReports];\nreturn allOutputs.length > 0 ? allOutputs : [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        656,
+        -16
+      ],
+      "id": "457abfcf-e9ce-498d-bb6d-ff6efeb6c688",
+      "name": "Process Scores & Generate Reports"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.update_type }}",
+                    "rightValue": "completion_count",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5ed0db87-2678-4c5a-8c29-9278a4a5b1ba"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": "="
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "946753c2-275e-4b8a-80ee-e584dedc7894",
+                    "leftValue": "={{ $json.update_type }}",
+                    "rightValue": "final_report",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        -16
+      ],
+      "id": "f7be360a-bcd6-4c29-96d6-c496a63c0ed0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Address": "={{ $json.email }}",
+            "Total Assessments Completed": "={{ $json.new_completed }}",
+            "Total Assessments Incomplete": "={{ $json.new_incomplete }}"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Training Start Date",
+              "displayName": "Training Start Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Name",
+              "displayName": "Coach Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Email",
+              "displayName": "Coach Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent Date",
+              "displayName": "Email Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role Overview Sent Date",
+              "displayName": "Role Overview Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Assessments Required",
+              "displayName": "Total Assessments Required",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Completed",
+              "displayName": "Total Assessments Completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Incomplete",
+              "displayName": "Total Assessments Incomplete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Days since Training Start ",
+              "displayName": "Days since Training Start ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Reminder Sent",
+              "displayName": "Last Reminder Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reminder Count",
+              "displayName": "Reminder Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suvery Sent Date",
+              "displayName": "Suvery Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1104,
+        -208
+      ],
+      "id": "e5307011-c680-4044-aa81-15e2248e33da",
+      "name": "Update Master List Completion Counts",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.coach_emails }}",
+        "subject": "=📊 Final Training Report: {{ $json.trainee_name }} - {{ $json.role }}",
+        "emailType": "text",
+        "message": "=Hi {{ $json.coach_names }}\n\n{{ $json.trainee_name }} has completed their training program! Here's the final performance summary:\n\n═══════════════════════════════════════════════\n📈 FINAL TRAINING SCORE: {{ $json.final_score }}%\n═══════════════════════════════════════════════\n\nLearning Score: {{ $json.learning_score }}%/80%\nParticipation Score: {{ $json.participation_contribution }}%/20%\n\nTraining Period: {{ $json.training_start_date }} - {{ $now.format('yyyy-MM-dd') }}\nCountry: {{ $json.country }}\n\n═══════════════════════════════════════════════\n📊 ASSESSMENT BREAKDOWN\n═══════════════════════════════════════════════\n\nTotal Assessments Completed: {{ $json.total_assessments }}\n\n{{ $json.assessment_breakdown }}\n\n═══════════════════════════════════════════════\n✨ HIGHLIGHTS\n═══════════════════════════════════════════════\n{{ $json.highlights }}\n\n═══════════════════════════════════════════════\n⚠️ AREAS FOR DEVELOPMENT\n═══════════════════════════════════════════════\n{{ $json.lowlights }}\n\n═══════════════════════════════════════════════\nOverall Result: {{ $json.overall_status }}\n═══════════════════════════════════════════════\n\nThis report has been logged in the Performance Dashboard.\n\nBest regards,\nAndrea K.\nSr. Training & KB Specialist",
+        "options": {
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1120,
+        176
+      ],
+      "id": "dd178552-3057-4277-9d6c-e8d311a9d682",
+      "name": "Send Final Report to Coach",
+      "webhookId": "7f1cff75-45bd-484e-8343-6d3006298553",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1330781560,
+          "mode": "list",
+          "cachedResultName": "Training Completion & Final Score",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=1330781560"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.trainee_email }}",
+            "Learning Score": "={{ $json.learning_score }}",
+            "Final Score": "={{ $json.final_score }}",
+            "Training Status": "Report Sent",
+            "Report Sent Date": "={{ $now.toISO() }}",
+            "row_number": 0,
+            "Trainee Name": "={{ $json.trainee_name }}",
+            "Department/Role": "={{ $json.role }}",
+            "Country": "={{ $json.country }}",
+            "Training Start Date": "={{ $json.training_start_date }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Trainee Name",
+              "displayName": "Trainee Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Department/Role",
+              "displayName": "Department/Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Training Start Date",
+              "displayName": "Training Start Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Training Status",
+              "displayName": "Training Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Learning Score",
+              "displayName": "Learning Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Participation Score",
+              "displayName": "Participation Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Final Score",
+              "displayName": "Final Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Highlights",
+              "displayName": "Highlights",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lowlights",
+              "displayName": "Lowlights",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Name",
+              "displayName": "Coach Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Email",
+              "displayName": "Coach Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Report Sent Date",
+              "displayName": "Report Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "ccf43115-9380-413d-a79c-6d15f9311e0b",
+      "name": "Mark Report as Sent",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1409163176,
+          "mode": "list",
+          "cachedResultName": "Coach & Managers Directory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1409163176"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "=A:H"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        368
+      ],
+      "id": "9bb2a5eb-ce13-4f18-900c-7c2ebac27ae2",
+      "name": "Get Coach Directory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Individual Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Training Completion Sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Learning Score Weightage",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Master New Hire List",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Coach Directory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Master New Hire List": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Training Completion Sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get Individual Progress": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Get Learning Score Weightage": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Process Scores & Generate Reports",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Scores & Generate Reports": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Update Master List Completion Counts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Final Report to Coach",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mark Report as Sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Final Report to Coach": {
+      "main": [
+        []
+      ]
+    },
+    "Get Coach Directory": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "35c95e30-abc8-49ea-a764-e8c04b53711c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "uHhEkAhtHbppuCHF",
+  "tags": []
+}

@@ -1,0 +1,1424 @@
+{
+  "name": "Win 3: Incomplete Assessment Alerter",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 18
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        32
+      ],
+      "id": "4421bc35-5f3c-4edb-bab0-e0e6328d20a6",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:U"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        -128
+      ],
+      "id": "4600e53e-b6c7-43ae-80bb-994a81b2db92",
+      "name": "Get All Trainees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== WIN 3 ENHANCED: RED + ORANGE ALERTS WITH ATTEMPT TRACKING =====\n\nconsole.log('=== STARTING ENHANCED SMART REMINDER LOGIC ===');\n\n// ========================================\n// STEP 1: GET ALL DATA SOURCES\n// ========================================\n\nconst coachDirectory = $('Get Coach Directory').all();\nconsole.log(`✅ Coach Directory: ${coachDirectory.length} entries`);\n\nlet masterTrainingStatus = [];\ntry {\n  masterTrainingStatus = $('Get Master Training Status').all();\n  console.log(`✅ Master Training Status: ${masterTrainingStatus.length} entries`);\n} catch (e) {\n  console.log('⚠️ Could not load Master Training Status');\n}\n\nlet individualProgress = [];\ntry {\n  individualProgress = $('Get Individual Progress').all();\n  console.log(`✅ Individual Progress: ${individualProgress.length} entries`);\n} catch (e) {\n  console.log('⚠️ Could not load Individual Progress');\n}\n\nlet assessmentSchedule = [];\ntry {\n  assessmentSchedule = $('Get Assessment Schedule Configuration').all();\n  console.log(`✅ Assessment Schedule: ${assessmentSchedule.length} entries`);\n} catch (e) {\n  console.log('⚠️ Could not load Assessment Schedule');\n}\n\n// ========================================\n// 🆕 GET ALERT LOG TO PREVENT DUPLICATES\n// ========================================\n\nlet alertLog = [];\ntry {\n  alertLog = $('Get Alert Log').all();\n  console.log(`✅ Alert Log: ${alertLog.length} entries`);\n} catch (e) {\n  console.log('⚠️ Could not load Alert Log - duplicates may occur');\n}\n\n// Build set of ALL previously alerted trainees (send only ONCE until status changes)\nconst previouslyAlerted = new Set();\n\nalertLog.forEach(log => {\n  const email = log.json['Trainee Email']?.toLowerCase().trim();\n  const alertType = log.json['Alert Type'];\n  \n  if (email && alertType) {\n    previouslyAlerted.add(`${email}_${alertType}`);\n  }\n});\n\nconsole.log(`📋 Found ${previouslyAlerted.size} previously alerted trainees to skip`);\n\n// ========================================\n// BUILD LOOKUP MAPS\n// ========================================\n\n// Build training status lookup by email\nconst trainingStatusMap = new Map();\nmasterTrainingStatus.forEach(record => {\n  const email = record.json['Trainee Email']?.toLowerCase().trim();\n  if (email) {\n    trainingStatusMap.set(email, {\n      currentStatus: record.json['Current Status'] || '',\n      delayReason: record.json['Delay Reason'] || '',\n      totalDaysExtended: parseInt(record.json['Total Days Extended']) || 0,\n      performanceFlag: record.json['Performance Flag'] || '',\n      notes: record.json['Notes'] || '',\n      traineeName: record.json['Trainee Name'] || '',\n      role: record.json['Role'] || '',\n      country: record.json['Country'] || '',\n      coachName: record.json['Coach Name'] || '',\n      currentTrainingDay: record.json['Current Training Day'] || ''\n    });\n  }\n});\n\n// ========================================\n// 🆕 BUILD ASSESSMENT PROGRESS WITH ATTEMPTS\n// ========================================\n\nconst assessmentProgressMap = new Map();\n\nindividualProgress.forEach(record => {\n  const email = record.json['Email']?.toLowerCase().trim();\n  if (!email) return;\n  \n  if (!assessmentProgressMap.has(email)) {\n    assessmentProgressMap.set(email, []);\n  }\n  \n  let score = record.json['Score'];\n  if (typeof score === 'string') {\n    score = parseFloat(score.replace('%', ''));\n  } else if (typeof score === 'number' && score <= 1) {\n    score = score * 100;\n  }\n  \n  const attemptNumber = parseInt(record.json['Attempt Number']) || 1;\n  const passFail = record.json['Pass/Fail'] || (score >= 80 ? 'PASS' : 'FAIL');\n  \n  assessmentProgressMap.get(email).push({\n    name: record.json['Assessment Name'],\n    score: score,\n    passFail: passFail,\n    attemptNumber: attemptNumber\n  });\n});\n\n// ========================================\n// 🆕 HELPER: COUNT FAILED ATTEMPTS PER ASSESSMENT\n// ========================================\n\nfunction getFailedAttemptsAnalysis(email) {\n  const assessments = assessmentProgressMap.get(email) || [];\n  const failedByAssessment = new Map();\n  \n  // Group by assessment name, count failures\n  assessments.forEach(a => {\n    if (a.passFail === 'FAIL' || (a.score < 80 && a.score > 0)) {\n      const name = a.name;\n      if (!failedByAssessment.has(name)) {\n        failedByAssessment.set(name, []);\n      }\n      failedByAssessment.get(name).push({\n        attempt: a.attemptNumber,\n        score: a.score\n      });\n    }\n  });\n  \n  // Find max failed attempts on any single assessment\n  let maxFailedAttempts = 0;\n  let worstAssessment = null;\n  let worstDetails = [];\n  \n  failedByAssessment.forEach((failures, name) => {\n    if (failures.length > maxFailedAttempts) {\n      maxFailedAttempts = failures.length;\n      worstAssessment = name;\n      worstDetails = failures;\n    }\n  });\n  \n  return {\n    maxFailedAttempts,\n    worstAssessment,\n    worstDetails,\n    allFailedAssessments: failedByAssessment\n  };\n}\n\n// Build required assessments by role\nconst requiredByRole = new Map();\nassessmentSchedule.forEach(record => {\n  const role = record.json['Role'];\n  const assessmentName = record.json['Assessment Name'];\n  if (!role || !assessmentName) return;\n  \n  if (!requiredByRole.has(role)) {\n    requiredByRole.set(role, []);\n  }\n  requiredByRole.get(role).push(assessmentName);\n});\n\nconsole.log(`📋 Roles with assessments: ${Array.from(requiredByRole.keys()).join(', ')}`);\n\n// System delays (suppress reminders)\nconst SYSTEM_DELAYS = [\n  'Buddy Unavailable',\n  'Coach Unavailable',\n  'Assessment Postponed (Operational)'\n];\n\n// ========================================\n// STEP 2: HELPER FUNCTIONS\n// ========================================\n\nfunction getCoachEmail(coachName) {\n  if (!coachName) return 'andrea.kaur@storehub.com';\n  \n  const coach = coachDirectory.find(c => \n    c.json['Coach Name']?.toLowerCase().trim() === coachName.toLowerCase().trim()\n  );\n  \n  return coach?.json['Coach Email'] || `${coachName.toLowerCase().replace(/\\s+/g, '.')}@storehub.com`;\n}\n\n// ========================================\n// SMART ASSESSMENT MATCHING\n// ========================================\n\nfunction normalizeAssessmentName(name) {\n  if (!name) return '';\n  \n  return name.toLowerCase()\n    .replace(/^(bc|csm|care|oc|sc|mom)\\s*/i, '')\n    .replace(/\\s*assessment\\s*/gi, ' ')\n    .replace(/\\s*skills\\s*/gi, ' ')\n    .replace(/\\s*session\\s*/gi, ' ')\n    .replace(/\\s*attempt\\s*/gi, ' ')\n    .replace(/[-_]/g, ' ')\n    .replace(/[()]/g, ' ')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction getKeyWords(name) {\n  const normalized = normalizeAssessmentName(name);\n  const keywords = [];\n  \n  if (/pitching/i.test(normalized)) keywords.push('pitching');\n  if (/spin/i.test(normalized)) keywords.push('spin');\n  if (/closing/i.test(normalized)) keywords.push('closing');\n  if (/mock\\s*test/i.test(normalized)) keywords.push('mocktest');\n  if (/full\\s*pitching/i.test(normalized)) keywords.push('fullpitching');\n  if (/full\\s*call/i.test(normalized)) keywords.push('fullcall');\n  if (/roleplay/i.test(normalized)) keywords.push('roleplay');\n  if (/hardware/i.test(normalized)) keywords.push('hardware');\n  if (/welcome\\s*call/i.test(normalized)) keywords.push('welcomecall');\n  if (/go\\s*live/i.test(normalized)) keywords.push('golive');\n  if (/objection/i.test(normalized)) keywords.push('objection');\n  if (/training\\s*(assessment|mock)/i.test(normalized)) keywords.push('training');\n  if (/all\\s*in\\s*one/i.test(normalized)) keywords.push('allinone');\n  if (/networking/i.test(normalized)) keywords.push('networking');\n  \n  if (/f&b|f\\s*&\\s*b|fnb/i.test(normalized)) keywords.push('fnb');\n  if (/retail/i.test(normalized)) keywords.push('retail');\n  \n  const numMatch = normalized.match(/(\\d+)/);\n  if (numMatch) {\n    if (/spin|closing/i.test(normalized)) {\n      keywords.push(`session${numMatch[1]}`);\n    }\n  }\n  \n  if (/trial/i.test(normalized)) keywords.push('trial');\n  \n  return keywords;\n}\n\nfunction assessmentsMatch(scheduleName, completedName) {\n  const normSchedule = normalizeAssessmentName(scheduleName);\n  const normCompleted = normalizeAssessmentName(completedName);\n  \n  if (normSchedule === normCompleted) return true;\n  \n  const scheduleKeys = getKeyWords(scheduleName);\n  const completedKeys = getKeyWords(completedName);\n  \n  if (scheduleKeys.length === 0 || completedKeys.length === 0) {\n    return normSchedule.includes(normCompleted) || normCompleted.includes(normSchedule);\n  }\n  \n  const allMatch = scheduleKeys.every(sk => completedKeys.includes(sk));\n  \n  const scheduleHasSession = scheduleKeys.some(k => k.startsWith('session'));\n  const completedHasSession = completedKeys.some(k => k.startsWith('session'));\n  \n  if (scheduleHasSession && completedHasSession) {\n    const scheduleSession = scheduleKeys.find(k => k.startsWith('session'));\n    const completedSession = completedKeys.find(k => k.startsWith('session'));\n    if (scheduleSession !== completedSession) return false;\n  }\n  \n  return allMatch;\n}\n\n// ========================================\n// 🆕 ENHANCED ASSESSMENT SUMMARY WITH ATTEMPTS\n// ========================================\n\nfunction getAssessmentSummary(email, role) {\n  const assessments = assessmentProgressMap.get(email) || [];\n  const required = requiredByRole.get(role) || [];\n  \n  // Group by assessment name to get latest attempt\n  const latestByAssessment = new Map();\n  assessments.forEach(a => {\n    const name = a.name;\n    if (!latestByAssessment.has(name) || a.attemptNumber > latestByAssessment.get(name).attemptNumber) {\n      latestByAssessment.set(name, a);\n    }\n  });\n  \n  const completed = latestByAssessment.size;\n  const totalRequired = required.length || completed;\n  \n  // Count pass/fail based on LATEST attempt only\n  let passed = 0;\n  let failed = 0;\n  const failedList = [];\n  \n  latestByAssessment.forEach((a, name) => {\n    if (a.passFail === 'PASS' || a.score >= 80) {\n      passed++;\n    } else if (a.score > 0) {\n      failed++;\n      const attemptInfo = a.attemptNumber > 1 ? ` (Attempt ${a.attemptNumber})` : '';\n      failedList.push(`• ${name}: ${Math.round(a.score)}%${attemptInfo}`);\n    }\n  });\n  \n  // Find pending assessments\n  const pending = [];\n  required.forEach(reqName => {\n    const isCompleted = Array.from(latestByAssessment.keys()).some(compName => \n      assessmentsMatch(reqName, compName)\n    );\n    if (!isCompleted) {\n      pending.push(reqName);\n    }\n  });\n  \n  // 🆕 Get failed attempts analysis\n  const failedAnalysis = getFailedAttemptsAnalysis(email);\n  \n  return {\n    completed,\n    totalRequired,\n    completionRate: totalRequired > 0 ? Math.round((completed / totalRequired) * 100) : 0,\n    passed,\n    failed,\n    failedList: failedList.join('\\n') || 'None',\n    pendingCount: pending.length,\n    pendingList: pending.length > 0 ? pending.map(p => `• ${p}`).join('\\n') : 'None',\n    // 🆕 Attempt tracking\n    maxFailedAttempts: failedAnalysis.maxFailedAttempts,\n    worstAssessment: failedAnalysis.worstAssessment,\n    worstDetails: failedAnalysis.worstDetails,\n    allFailedAssessments: failedAnalysis.allFailedAssessments\n  };\n}\n\nfunction formatAssessmentSection(summary) {\n  let section = `📋 ASSESSMENT PROGRESS\\n`;\n  section += `• Completed: ${summary.completed}/${summary.totalRequired} (${summary.completionRate}%)\\n`;\n  section += `• Passed: ${summary.passed} ✅\\n`;\n  section += `• Failed: ${summary.failed} ❌\\n\\n`;\n  \n  if (summary.failed > 0) {\n    section += `Failed Assessments:\\n${summary.failedList}\\n\\n`;\n  }\n  \n  // 🆕 Show multiple failed attempts warning\n  if (summary.maxFailedAttempts >= 2) {\n    section += `⚠️ RETRY PATTERN DETECTED:\\n`;\n    section += `• ${summary.worstAssessment}: ${summary.maxFailedAttempts} failed attempts\\n`;\n    summary.worstDetails.forEach(d => {\n      section += `  └─ Attempt ${d.attempt}: ${Math.round(d.score)}%\\n`;\n    });\n    section += '\\n';\n  }\n  \n  if (summary.pendingCount > 0) {\n    section += `Pending (${summary.pendingCount}):\\n${summary.pendingList}`;\n  } else {\n    section += `Pending: None`;\n  }\n  \n  return section;\n}\n\n// ========================================\n// STEP 3: DETECT RED & ORANGE ALERTS\n// ========================================\n\nconst redAlerts = [];\nconst orangeAlerts = [];\nconst processedEmails = new Set();\nlet skippedDuplicates = 0;\n\nmasterTrainingStatus.forEach(record => {\n  const email = record.json['Trainee Email']?.toLowerCase().trim();\n  const traineeName = record.json['Trainee Name'];\n  const currentStatus = record.json['Current Status'] || '';\n  const delayReason = record.json['Delay Reason'] || '';\n  const performanceFlag = record.json['Performance Flag'] || '';\n  const totalDaysExtended = parseInt(record.json['Total Days Extended']) || 0;\n  const coachName = record.json['Coach Name'];\n  const role = record.json['Role'];\n  const country = record.json['Country'];\n  const notes = record.json['Notes'] || '';\n  const currentTrainingDay = record.json['Current Training Day'] || '';\n  \n  if (!email || !traineeName) return;\n  \n  const assessmentSummary = getAssessmentSummary(email, role);\n  const assessmentSection = formatAssessmentSection(assessmentSummary);\n  \n  // ========================================\n  // CHECK 1: RED ALERT\n  // - MIA status\n  // - Red Performance Flag  \n  // - 🆕 3+ failed attempts on same assessment\n  // ========================================\n  \n  const isMIA = currentStatus === 'MIA' || delayReason === 'MIA';\n  const isRedFlag = performanceFlag === 'Red';\n  const hasMultipleFailures = assessmentSummary.maxFailedAttempts >= 3;  // 🆕\n  \n  if (isMIA || isRedFlag || hasMultipleFailures) {\n    // CHECK FOR DUPLICATE\n    const alertKey = `${email}_RED`;\n    if (previouslyAlerted.has(alertKey)) {\n      console.log(`⏭️ Skipping RED alert for ${traineeName} (already alerted previously)`);\n      skippedDuplicates++;\n      processedEmails.add(email);\n      return;\n    }\n    \n    let alertReason = '';\n    let issueDetected = '';\n    \n    if (isMIA) {\n      alertReason = 'MIA - Trainee unreachable';\n      issueDetected = 'Trainee has been unreachable and marked as Missing in Action (MIA).';\n    } else if (isRedFlag) {\n      alertReason = 'Red Flag - Critical performance/attendance concern';\n      if (notes.toLowerCase().includes('attendance') || notes.toLowerCase().includes('mc') || notes.toLowerCase().includes('leave')) {\n        issueDetected = `Multiple attendance disruptions impacting training timeline.\\nTotal days extended: ${totalDaysExtended}`;\n      } else {\n        issueDetected = `Performance concerns requiring immediate attention. Days extended: ${totalDaysExtended}`;\n      }\n    } else if (hasMultipleFailures) {\n      // 🆕 NEW: Auto-detected from attempt data\n      alertReason = `Multiple Failed Attempts - ${assessmentSummary.worstAssessment}`;\n      issueDetected = `Trainee has failed \"${assessmentSummary.worstAssessment}\" ${assessmentSummary.maxFailedAttempts} times.\\n`;\n      issueDetected += `This indicates a significant knowledge gap requiring immediate intervention.\\n\\n`;\n      issueDetected += `Attempt History:\\n`;\n      assessmentSummary.worstDetails.forEach(d => {\n        issueDetected += `• Attempt ${d.attempt}: ${Math.round(d.score)}%\\n`;\n      });\n    }\n    \n    console.log(`🔴 RED ALERT: ${traineeName} (${alertReason})`);\n    \n    redAlerts.push({\n      json: {\n        trainee_name: traineeName,\n        trainee_email: email,\n        coach_name: coachName,\n        coach_email: getCoachEmail(coachName),\n        role: role,\n        country: country,\n        current_training_day: currentTrainingDay,\n        days_extended: totalDaysExtended,\n        delay_reason: delayReason,\n        performance_flag: performanceFlag,\n        notes: notes,\n        alert_reason: alertReason,\n        is_mia: isMIA,\n        is_multiple_failures: hasMultipleFailures,\n        failed_attempts: assessmentSummary.maxFailedAttempts,\n        worst_assessment: assessmentSummary.worstAssessment,\n        assessment_section: assessmentSection,\n        issue_detected: issueDetected,\n        alert_type: 'RED',\n        alert_level: 'red',\n        alert_emoji: '🔴'\n      }\n    });\n    \n    processedEmails.add(email);\n    return;\n  }\n  \n  // ========================================\n  // CHECK 2: ORANGE ALERT\n  // - Trainee Not Ready delay reason\n  // - Orange Performance Flag\n  // - 🆕 2 failed attempts on same assessment\n  // ========================================\n  \n  const isOrangeFlag = performanceFlag === 'Orange';\n  const isTraineeNotReady = delayReason === 'Trainee Not Ready (Needs More Time)';\n  const hasTwoFailures = assessmentSummary.maxFailedAttempts === 2;  // 🆕\n  \n  if (isOrangeFlag || isTraineeNotReady || hasTwoFailures) {\n    // CHECK FOR DUPLICATE\n    const alertKey = `${email}_ORANGE`;\n    if (previouslyAlerted.has(alertKey)) {\n      console.log(`⏭️ Skipping ORANGE alert for ${traineeName} (already alerted previously)`);\n      skippedDuplicates++;\n      processedEmails.add(email);\n      return;\n    }\n    \n    let alertReason = '';\n    let issueDetected = '';\n    \n    if (isTraineeNotReady) {\n      alertReason = 'Trainee Not Ready - Needs more time';\n      issueDetected = `Trainee has requested additional time to prepare for assessments.\\nThis may indicate knowledge gaps or need for additional coaching support.`;\n    } else if (isOrangeFlag) {\n      alertReason = 'Orange Flag - Coaching intervention needed';\n      issueDetected = `Performance flag indicates coaching intervention needed.\\nDelay Reason: ${delayReason || 'N/A'}\\nDays extended: ${totalDaysExtended}`;\n    } else if (hasTwoFailures) {\n      // 🆕 NEW: Auto-detected from attempt data\n      alertReason = `Second Failed Attempt - ${assessmentSummary.worstAssessment}`;\n      issueDetected = `Trainee has failed \"${assessmentSummary.worstAssessment}\" twice.\\n`;\n      issueDetected += `Proactive coaching intervention recommended before third attempt.\\n\\n`;\n      issueDetected += `Attempt History:\\n`;\n      assessmentSummary.worstDetails.forEach(d => {\n        issueDetected += `• Attempt ${d.attempt}: ${Math.round(d.score)}%\\n`;\n      });\n    }\n    \n    console.log(`🟠 ORANGE ALERT: ${traineeName} (${alertReason})`);\n    \n    orangeAlerts.push({\n      json: {\n        trainee_name: traineeName,\n        trainee_email: email,\n        coach_name: coachName,\n        coach_email: getCoachEmail(coachName),\n        role: role,\n        country: country,\n        current_training_day: currentTrainingDay,\n        days_extended: totalDaysExtended,\n        delay_reason: delayReason,\n        performance_flag: performanceFlag,\n        notes: notes,\n        alert_reason: alertReason,\n        is_two_failures: hasTwoFailures,\n        failed_attempts: assessmentSummary.maxFailedAttempts,\n        worst_assessment: assessmentSummary.worstAssessment,\n        assessment_section: assessmentSection,\n        issue_detected: issueDetected,\n        alert_type: 'TRAINEE_NOT_READY',\n        alert_level: 'orange',\n        alert_emoji: '🟠'\n      }\n    });\n    \n    processedEmails.add(email);\n    return;\n  }\n});\n\n// ========================================\n// STEP 4: PROCESS NORMAL REMINDERS\n// ========================================\n\nconst inputItems = $input.all();\nconsole.log(`\\n📥 Received ${inputItems.length} trainees from Filter`);\n\nconst remindersToSend = [];\nconst suppressedTrainees = [];\n\ninputItems.forEach((item, index) => {\n  const trainee = item.json;\n  const traineeName = trainee['Full Name'];\n  const traineeEmail = trainee['Email Address']?.toLowerCase().trim();\n  \n  if (processedEmails.has(traineeEmail)) {\n    console.log(`⏭️ ${traineeName}: Already has critical alert`);\n    return;\n  }\n  \n  const status = trainingStatusMap.get(traineeEmail) || {};\n  const delayReason = status.delayReason || '';\n  \n  if (SYSTEM_DELAYS.includes(delayReason)) {\n    console.log(`🔕 SUPPRESSED: ${traineeName} (${delayReason})`);\n    suppressedTrainees.push({ name: traineeName, reason: delayReason });\n    return;\n  }\n  \n  const reminderCount = parseInt(trainee['Reminder Count']) || 0;\n  const lastReminderSent = trainee['Last Reminder Sent'];\n  const daysTraining = parseInt(trainee['Days since Training Start ']) || 0;\n  const incompleteCount = parseInt(trainee['Total Assessments Incomplete']) || 0;\n  \n  let shouldSend = false;\n  \n  if (reminderCount === 0 && incompleteCount > 0 && daysTraining > 1) {\n    shouldSend = true;\n  } else if (reminderCount < 2 && lastReminderSent) {\n    const daysSinceLast = Math.floor((new Date() - new Date(lastReminderSent)) / (1000*60*60*24));\n    if (daysSinceLast >= 3) shouldSend = true;\n  }\n  \n  if (shouldSend) {\n    remindersToSend.push({\n      json: {\n        trainee_name: traineeName,\n        trainee_email: traineeEmail,\n        coach_name: trainee['Coach Name'],\n        coach_email: getCoachEmail(trainee['Coach Name']),\n        role: trainee.Department,\n        country: trainee.Country,\n        incomplete_count: incompleteCount,\n        days_training: daysTraining,\n        current_reminder_count: reminderCount,\n        new_reminder_count: reminderCount + 1,\n        reminder_date: new Date().toISOString(),\n        total_required: parseInt(trainee['Total Assessments Required']) || 0,\n        total_completed: parseInt(trainee['Total Assessments Completed']) || 0,\n        alert_type: 'reminder'\n      }\n    });\n  }\n});\n\n// ========================================\n// STEP 5: SUMMARY\n// ========================================\n\nconsole.log(`\\n=== SUMMARY ===`);\nconsole.log(`🔴 Red Alerts: ${redAlerts.length}`);\nconsole.log(`🟠 Orange Alerts: ${orangeAlerts.length}`);\nconsole.log(`🔕 Suppressed: ${suppressedTrainees.length}`);\nconsole.log(`📧 Reminders: ${remindersToSend.length}`);\nconsole.log(`⏭️ Duplicates Skipped: ${skippedDuplicates}`);\n\nconst allOutputs = [...redAlerts, ...orangeAlerts, ...remindersToSend];\n\nreturn allOutputs.length > 0 ? allOutputs : [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        48
+      ],
+      "id": "ec3ca7cb-38f8-4035-af01-b23bef1506c3",
+      "name": "Smart Reminder Logic"
+    },
+    {
+      "parameters": {
+        "sendTo": "=andrea.kaur@storehub.com",
+        "subject": "=⚠️ {{ $json.country }} {{ $json.role }} - Incomplete Assessment Reminder",
+        "emailType": "text",
+        "message": "=Hi {{ $json.country }} {{ $json.role }} Team,\n\nQuick reminder: {{ $json.total_trainees }} trainee(s) have {{ $json.total_incomplete }} incomplete assessment(s).\n\n📊 Details:\n\n{{ $json.trainee_list }}\n\n🎯 Action: Please complete the pending assessments at your earliest convenience. Assessment links were sent via the scheduler or reach out if you need them resent.\n\nCheers,\n\nAndrea K.\nSr. Training & KB Specialist",
+        "options": {
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1696,
+        304
+      ],
+      "id": "65c89aa2-1d6a-4eb6-a5d4-7a6808a73cb0",
+      "name": "Send a message",
+      "webhookId": "0b4fc073-0760-47a6-9815-21a0814b08be",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1409163176,
+          "mode": "list",
+          "cachedResultName": "Coach & Managers Directory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1409163176"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:H"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        -272
+      ],
+      "id": "30d1dccc-d928-4fb6-a6a9-b2c0bfdf1f13",
+      "name": "Get Coach Directory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2380bfe7-1a70-4857-b1dc-187e965c65d2",
+              "leftValue": "={{ parseInt($json['Total Assessments Incomplete']) || 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "42dcb436-4e34-4cb0-ad9c-e3f8cc8193b2",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "Email Sent",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "78e3ffae-391e-47f5-aefa-43b5ef83626c",
+              "leftValue": "={{ $json['Days since Training Start '] }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        48
+      ],
+      "id": "4d653045-40ae-4117-ae2d-15bb733f3459",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== WIN 3: GROUP REMINDERS BY ROLE + COUNTRY (SCHEDULE-AWARE) =====\n\nconsole.log('=== STARTING REMINDER GROUPING ===');\n\n// Get reminders from Smart Reminder Logic\nconst reminders = $input.all().map(item => item.json);\nconsole.log(`Processing ${reminders.length} reminders`);\n\n// Get coach directory\nlet coachDirectory = [];\ntry {\n  coachDirectory = $('Get Coach Directory').all();\n  console.log(`✅ Loaded ${coachDirectory.length} coach directory entries`);\n} catch (e) {\n  console.log('❌ ERROR: Cannot access Get Coach Directory:', e.message);\n  throw new Error('Please execute from Schedule Trigger');\n}\n\n// Get Individual Progress\nlet individualProgress = [];\ntry {\n  individualProgress = $('Get Individual Progress').all();\n  console.log(`✅ Loaded ${individualProgress.length} Individual Progress records`);\n} catch (e) {\n  console.log('❌ ERROR: Cannot access Get Individual Progress:', e.message);\n  throw new Error('Please add Get Individual Progress node');\n}\n\n// Get Assessment Schedule Configuration\nlet assessmentSchedule = [];\ntry {\n  assessmentSchedule = $('Get Assessment Schedule Configuration').all();\n  console.log(`✅ Loaded ${assessmentSchedule.length} Assessment Schedule records`);\n} catch (e) {\n  console.log('❌ ERROR: Cannot access Get Assessment Schedule Configuration:', e.message);\n  throw new Error('Please add Get Assessment Schedule Configuration node');\n}\n\n// Build assessment data per role from Schedule\nconst roleAssessments = new Map();\nassessmentSchedule.forEach(item => {\n  const role = item.json['Role'];\n  const assessmentName = item.json['Assessment Name'];\n  const scheduleDay = parseInt(item.json['Schedule Day']) || 0;\n  \n  if (!role || !assessmentName) return;\n  \n  if (!roleAssessments.has(role)) {\n    roleAssessments.set(role, []);\n  }\n  \n  roleAssessments.get(role).push({\n    name: assessmentName,\n    scheduleDay: scheduleDay\n  });\n});\n\nconsole.log('Assessments per role:', Array.from(roleAssessments.keys()));\n\n// Build completed assessments map\nconst completedAssessments = new Map();\nindividualProgress.forEach(record => {\n  const email = record.json['Email'];\n  const assessmentName = record.json['Assessment Name'];\n  \n  // Skip if either is missing\n  if (!email || !assessmentName) return;\n  \n  const emailKey = email.toLowerCase().trim();\n  \n  if (!completedAssessments.has(emailKey)) {\n    completedAssessments.set(emailKey, new Set());\n  }\n  \n  // Store original name\n  completedAssessments.get(emailKey).add(assessmentName);\n  \n  // Store normalized version (safely)\n  try {\n    const normalized = assessmentName.toLowerCase().replace(/\\s+/g, '').replace(/[-_]/g, '');\n    completedAssessments.get(emailKey).add(normalized);\n  } catch (e) {\n    console.log('⚠️ Could not normalize assessment name:', assessmentName);\n  }\n});\n\nconsole.log(`Built completion map for ${completedAssessments.size} trainees`);\n\n// Check if assessment is completed\nfunction isCompleted(traineeEmail, scheduleName) {\n  if (!traineeEmail || !scheduleName) return false;\n  \n  const emailKey = traineeEmail.toLowerCase().trim();\n  const completed = completedAssessments.get(emailKey);\n  \n  if (!completed) return false;\n  \n  // Direct match\n  if (completed.has(scheduleName)) return true;\n  \n  // Normalized match\n  try {\n    const normalizedSchedule = scheduleName.toLowerCase().replace(/\\s+/g, '').replace(/[-_]/g, '');\n    if (completed.has(normalizedSchedule)) return true;\n  } catch (e) {\n    return false;\n  }\n  \n  // Pattern matching\n  const searchLower = scheduleName.toLowerCase();\n  \n  for (const completedName of completed) {\n    if (!completedName || typeof completedName !== 'string') continue;\n    \n    const compLower = completedName.toLowerCase();\n    \n    // Pitching matching\n    if (searchLower.includes('pitching') && compLower.includes('pitching')) {\n      if (searchLower.includes('f&b') && compLower.includes('f&b')) return true;\n      if (searchLower.includes('retail') && compLower.includes('retail')) return true;\n      if (searchLower.includes('full') && compLower.includes('full')) {\n        if (searchLower.includes('f&b') && compLower.includes('f&b')) return true;\n        if (searchLower.includes('retail') && compLower.includes('retail')) return true;\n      }\n    }\n    \n    // SPIN matching\n    if (searchLower.includes('spin') && compLower.includes('spin')) {\n      if (searchLower.includes('trial') && compLower.includes('trial')) return true;\n      if (searchLower.includes('2') && (compLower.includes('session 2') || compLower.includes('2'))) return true;\n    }\n    \n    // Closing matching\n    if (searchLower.includes('closing') && compLower.includes('closing')) {\n      if (searchLower.includes('1') && (compLower.includes('session 1') || compLower.includes('1'))) return true;\n      if (searchLower.includes('2') && (compLower.includes('session 2') || compLower.includes('2'))) return true;\n    }\n    \n    // Mock Test matching\n    if (searchLower.includes('mock') && compLower.includes('mock')) {\n      if (searchLower.includes('f&b') && compLower.includes('f&b')) return true;\n      if (searchLower.includes('retail') && compLower.includes('retail')) return true;\n    }\n    \n    // Hardware\n    if (searchLower.includes('hardware') && compLower.includes('hardware')) return true;\n    \n    // All in One Quiz\n    if (searchLower.includes('all in one') && compLower.includes('all in one')) return true;\n  }\n  \n  return false;\n}\n\n// Get overdue incomplete assessments\nfunction getOverdueIncomplete(traineeEmail, role, daysTraining) {\n  const assessments = roleAssessments.get(role) || [];\n  const incomplete = [];\n  \n  assessments.forEach(assessment => {\n    if (!isCompleted(traineeEmail, assessment.name)) {\n      if (daysTraining >= assessment.scheduleDay) {\n        incomplete.push({\n          name: assessment.name,\n          scheduleDay: assessment.scheduleDay,\n          daysOverdue: daysTraining - assessment.scheduleDay\n        });\n      }\n    }\n  });\n  \n  return incomplete;\n}\n\n// Group reminders by Role + Country\nconst groups = new Map();\n\nreminders.forEach(reminder => {\n  const key = `${reminder.role}_${reminder.country || 'Unknown'}`;\n  \n  if (!groups.has(key)) {\n    groups.set(key, {\n      role: reminder.role,\n      country: reminder.country || 'Unknown',\n      trainees: [],\n      total_incomplete: 0\n    });\n  }\n  \n  const overdueAssessments = getOverdueIncomplete(\n    reminder.trainee_email, \n    reminder.role, \n    reminder.days_training\n  );\n  \n  if (overdueAssessments.length > 0) {\n    const group = groups.get(key);\n    group.trainees.push({\n      name: reminder.trainee_name,\n      email: reminder.trainee_email,\n      incomplete_count: overdueAssessments.length,\n      days_training: reminder.days_training,\n      total_required: reminder.total_required,\n      total_completed: reminder.total_completed,\n      coach_name: reminder.coach_name,\n      incomplete_assessments: overdueAssessments,\n      reminder_date: reminder.reminder_date,\n      new_reminder_count: reminder.new_reminder_count,\n      current_reminder_count: reminder.current_reminder_count\n    });\n    group.total_incomplete += overdueAssessments.length;\n  } else {\n    console.log(`ℹ️ ${reminder.trainee_name} has no overdue assessments (Day ${reminder.days_training})`);\n  }\n});\n\nconsole.log(`Created ${groups.size} Role+Country groups`);\n\n// Build results with coach emails\nconst results = [];\n\ngroups.forEach((group, key) => {\n  if (group.trainees.length === 0) return;\n  \n  console.log(`\\nProcessing group: ${group.role} (${group.country})`);\n  \n  const coaches = coachDirectory.filter(c => {\n    const matchRole = c.json['Role'] === group.role;\n    const matchCountry = c.json['Country'] === group.country;\n    return matchRole && matchCountry && c.json['Coach Email'];\n  });\n  \n  const coachEmails = [...new Set(coaches.map(c => c.json['Coach Email']))];\n  const coachNames = [...new Set(coaches.map(c => c.json['Coach Name']))];\n  \n  console.log(`Found ${coachEmails.length} coaches:`, coachEmails);\n  \n  if (coachEmails.length === 0) {\n    console.log('⚠️ No coaches found, defaulting to Andrea');\n    coachEmails.push('andrea.kaur@storehub.com');\n    coachNames.push('Andrea');\n  }\n  \n  const traineeList = group.trainees.map((t, idx) => {\n    let entry = `${idx + 1}. ${t.name} - ${t.incomplete_count} incomplete`;\n    \n    if (t.incomplete_assessments && t.incomplete_assessments.length > 0) {\n      entry += '\\n   ' + t.incomplete_assessments.map(a => {\n        const overdueInfo = a.daysOverdue > 0 ? ` (${a.daysOverdue} days overdue)` : '';\n        return `• ${a.name}${overdueInfo}`;\n      }).join('\\n   ');\n    }\n    \n    return entry;\n  }).join('\\n\\n');\n  \n  results.push({\n    role: group.role,\n    country: group.country,\n    coach_emails: coachEmails.join(', '),\n    coach_names: coachNames.join(', '),\n    total_trainees: group.trainees.length,\n    total_incomplete: group.total_incomplete,\n    trainee_list: traineeList,\n    trainees_data: group.trainees\n  });\n});\n\nconsole.log(`\\n=== GROUPING COMPLETE ===`);\nconsole.log(`Total groups to notify: ${results.length}`);\n\nif (results.length === 0) {\n  console.log('ℹ️ No overdue assessments found');\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        304
+      ],
+      "id": "d1e57666-aaad-42b7-b119-bd092fb988b5",
+      "name": "Group Reminders by Role+Country"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Address": "={{ $json.email }}",
+            "Last Reminder Sent": "={{ $json.reminder_date }}",
+            "Reminder Count": "={{ $json.new_reminder_count }}"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Department",
+              "displayName": "Department",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Training Start Date",
+              "displayName": "Training Start Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Name",
+              "displayName": "Coach Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Email",
+              "displayName": "Coach Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent Date",
+              "displayName": "Email Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role Overview Sent Date",
+              "displayName": "Role Overview Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Total Assessments Required",
+              "displayName": "Total Assessments Required",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Completed",
+              "displayName": "Total Assessments Completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Assessments Incomplete",
+              "displayName": "Total Assessments Incomplete",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Days since Training Start ",
+              "displayName": "Days since Training Start ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Reminder Sent",
+              "displayName": "Last Reminder Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reminder Count",
+              "displayName": "Reminder Count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suvery Sent Date",
+              "displayName": "Suvery Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2096,
+        304
+      ],
+      "id": "1ad73068-dd24-45f6-ab07-568062159579",
+      "name": "Log Reminder sent",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the current group's data from the input (coming from Send a message)\n// We need to reference back to the Group node's output for this execution item\nconst groupData = $input.first().json;\n\n// Check if trainees_data exists\nif (!groupData.trainees_data || groupData.trainees_data.length === 0) {\n  console.log('No trainees_data found, trying to get from Group node');\n  // Fallback: try to get from the pairedItem reference\n  const groupNodeData = $('Group Reminders by Role+Country').item.json;\n  return groupNodeData.trainees_data.map(trainee => ({\n    json: trainee\n  }));\n}\n\nconsole.log(`Extracting ${groupData.trainees_data.length} trainees for sheet update`);\n\n// Return each trainee as a separate item for sheet update\nreturn groupData.trainees_data.map(trainee => ({\n  json: trainee\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        304
+      ],
+      "id": "3eb9e8b9-ffba-4af4-877e-987ba7ece3f5",
+      "name": "Split Out Individual Trainees"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2122986852,
+          "mode": "list",
+          "cachedResultName": "Individual Progress",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=2122986852"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        -432
+      ],
+      "id": "7d2737d3-7b91-49a2-9d9b-8e2ef0ba9807",
+      "name": "Get Individual Progress",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1844692346,
+          "mode": "list",
+          "cachedResultName": "Learning Score Weightage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1844692346"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A:D"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        32
+      ],
+      "id": "4301671f-0129-4aff-adde-99a26acce040",
+      "name": "Get Learning Score Weightage",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 8
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        624,
+        -48
+      ],
+      "id": "23479008-6f65-4f44-b75f-e1c75759ea62",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1266489538,
+          "mode": "list",
+          "cachedResultName": "Assessment Schedule Configuration",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=1266489538"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        256
+      ],
+      "id": "73b78d30-3bd6-45d1-be46-781289b807e7",
+      "name": "Get Assessment Schedule Configuration",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 46167546,
+          "mode": "list",
+          "cachedResultName": "Master Training Status",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=46167546"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        464
+      ],
+      "id": "7509c4d0-71bf-4f6f-a9c9-25b2c170fe73",
+      "name": "Get Master Training Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2141798232,
+          "mode": "list",
+          "cachedResultName": "Status History Logger",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=2141798232"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        624
+      ],
+      "id": "134938f0-a13a-4fb5-802c-c949735b8210",
+      "name": "Get Status History",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.alert_type }}",
+                    "rightValue": "RED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fb76c3cb-7a14-47f4-ae4b-06534dc185a5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Red Alert"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "36ec26be-fad8-45f5-9c88-44534b013c6a",
+                    "leftValue": "={{ $json.alert_type }}",
+                    "rightValue": "TRAINEE_NOT_READY",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Orange"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a8976e4c-8f8f-43ec-8942-f19113c3d13e",
+                    "leftValue": "={{ $json.alert_type }}",
+                    "rightValue": "reminder",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Normal Reminder"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1248,
+        32
+      ],
+      "id": "589eb14b-7d3b-4dc7-bc9b-1c8d9ba33647",
+      "name": "Route by Alert Type"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group Red Alerts by Role + Country\nconsole.log('=== GROUP RED ALERTS ===');\n\nconst alerts = $input.all();\nif (alerts.length === 0) return [];\n\nconst coachDirectory = $('Get Coach Directory').all();\nconst groups = new Map();\n\nalerts.forEach(item => {\n  const a = item.json;\n  const key = `${a.role}_${a.country || 'Unknown'}`;\n  \n  if (!groups.has(key)) {\n    groups.set(key, { role: a.role, country: a.country || 'Unknown', trainees: [] });\n  }\n  groups.get(key).trainees.push(a);\n});\n\nconst results = [];\n\ngroups.forEach((group) => {\n  const coaches = coachDirectory.filter(c => \n    c.json['Role'] === group.role && \n    c.json['Country'] === group.country && \n    c.json['Coach Email']\n  );\n  \n  const coachEmails = [...new Set(coaches.map(c => c.json['Coach Email']))];\n  if (coachEmails.length === 0) coachEmails.push('andrea.kaur@storehub.com');\n  \n  const traineeSections = group.trainees.map((t, i) => {\n    let s = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += `🚨 CRITICAL ALERT: ${t.trainee_name}\\n`;\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n\\n`;\n    s += `📊 TRAINING SUMMARY\\n`;\n    s += `• Role: ${t.role} (${t.country})\\n`;\n    s += `• Coach: ${t.coach_name}\\n`;\n    s += `• Training Day: ${t.current_training_day || 'N/A'}\\n`;\n    s += `• Days Extended: ${t.days_extended}\\n`;\n    s += `• Performance Flag: 🔴 RED\\n\\n`;\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += t.assessment_section + '\\n';\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    if (t.notes) {\n      s += `📅 ATTENDANCE HISTORY\\n${t.notes}\\n\\n`;\n      s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    }\n    s += `⚠️ ISSUE DETECTED\\n${t.issue_detected}\\n\\n`;\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += `💡 RECOMMENDED ACTION\\n`;\n    s += `1. Schedule formal review meeting within 48 hours\\n`;\n    s += `2. Discuss training continuation vs. program restart\\n`;\n    s += `3. If pattern continues, consider role fit evaluation\\n`;\n    return s;\n  }).join('\\n\\n');\n  \n  results.push({\n    json: {\n      role: group.role,\n      country: group.country,\n      coach_emails: coachEmails.join(', '),\n      total_alerts: group.trainees.length,\n      trainee_sections: traineeSections\n    }\n  });\n});\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        -208
+      ],
+      "id": "6da29eb6-bac6-482f-9954-04a7b84a608f",
+      "name": "Group Red Alerts"
+    },
+    {
+      "parameters": {
+        "sendTo": "=andrea.kaur@storehub.com",
+        "subject": "=🚨 CRITICAL: {{ $json.total_alerts }} Trainee(s) Need Immediate Attention - {{ $json.role }} ({{ $json.country }})",
+        "emailType": "text",
+        "message": "=Hi Team,  \n\n{{ $json.trainee_sections }}  \n\n\nRegards,\nAndrea K. \nSr. Training & KB Specialist",
+        "options": {
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1696,
+        -208
+      ],
+      "id": "b11621f2-611d-404c-9d66-7286ebdd4af4",
+      "name": "Send Red Alert",
+      "webhookId": "f55c2178-dd12-4799-b1f1-72208ce3d633",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group Orange Alerts by Role + Country\nconsole.log('=== GROUP ORANGE ALERTS ===');\n\nconst alerts = $input.all();\nif (alerts.length === 0) return [];\n\nconst coachDirectory = $('Get Coach Directory').all();\nconst groups = new Map();\n\nalerts.forEach(item => {\n  const a = item.json;\n  const key = `${a.role}_${a.country || 'Unknown'}`;\n  \n  if (!groups.has(key)) {\n    groups.set(key, { role: a.role, country: a.country || 'Unknown', trainees: [] });\n  }\n  groups.get(key).trainees.push(a);\n});\n\nconst results = [];\n\ngroups.forEach((group) => {\n  const coaches = coachDirectory.filter(c => \n    c.json['Role'] === group.role && \n    c.json['Country'] === group.country && \n    c.json['Coach Email']\n  );\n  \n  const coachEmails = [...new Set(coaches.map(c => c.json['Coach Email']))];\n  if (coachEmails.length === 0) coachEmails.push('andrea.kaur@storehub.com');\n  \n  const traineeSections = group.trainees.map((t, i) => {\n    let s = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += `🟠 COACHING NEEDED: ${t.trainee_name}\\n`;\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n\\n`;\n    s += `📊 TRAINING SUMMARY\\n`;\n    s += `• Role: ${t.role} (${t.country})\\n`;\n    s += `• Coach: ${t.coach_name}\\n`;\n    s += `• Training Day: ${t.current_training_day || 'N/A'}\\n`;\n    s += `• Days Extended: ${t.days_extended}\\n`;\n    if (t.performance_flag) s += `• Performance Flag: 🟠 ${t.performance_flag}\\n`;\n    s += '\\n';\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += t.assessment_section + '\\n';\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += `⚠️ ISSUE DETECTED\\n${t.issue_detected}\\n\\n`;\n    s += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n`;\n    s += `💡 RECOMMENDED ACTION\\n`;\n    s += `1. Schedule 1-on-1 coaching session\\n`;\n    s += `2. Identify specific knowledge gaps\\n`;\n    s += `3. Create targeted learning plan\\n`;\n    s += `4. Consider extending training timeline if needed\\n`;\n    return s;\n  }).join('\\n\\n');\n  \n  results.push({\n    json: {\n      role: group.role,\n      country: group.country,\n      coach_emails: coachEmails.join(', '),\n      total_alerts: group.trainees.length,\n      trainee_sections: traineeSections\n    }\n  });\n});\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        48
+      ],
+      "id": "34b838da-3853-471d-9714-989046a007ad",
+      "name": "Group Orange Alerts"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract trainees from Red Alert for logging\nconsole.log('=== EXTRACTING RED ALERT TRAINEES FOR LOG ===');\n\nconst groupData = $('Group Red Alerts').item.json;\nconst coachEmails = groupData.coach_emails || '';\nconst role = groupData.role || '';\nconst country = groupData.country || '';\n\n// Get original red alerts from Route node\nlet redAlerts = [];\ntry {\n  redAlerts = $('Route by Alert Type').all().filter(item => item.json.alert_type === 'RED');\n} catch (e) {\n  console.log('Could not get from Route, using Group data');\n}\n\nif (redAlerts.length === 0) {\n  // Fallback: create single log entry from group data\n  return [{\n    json: {\n      timestamp: new Date().toISOString(),\n      trainee_name: 'Multiple Trainees',\n      trainee_email: '',\n      alert_type: 'RED',\n      alert_reason: 'Red Performance Flag / MIA',\n      days_extended: 0,\n      coach_notified: coachEmails,\n      role: role,\n      country: country\n    }\n  }];\n}\n\nconst results = redAlerts.map(alert => ({\n  json: {\n    timestamp: new Date().toISOString(),\n    trainee_name: alert.json.trainee_name,\n    trainee_email: alert.json.trainee_email,\n    alert_type: 'RED',\n    alert_reason: alert.json.alert_reason || 'Red Performance Flag',\n    days_extended: alert.json.days_extended || 0,\n    coach_notified: coachEmails,\n    role: alert.json.role,\n    country: alert.json.country\n  }\n}));\n\nconsole.log(`Extracted ${results.length} trainee(s) for logging`);\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        -208
+      ],
+      "id": "a30f904b-dd86-4de2-9e28-e7df6952805d",
+      "name": "Extract Red Trainees for Log"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract trainees from Orange Alert for logging\nconsole.log('=== EXTRACTING ORANGE ALERT TRAINEES FOR LOG ===');\n\nconst groupData = $('Group Orange Alerts').item.json;\nconst coachEmails = groupData.coach_emails || '';\nconst role = groupData.role || '';\nconst country = groupData.country || '';\n\n// Get original orange alerts from Route node\nlet orangeAlerts = [];\ntry {\n  orangeAlerts = $('Route by Alert Type').all().filter(item => item.json.alert_type === 'TRAINEE_NOT_READY');\n} catch (e) {\n  console.log('Could not get from Route, using Group data');\n}\n\nif (orangeAlerts.length === 0) {\n  // Fallback: create single log entry from group data\n  return [{\n    json: {\n      timestamp: new Date().toISOString(),\n      trainee_name: 'Multiple Trainees',\n      trainee_email: '',\n      alert_type: 'ORANGE',\n      alert_reason: 'Trainee Not Ready (Needs More Time)',\n      days_extended: 0,\n      coach_notified: coachEmails,\n      role: role,\n      country: country\n    }\n  }];\n}\n\nconst results = orangeAlerts.map(alert => ({\n  json: {\n    timestamp: new Date().toISOString(),\n    trainee_name: alert.json.trainee_name,\n    trainee_email: alert.json.trainee_email,\n    alert_type: 'ORANGE',\n    alert_reason: 'Trainee Not Ready (Needs More Time)',\n    days_extended: alert.json.days_extended || 0,\n    coach_notified: coachEmails,\n    role: alert.json.role,\n    country: alert.json.country\n  }\n}));\n\nconsole.log(`Extracted ${results.length} trainee(s) for logging`);\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        48
+      ],
+      "id": "55782d39-a9d9-4768-9e09-ca63885d535f",
+      "name": "Extract Orange Trainees for Log"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 853394366,
+          "mode": "list",
+          "cachedResultName": "Alert Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=853394366"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.timestamp }}",
+            "Trainee Name": "={{ $json.trainee_name }}",
+            "Trainee Email": "={{ $json.trainee_email }}",
+            "Alert Type": "={{ $json.alert_type }}",
+            "Alert Reason": "={{ $json.alert_reason }}",
+            "Days Extended": "={{ $json.days_extended }}",
+            "Coach Notified": "={{ $json.coach_notified }}",
+            "Role": "={{ $json.role }}",
+            "Country": "={{ $json.country }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Trainee Name",
+              "displayName": "Trainee Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Trainee Email",
+              "displayName": "Trainee Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Alert Type",
+              "displayName": "Alert Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Alert Reason",
+              "displayName": "Alert Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Days Extended",
+              "displayName": "Days Extended",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Notified",
+              "displayName": "Coach Notified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2112,
+        -208
+      ],
+      "id": "90024506-c2f2-4d48-ba17-16a5ef6130c7",
+      "name": "Log Red Alert",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 853394366,
+          "mode": "list",
+          "cachedResultName": "Alert Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=853394366"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.timestamp }}",
+            "Trainee Name": "={{ $json.trainee_name }}",
+            "Trainee Email": "={{ $json.trainee_email }}",
+            "Alert Type": "={{ $json.alert_type }}",
+            "Alert Reason": "={{ $json.alert_reason }}",
+            "Days Extended": "={{ $json.days_extended }}",
+            "Coach Notified": "={{ $json.coach_notified }}",
+            "Role": "={{ $json.role }}",
+            "Country": "={{ $json.country }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Trainee Name",
+              "displayName": "Trainee Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Trainee Email",
+              "displayName": "Trainee Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Alert Type",
+              "displayName": "Alert Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Alert Reason",
+              "displayName": "Alert Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Days Extended",
+              "displayName": "Days Extended",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Coach Notified",
+              "displayName": "Coach Notified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Country",
+              "displayName": "Country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2112,
+        48
+      ],
+      "id": "4ec33ecf-90ad-4edb-ab2b-ea96ef95f395",
+      "name": "Log Orange Laert",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 853394366,
+          "mode": "list",
+          "cachedResultName": "Alert Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=853394366"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        816
+      ],
+      "id": "c5b3be9a-ed8f-48f8-be23-aee80684c5f1",
+      "name": "Get Alert Log",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "=andrea.kaur@storehub.com",
+        "subject": "=🟠 Coaching Needed: {{ $json.total_alerts }} Trainee(s) Not Ready - {{ $json.role }} ({{ $json.country }})",
+        "emailType": "text",
+        "message": "=Hi Team,  \n\n{{ $json.trainee_sections }}  \n\nPlease update Master Training Status once action is taken.  \n\nAndrea K. \nSr. Training & KB Specialist",
+        "options": {
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1696,
+        48
+      ],
+      "id": "1c83f9a6-60ad-4fd3-be1a-c41466a4d188",
+      "name": "Send Orange Alert",
+      "webhookId": "9db3a7eb-3ccd-4291-a8df-dc1e13751b3e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Coach Directory",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Individual Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Learning Score Weightage",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get All Trainees",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Assessment Schedule Configuration",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Master Training Status",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Status History",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Alert Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Trainees": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Smart Reminder Logic": {
+      "main": [
+        [
+          {
+            "node": "Route by Alert Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Split Out Individual Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Coach Directory": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Smart Reminder Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group Reminders by Role+Country": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out Individual Trainees": {
+      "main": [
+        [
+          {
+            "node": "Log Reminder sent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Individual Progress": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Learning Score Weightage": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Assessment Schedule Configuration": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Get Master Training Status": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Get Status History": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Route by Alert Type": {
+      "main": [
+        [
+          {
+            "node": "Group Red Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Group Orange Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Group Reminders by Role+Country",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group Red Alerts": {
+      "main": [
+        [
+          {
+            "node": "Send Red Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group Orange Alerts": {
+      "main": [
+        [
+          {
+            "node": "Send Orange Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Red Alert": {
+      "main": [
+        [
+          {
+            "node": "Extract Red Trainees for Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Red Trainees for Log": {
+      "main": [
+        [
+          {
+            "node": "Log Red Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Orange Trainees for Log": {
+      "main": [
+        [
+          {
+            "node": "Log Orange Laert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Alert Log": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "Send Orange Alert": {
+      "main": [
+        [
+          {
+            "node": "Extract Orange Trainees for Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e82d4c42-f953-4051-a412-087736c04442",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "dA5unv4h4d3cMm2J",
+  "tags": []
+}

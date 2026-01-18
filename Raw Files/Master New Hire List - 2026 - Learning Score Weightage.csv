@@ -1,0 +1,42 @@
+Role,Assessment Name,Learning Score Weightage,Passing Rate
+Merchant Care,All in One Quiz,20%,80%
+Merchant Care,Advance System & Networking Quiz,15%,80%
+Merchant Care,Hardware Assessment,20%,80%
+Merchant Care,Care Mock Test,45%,80%
+Merchant Onboarding Manager,All in One Quiz,20%,80%
+Merchant Onboarding Manager,Advance System & Networking Quiz,10%,80%
+Merchant Onboarding Manager,Hardware Assessment,5%,80%
+Merchant Onboarding Manager,Training Assessment (F&B),10%,80%
+Merchant Onboarding Manager,Training Assessment (Retail),10%,80%
+Merchant Onboarding Manager,Mock Test,45%,80%
+Customer Success Manager,All in One Quiz,20%,80%
+Customer Success Manager,Advance System & Networking Quiz,10%,80%
+Customer Success Manager,Hardware Assessment,5%,80%
+Customer Success Manager,CSM Assessment,20%,80%
+Customer Success Manager,Mock Test,45%,80%
+Onboarding Specialist,All in One Quiz,20%,80%
+Onboarding Specialist,Advance System & Networking Quiz,10%,80%
+Onboarding Specialist,Hardware Assessment,5%,80%
+Onboarding Specialist,Training Assessment (F&B),10%,80%
+Onboarding Specialist,Training Assessment (Retail),10%,80%
+Onboarding Specialist,Mock Test,45%,80%
+Onboarding Coodinator,All in One Quiz,50%,80%
+Onboarding Coodinator,Advance System & Networking Quiz,35%,80%
+Onboarding Coodinator,Hardware Assessment,15%,80%
+Business Consultant,All in One Quiz,20%,80%
+Business Consultant,BC Pitching Assessment - F&B,5%,80%
+Business Consultant,BC Pitching Assessment - Retail,5%,80%
+Business Consultant,BC SPIN Trial Session,-,80%
+Business Consultant,BC SPIN Assessment - Session 2,5%,80%
+Business Consultant,BC Closing Skills - Session 1,5%,80%
+Business Consultant,BC Closing Skills - Session 2,5%,80%
+Business Consultant,BC Full Pitching - F&B,10%,80%
+Business Consultant,BC Full Pitching - Retail,10%,80%
+Business Consultant,Mock Test,45%,80%
+Sales Coordinator,All in One Quiz,15%,80%
+Sales Coordinator,Full Call Assessment,10%,80%
+Sales Coordinator,Objection Handling - F&B,15%,80%
+Sales Coordinator,Objection Handling - Retail,15%,80%
+Sales Coordinator,Mock Test,45%,80%
+Marketing,All in One Quiz,100%,80%
+Ops,All in One Quiz,100%,80%

@@ -1,0 +1,216 @@
+{
+  "name": "API: Performance Reports",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "reports/performance",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "webhook-performance",
+      "name": "Performance Webhook",
+      "webhookId": "reports-performance"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8",
+          "mode": "list",
+          "cachedResultName": "[MASTER] Performance Dashboard - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1330781560,
+          "mode": "list",
+          "cachedResultName": "Training Completion & Final Score",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13R0oJBp7PfgLjV2gjI_nH3ZEZc40xEzhue6JebsT2G8/edit#gid=1330781560"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -80
+      ],
+      "id": "get-training-completion",
+      "name": "Get Training Completion",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA",
+          "mode": "list",
+          "cachedResultName": "Master New Hire List - 2025",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "New Hire List",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ygEYNDbhmtaqjXhO7K_GfWwYK2WtV_erws7n52cWUZA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        80
+      ],
+      "id": "get-trainees",
+      "name": "Get Active Trainees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "merge-data",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate performance data for dashboard\n\nconst allInputs = $input.all();\n\n// Separate data sources\nlet completedTrainees = [];\nlet activeTrainees = [];\n\nallInputs.forEach(item => {\n  const data = item.json;\n  \n  // Training Completion records have 'Training Status'\n  if (data['Training Status']) {\n    completedTrainees.push(data);\n  }\n  // Active trainees have 'Status' field  \n  else if (data['Status'] === 'Email Sent') {\n    activeTrainees.push(data);\n  }\n});\n\nconsole.log(`Completed trainees: ${completedTrainees.length}`);\nconsole.log(`Active trainees: ${activeTrainees.length}`);\n\n// Calculate overall stats\nlet totalCompleted = 0;\nlet totalPassed = 0;\nlet totalFailed = 0;\nlet totalScores = 0;\nlet scoreSum = 0;\n\ncompletedTrainees.forEach(t => {\n  if (t['Training Status'] === 'Report Sent') {\n    totalCompleted++;\n    const score = parseInt(t['Final Score']) || 0;\n    if (score > 0) {\n      scoreSum += score;\n      totalScores++;\n    }\n    if (score >= 80) {\n      totalPassed++;\n    } else {\n      totalFailed++;\n    }\n  }\n});\n\nconst avgScore = totalScores > 0 ? Math.round(scoreSum / totalScores) : 0;\nconst passRate = totalCompleted > 0 ? Math.round((totalPassed / totalCompleted) * 100) : 0;\n\n// Stats by role\nconst byRole = new Map();\ncompletedTrainees.forEach(t => {\n  if (t['Training Status'] !== 'Report Sent') return;\n  \n  const role = t['Department/Role'] || 'Unknown';\n  if (!byRole.has(role)) {\n    byRole.set(role, { total: 0, passed: 0, scoreSum: 0 });\n  }\n  const roleData = byRole.get(role);\n  roleData.total++;\n  \n  const score = parseInt(t['Final Score']) || 0;\n  roleData.scoreSum += score;\n  if (score >= 80) roleData.passed++;\n});\n\nconst roleStats = Array.from(byRole.entries()).map(([role, data]) => ({\n  role: role,\n  total_completed: data.total,\n  pass_rate: data.total > 0 ? Math.round((data.passed / data.total) * 100) : 0,\n  avg_score: data.total > 0 ? Math.round(data.scoreSum / data.total) : 0\n}));\n\n// Stats by country\nconst byCountry = new Map();\ncompletedTrainees.forEach(t => {\n  if (t['Training Status'] !== 'Report Sent') return;\n  \n  const country = t['Country'] || 'Unknown';\n  if (!byCountry.has(country)) {\n    byCountry.set(country, { total: 0, passed: 0 });\n  }\n  const countryData = byCountry.get(country);\n  countryData.total++;\n  \n  const score = parseInt(t['Final Score']) || 0;\n  if (score >= 80) countryData.passed++;\n});\n\nconst countryStats = Array.from(byCountry.entries()).map(([country, data]) => ({\n  country: country,\n  total_completed: data.total,\n  pass_rate: data.total > 0 ? Math.round((data.passed / data.total) * 100) : 0\n}));\n\n// Recent completions (last 10)\nconst recentCompletions = completedTrainees\n  .filter(t => t['Training Status'] === 'Report Sent' && t['Report Sent Date'])\n  .sort((a, b) => new Date(b['Report Sent Date']) - new Date(a['Report Sent Date']))\n  .slice(0, 10)\n  .map(t => ({\n    trainee_name: t['Trainee Name'],\n    email: t['Email'],\n    role: t['Department/Role'],\n    country: t['Country'],\n    final_score: parseInt(t['Final Score']) || 0,\n    status: (parseInt(t['Final Score']) || 0) >= 80 ? 'passed' : 'failed',\n    completed_at: t['Report Sent Date']\n  }));\n\n// Active training count\nconst inTraining = activeTrainees.length;\n\nreturn [{\n  json: {\n    summary: {\n      total_completed: totalCompleted,\n      total_passed: totalPassed,\n      total_failed: totalFailed,\n      pass_rate: passRate,\n      avg_score: avgScore,\n      in_training: inTraining\n    },\n    by_role: roleStats,\n    by_country: countryStats,\n    recent_completions: recentCompletions,\n    last_updated: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "aggregate-performance",
+      "name": "Aggregate Performance"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        0
+      ],
+      "id": "respond-performance",
+      "name": "Respond"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Performance Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Training Completion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Active Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Training Completion": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active Trainees": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Performance": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1-new-performance-api",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "new-performance-api",
+  "tags": []
+}

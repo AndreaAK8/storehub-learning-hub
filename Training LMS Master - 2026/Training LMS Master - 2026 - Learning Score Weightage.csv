@@ -1,0 +1,50 @@
+Role,Assessment Name,Assessment Included in Mock,Learning Score Weightage,Passing Rate,Notes
+Merchant Care,All in One Quiz,,20%,80%,Taken by trainee
+Merchant Care,Advance System & Networking Quiz,,15%,80%,Taken by trainee
+Merchant Care,Hardware Assessment,,20%,80%,Conducted by Trainer
+Merchant Care,Care Mock Test,Care Mock Test - 1,45%,80%,"Trainee will need to pass 3 consercutive times of Mock test. If any attemps fail, will restart at the 1st round. 
+1st round done by trainer, 2nd, 3rd or retakes will be conducted by coach. "
+Merchant Care,,Care Mock Test - 2,,80%,
+Merchant Care,,Care Mock Test - 3,,80%,
+Merchant Onboarding Manager,All in One Quiz,,20%,80%,Taken by trainee
+Merchant Onboarding Manager,Advance System & Networking Quiz,,10%,80%,Taken by trainee
+Merchant Onboarding Manager,Hardware Assessment,,5%,80%,Conducted by Trainer
+Merchant Onboarding Manager,Training Assessment (F&B),,10%,80%,Conducted by Coach
+Merchant Onboarding Manager,Training Assessment (Retail),,10%,80%,Conducted by Coach
+Merchant Onboarding Manager,Mock Test,Welcome Call Assessment,45%,80%,Conducted by Coach
+Merchant Onboarding Manager,,Go Live Call Assessment,,80%,Conducted by Coach
+Merchant Onboarding Manager,,Training Mock Test (F&B),,80%,Conducted by Coach
+Merchant Onboarding Manager,,Training Mock Test (Retail),,80%,Conducted by Coach
+Customer Success Manager,All in One Quiz,,20%,80%,Taken by trainee
+Customer Success Manager,Advance System & Networking Quiz,,10%,80%,Taken by trainee
+Customer Success Manager,Hardware Assessment,,5%,80%,Conducted by Trainer
+Customer Success Manager,CSM Assessment,,20%,80%,Taken by trainee
+Customer Success Manager,Mock Test,Roleplay 1,45%,80%,Conducted by Coach
+Customer Success Manager,,Roleplay 2,,80%,Conducted by Coach
+Onboarding Specialist,All in One Quiz,,20%,80%,Taken by trainee
+Onboarding Specialist,Advance System & Networking Quiz,,10%,80%,Taken by trainee
+Onboarding Specialist,Hardware Assessment,,5%,80%,Conducted by Trainer
+Onboarding Specialist,Training Assessment (F&B),,10%,80%,Conducted by Coach
+Onboarding Specialist,Training Assessment (Retail),,10%,80%,Conducted by Coach
+Onboarding Specialist,Mock Test,,45%,80%,Conducted by Coach
+Onboarding Coodinator,All in One Quiz,,50%,80%,Taken by trainee
+Onboarding Coodinator,Advance System & Networking Quiz,,35%,80%,Taken by trainee
+Onboarding Coodinator,Hardware Assessment,,15%,80%,Conducted by Trainer
+Business Consultant,All in One Quiz,,20%,80%,Taken by trainee
+Business Consultant,BC Pitching Assessment - F&B,,5%,80%,Taken by trainee
+Business Consultant,BC Pitching Assessment - Retail,,5%,80%,Taken by trainee
+Business Consultant,BC SPIN Trial Session,,-,80%,Taken by trainee
+Business Consultant,BC SPIN Assessment - Session 2,,5%,80%,Taken by trainee
+Business Consultant,BC Closing Skills - Session 1,,5%,80%,Taken by trainee
+Business Consultant,BC Closing Skills - Session 2,,5%,80%,Taken by trainee
+Business Consultant,BC Full Pitching - F&B,,10%,80%,Taken by trainee
+Business Consultant,BC Full Pitching - Retail,,10%,80%,Taken by trainee
+Business Consultant,Mock Test,Mock Test (F&B),35%,80%,Conducted by Coach
+Business Consultant,,Mock Test (Retail),,80%,Conducted by Coach
+Sales Coordinator,All in One Quiz,,15%,80%,Taken by trainee
+Sales Coordinator,Full Call Assessment,,10%,80%,Taken by trainee
+Sales Coordinator,Objection Handling - F&B,,15%,80%,Taken by trainee
+Sales Coordinator,Objection Handling - Retail,,15%,80%,Taken by trainee
+Sales Coordinator,Mock Test,,45%,80%,Conducted by Coach
+Marketing,All in One Quiz,,100%,80%,Taken by trainee
+Ops,All in One Quiz,,100%,80%,Taken by trainee

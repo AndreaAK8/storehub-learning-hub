@@ -1,0 +1,444 @@
+{
+  "name": "Win 1: Automated Welcome & Resource Pack (Lark Calendar)",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        300
+      ],
+      "id": "1b0cadae-ebda-4514-86b0-1d40972ac6d9",
+      "name": "New Hire Master List",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "5RdjBLcNZ5y3PeRk",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "09e7ef4a-9bc2-477f-8ccb-debaa8bf16b9",
+              "leftValue": "={{$json[\"Status\"]}}",
+              "rightValue": "New",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1100,
+        300
+      ],
+      "id": "e6aedb2c-415d-4010-8310-44c0e8873737",
+      "name": "Status = New?"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email Address'] }}",
+        "subject": "=\"Welcome to the Team,  {{ $json['Full Name'] }}",
+        "emailType": "text",
+        "message": "=Hi {{$json[\"Full Name\"]}},\n\nWelcome to the StoreHub training program! I'm Andrea, and I'll be guiding you through your learning journey as you settle into your new role. We're excited to have you on board and can't wait to see what you'll accomplish.\n\n🗓 Your training begins on: {{$json[\"Training Start Date\"]}}.\n\n🎯 Essential Pre-Training Resources:\n\n• Training Lark Wiki: https://storehub.sg.larksuite.com/wiki/V1Dqw3SnbibdDdkQKpmlNQGygef\n\n• Meet the Organization: https://storehub.sg.larksuite.com/wiki/V1Dqw3SnbibdDdkQKpmlNQGygef#share-LsQ0dCwVWoBYZqxOXwYl17fEgyS\n\n\n📚 Your Training Journey:\n• Days 1–2: Product Training (Self-Study with Andrea)\n• Days 3–6: Role-Specific Training\n• Week 2 onwards: Hands-on application & mentorship\n\n\n💻 Technical Requirements:\nMake sure your company-issued MacBook and iPad are ready to go - fully set up and charged. You'll be using them throughout the self-study modules and live syncs.\n\nNote: If you do not have an iPad, you may request to borrow one from HR for training purposes.\n\n\n❓ Quick Start FAQ:\n\nQ: How should I prepare for Day 1?\n\nA: A: Review the Meet the Organization page and confirm your devices are ready. You'll be starting with product training via self-study.\n\nQ: What if I have technical issues during training?\n\nA: You can reach me directly at andrea.kaur@storehub.com or contact your manager {{$json[\"Manager Name\"]}}.\n\nQ: Will there be opportunities to ask questions during training?\n\nA: Absolutely! Each session includes dedicated Q&A time, and I'm always available for additional support.\n\n🚀 Pro Tip:\nStart exploring the Training Wiki before Day 1 to get a head start on the fundamentals.\n\nLooking forward to meeting you and supporting your success at StoreHub!\n\nBest regards,\nAndrea K.\nSenior Training & Knowledge Base Specialist\nStoreHub\n\n---\nP.S. Your manager {{$json[\"Manager Name\"]}} will also be in touch regarding your overall onboarding timeline.",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "andrea.kaur@storehub.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -800,
+        300
+      ],
+      "id": "958256f8-f3e8-4ecc-8724-c1282b1a9ff8",
+      "name": "Send Welcome Email",
+      "webhookId": "f5f740d7-4e8c-45ce-ba60-049e9b7dfdd6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "M8WHs7W6uy2BUq7w",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trainees",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Sent Date": "={{$now}}",
+            "Email Address": "={{ $('Status = New?').item.json['Email Address'] }}",
+            "Timestamp": "={{$now.format('yyyy-MM-dd HH:mm:ss')}}",
+            "Full Name": "={{ $('Status = New?').item.json['Full Name'] }}",
+            "Department": "={{ $('Status = New?').item.json.Department }}",
+            "Training Start Date": "={{ $('Status = New?').item.json['Training Start Date'] }}",
+            "Status": "Email Sent"
+          },
+          "matchingColumns": [
+            "Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Email Address",
+              "displayName": "Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Sent Date",
+              "displayName": "Email Sent Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -500,
+        300
+      ],
+      "id": "851f8c61-429c-4145-a591-e6818c619462",
+      "name": "Update Sheet Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1d39mGpPzA3EcxfS",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the training start date and trainee info\nconst items = $input.all();\n\nreturn items.map(item => {\n  let trainingStartDate = item.json[\"Training Start Date\"];\n  const traineeEmail = item.json[\"Email Address\"];\n  const traineeName = item.json[\"Full Name\"];\n  \n  // Handle array format\n  if (Array.isArray(trainingStartDate)) {\n    trainingStartDate = trainingStartDate[0];\n  }\n  \n  // Convert Excel serial date if needed\n  if (typeof trainingStartDate === 'number' && trainingStartDate > 0) {\n    const excelEpoch = new Date(1899, 11, 30);\n    const jsDate = new Date(excelEpoch.getTime() + trainingStartDate * 24 * 60 * 60 * 1000);\n    trainingStartDate = jsDate.toISOString().split('T')[0];\n  }\n  \n  // Day 1: 2:00 PM - 6:30 PM (MYT = +08:00)\n  const day1Start = new Date(`${trainingStartDate}T14:00:00+08:00`);\n  const day1End = new Date(`${trainingStartDate}T18:30:00+08:00`);\n  \n  // Day 2: Next day, 9:30 AM - 6:30 PM\n  const day2Date = new Date(day1Start);\n  day2Date.setDate(day2Date.getDate() + 1);\n  const day2Str = day2Date.toISOString().split('T')[0];\n  const day2Start = new Date(`${day2Str}T09:30:00+08:00`);\n  const day2End = new Date(`${day2Str}T18:30:00+08:00`);\n  \n  // Product Demo: Same as Day 2, 3:00 PM - 5:30 PM\n  const demoStart = new Date(`${day2Str}T15:00:00+08:00`);\n  const demoEnd = new Date(`${day2Str}T17:30:00+08:00`);\n  \n  return {\n    json: {\n      trainee_email: traineeEmail,\n      trainee_name: traineeName,\n      training_date: trainingStartDate,\n      day1_start: Math.floor(day1Start.getTime() / 1000).toString(),\n      day1_end: Math.floor(day1End.getTime() / 1000).toString(),\n      day2_start: Math.floor(day2Start.getTime() / 1000).toString(),\n      day2_end: Math.floor(day2End.getTime() / 1000).toString(),\n      demo_start: Math.floor(demoStart.getTime() / 1000).toString(),\n      demo_end: Math.floor(demoEnd.getTime() / 1000).toString()\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        300
+      ],
+      "id": "b2dd463e-8820-4f0b-8e82-41a3a0bf0380",
+      "name": "Convert Dates for Lark"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/auth/v3/tenant_access_token/internal",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"app_id\": \"cli_a9ee6e1eb3799ed3\",\n  \"app_secret\": \"3LpSLm7Dse2dxImapMJhPgqJo027uk4N\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        300
+      ],
+      "id": "lark-token-001",
+      "name": "Get Lark Token"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.larksuite.com/open-apis/contact/v3/users/batch_get_id?user_id_type=open_id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get Lark Token').item.json.tenant_access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"emails\": [\"{{ $('Convert Dates for Lark').item.json.trainee_email }}\"]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        300
+      ],
+      "id": "lark-user-lookup-001",
+      "name": "Get User ID by Email"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://open.larksuite.com/open-apis/calendar/v4/calendars/primary/events",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get Lark Token').item.json.tenant_access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"summary\": \"[Day 1] Product Training\",\n  \"description\": \"Product Training (Self-Study) with Andrea K.\\n\\nThis self-paced session is designed to help you build a solid understanding of our product from the ground up. By the end of the day, you'll be more confident navigating our software, hardware, and key features.\\n\\n✅ Pre-Training Checklist:\\n• MacBook ready\\n• iPad ready\\n• Wiki access confirmed\\n\\n🗂 Agenda Overview:\\n• Training Briefing\\n• Software Module\\n• Hardware Module\\n• Feature Module\\n\\nFeel free to explore each module at your own pace, and don't hesitate to reach out if you have questions along the way.\",\n  \"start_time\": {\n    \"timestamp\": \"{{ $('Convert Dates for Lark').item.json.day1_start }}\",\n    \"timezone\": \"Asia/Kuala_Lumpur\"\n  },\n  \"end_time\": {\n    \"timestamp\": \"{{ $('Convert Dates for Lark').item.json.day1_end }}\",\n    \"timezone\": \"Asia/Kuala_Lumpur\"\n  },\n  \"attendees\": [\n    {\n      \"type\": \"user\",\n      \"user_id\": \"{{ $('Get User ID by Email').item.json.data.user_list[0].user_id }}\"\n    }\n  ],\n  \"need_notification\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        200
+      ],
+      "id": "lark-day1-event",
+      "name": "Create Day 1 Event"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://open.larksuite.com/open-apis/calendar/v4/calendars/primary/events",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get Lark Token').item.json.tenant_access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"summary\": \"[Day 2] Product Training\",\n  \"description\": \"📅 Day 2: Product Training (Self-Study) with Andrea K.\\n\\nYou're halfway through product training - great job so far! By now, you should have completed the first three modules. Today, we'll shift focus to navigating the system and understanding how our tools come to life through real merchant setups.\\n\\n🗂 Agenda Overview:\\n• System Navigation Module (BackOffice account must be created beforehand)\\n• Merchant Profile Module\\n\\nTake your time exploring each module at your own pace. If anything's unclear or you need support, feel free to reach out - I'm here to help!\",\n  \"start_time\": {\n    \"timestamp\": \"{{ $('Convert Dates for Lark').item.json.day2_start }}\",\n    \"timezone\": \"Asia/Kuala_Lumpur\"\n  },\n  \"end_time\": {\n    \"timestamp\": \"{{ $('Convert Dates for Lark').item.json.day2_end }}\",\n    \"timezone\": \"Asia/Kuala_Lumpur\"\n  },\n  \"attendees\": [\n    {\n      \"type\": \"user\",\n      \"user_id\": \"{{ $('Get User ID by Email').item.json.data.user_list[0].user_id }}\"\n    }\n  ],\n  \"need_notification\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        400
+      ],
+      "id": "lark-day2-event",
+      "name": "Create Day 2 Event"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://open.larksuite.com/open-apis/calendar/v4/calendars/primary/events",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Get Lark Token').item.json.tenant_access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"summary\": \"[Day 2] Product Demo & Debrief\",\n  \"description\": \"This is a key milestone in your training journey. In this live session, we'll bring everything together — recap what you've learned, demo essential hardware, and answer any questions you've been holding onto. It's your chance to clarify doubts and get fully equipped before diving into your role-specific training.\\n\\n🗂 Agenda Overview:\\n• Recap of All Modules\\n• Hardware Demo\\n• Quiz Debrief\\n• Role-Specific Expectations\\n\\nCome prepared with your questions — this session is all about making sure you're confident moving forward.\",\n  \"start_time\": {\n    \"timestamp\": \"{{ $('Convert Dates for Lark').item.json.demo_start }}\",\n    \"timezone\": \"Asia/Kuala_Lumpur\"\n  },\n  \"end_time\": {\n    \"timestamp\": \"{{ $('Convert Dates for Lark').item.json.demo_end }}\",\n    \"timezone\": \"Asia/Kuala_Lumpur\"\n  },\n  \"attendees\": [\n    {\n      \"type\": \"user\",\n      \"user_id\": \"{{ $('Get User ID by Email').item.json.data.user_list[0].user_id }}\"\n    }\n  ],\n  \"need_notification\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        600
+      ],
+      "id": "lark-demo-event",
+      "name": "Create Demo Event"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "New Hire Master List": {
+      "main": [
+        [
+          {
+            "node": "Status = New?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status = New?": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet Status": {
+      "main": [
+        [
+          {
+            "node": "Convert Dates for Lark",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Dates for Lark": {
+      "main": [
+        [
+          {
+            "node": "Get Lark Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Lark Token": {
+      "main": [
+        [
+          {
+            "node": "Get User ID by Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User ID by Email": {
+      "main": [
+        [
+          {
+            "node": "Create Day 1 Event",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Day 2 Event",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Demo Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "lark-v1-001",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "win1-lark-calendar",
+  "tags": []
+}
