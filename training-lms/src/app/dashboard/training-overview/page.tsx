@@ -24,17 +24,15 @@ export default function TrainingOverviewPage() {
           return
         }
 
-        // Fetch user profile to get training role and name
+        // Fetch user profile to get name
         const { data: profile } = await supabase
           .from('profiles')
-          .select('training_role, full_name')
+          .select('role, full_name')
           .eq('id', user.id)
           .single()
 
-        const validTrainingRoles = ['OC', 'OS', 'MOM', 'CSM', 'BC', 'MC', 'SC']
-        const roleCode = profile?.training_role && validTrainingRoles.includes(profile.training_role)
-          ? profile.training_role
-          : 'OC'
+        // Default to OC for now - TODO: add training_role column to profiles table
+        const roleCode = 'OC'
 
         // Get role details from API
         const response = await fetch(`/api/training/schedule?role=${roleCode}&email=${encodeURIComponent(user.email || '')}`)

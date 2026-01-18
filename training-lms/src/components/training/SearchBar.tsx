@@ -153,6 +153,7 @@ export function SearchBar({ modules, resources, onResultClick }: SearchBarProps)
       {/* Search Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
+        data-tour="search"
         className="flex items-center gap-2 px-3 py-2 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

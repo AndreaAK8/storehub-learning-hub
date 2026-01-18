@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Trainee, RiskLevel } from '@/types/trainee'
 import NeedsAttentionSection from '@/components/dashboard/NeedsAttentionSection'
@@ -191,9 +192,9 @@ export default async function DashboardPage() {
   // Admin/Coach stats
   const stats = calculateAdminStats(allTrainees)
 
-  // Trainee Dashboard
+  // Trainee Dashboard - redirect to My Training page
   if (userRole === 'trainee') {
-    return <TraineeDashboard user={user} profile={profile} traineeData={myTraineeData} activityProgress={activityProgress} />
+    redirect('/dashboard/my-training')
   }
 
   // Admin/Coach Dashboard

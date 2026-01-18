@@ -86,7 +86,7 @@ export default function OnboardingChecklist({
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--sh-orange)] to-[var(--sh-orange-dark)] flex items-center justify-center">
@@ -112,7 +112,7 @@ export default function OnboardingChecklist({
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="flex gap-8">
           {/* Sidebar Checklist */}
           <div className="w-64 flex-shrink-0">
@@ -478,14 +478,14 @@ function ScoringStep() {
       </div>
 
       {/* Final Score Formula */}
-      <div className="p-4 rounded-xl bg-gradient-to-r from-[var(--sh-orange)] to-[var(--sh-orange-dark)] text-white">
+      <div className="p-4 rounded-xl bg-gradient-to-r from-slate-700 to-slate-800 text-white">
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <span className="font-medium">Your Final Score =</span>
-          <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">Learning (80%)</span>
+          <span className="bg-[var(--sh-orange)] px-3 py-1 rounded-full text-sm font-semibold">Learning (80%)</span>
           <span>+</span>
-          <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">Participation (5-20%)</span>
+          <span className="bg-[var(--sh-blue)] px-3 py-1 rounded-full text-sm font-semibold">Participation (5-20%)</span>
         </div>
-        <p className="text-center text-sm mt-3 text-white/90">
+        <p className="text-center text-sm mt-3 text-slate-300">
           💡 High participation can boost your score and provide insurance against weaker assessments!
         </p>
       </div>
@@ -630,7 +630,7 @@ function JourneyStep({ roleCode, totalDays, content }: { roleCode: string, total
       )}
 
       {/* Ready Message */}
-      <div className="mt-6 p-5 rounded-xl bg-gradient-to-r from-[var(--sh-orange)] to-[var(--sh-orange-dark)] text-white text-center">
+      <div className="mt-6 p-5 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 text-white text-center">
         <p className="text-lg font-semibold mb-2">You're all set! 🎉</p>
         <p className="text-sm text-white/90">Click "Start My Training" to view your detailed schedule and begin Day 1.</p>
       </div>

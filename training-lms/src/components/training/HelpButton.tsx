@@ -20,6 +20,7 @@ export function HelpButton({
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
+        data-tour="help"
         className="fixed bottom-6 right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-full shadow-lg flex items-center gap-2 transition-all hover:scale-105"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

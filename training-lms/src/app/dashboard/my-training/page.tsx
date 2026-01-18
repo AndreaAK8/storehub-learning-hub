@@ -9,6 +9,9 @@ import {
   SearchBar,
   HelpButton,
   ReflectionModal,
+  CompletionCelebration,
+  GiftReveal,
+  OnboardingTour,
 } from '@/components/training'
 import type { ActivityPerformance } from '@/components/training'
 
@@ -52,6 +55,13 @@ export default function MyTrainingPage() {
   const [selectedDay, setSelectedDay] = useState(1)
   const [showReflection, setShowReflection] = useState(false)
   const [completedDayForReflection, setCompletedDayForReflection] = useState<number | null>(null)
+  const [surveyCompleted, setSurveyCompleted] = useState(false)
+  const [userName, setUserName] = useState<string>('')
+  const [giftRevealed, setGiftRevealed] = useState(false)
+  const [showGiftReveal, setShowGiftReveal] = useState(false)
+  const [viewMode, setViewMode] = useState<'certificate' | 'activities'>('certificate')
+  const [showTransition, setShowTransition] = useState(false)
+  const [showTour, setShowTour] = useState(false)
 
   const supabase = createClient()
 
@@ -71,20 +81,36 @@ export default function MyTrainingPage() {
       // Fetch user profile to get role
       const { data: profile } = await supabase
         .from('profiles')
-        .select('role, google_sheet_email, training_role')
+        .select('role, google_sheet_email, full_name')
         .eq('id', user.id)
         .single()
 
       const traineeEmail = profile?.google_sheet_email || user.email
+      const traineeName = profile?.full_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'Trainee'
+      setUserName(traineeName)
 
-      // Valid training program roles (not permission roles like 'admin', 'coach', 'trainee')
-      const validTrainingRoles = ['OC', 'OS', 'MOM', 'CSM', 'BC', 'MC', 'SC']
+      // Check if survey already completed
+      const surveyKey = `survey_completed_${traineeEmail}`
+      if (localStorage.getItem(surveyKey)) {
+        setSurveyCompleted(true)
+      }
 
-      // Use training_role if set, otherwise default to 'OC' for pilot
-      // Note: profile.role is the permission role (admin/coach/trainee), not training program
-      const traineeRole = profile?.training_role && validTrainingRoles.includes(profile.training_role)
-        ? profile.training_role
-        : 'OC' // Default to OC for Jan 19 pilot
+      // Check if gift has been revealed
+      const giftKey = `gift_revealed_${traineeEmail}`
+      if (localStorage.getItem(giftKey)) {
+        setGiftRevealed(true)
+      }
+
+      // Check if onboarding tour has been completed
+      const tourKey = `tour_completed_${traineeEmail}`
+      if (!localStorage.getItem(tourKey)) {
+        // Show tour after a short delay to let the page load
+        setTimeout(() => setShowTour(true), 500)
+      }
+
+      // Default to OC for Jan 19 pilot
+      // TODO: Add training_role column to profiles table for role-specific training
+      const traineeRole = 'OC'
 
       // Fetch training schedule from API
       const response = await fetch(
@@ -232,15 +258,18 @@ export default function MyTrainingPage() {
         }
       }
 
-      // Check if day is now complete
+      // Check if day is now complete (include the just-completed activity)
       const currentDayData = traineeData.trainingDays.find((d) => d.dayNumber === selectedDay)
       if (currentDayData) {
         const allComplete = currentDayData.activities.every(
           (a) => a.status === 'completed' || a.id === activityId || a.activityType === 'lunch' || a.activityType === 'break'
         )
         if (allComplete) {
-          setCompletedDayForReflection(selectedDay)
-          setShowReflection(true)
+          // Delay slightly to let the UI update first
+          setTimeout(() => {
+            setCompletedDayForReflection(selectedDay)
+            setShowReflection(true)
+          }, 500)
         }
       }
 
@@ -319,6 +348,108 @@ export default function MyTrainingPage() {
     }
   }, [])
 
+  // Handle survey submission - triggers Win 6 workflow
+  const handleTakeSurvey = useCallback(async () => {
+    if (!traineeData) return
+
+    try {
+      // Open survey form (could be a modal or external link)
+      // For now, trigger the Win 6 feedback workflow
+      const response = await fetch('/api/workflows/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          traineeEmail: traineeData.email,
+          traineeName: userName,
+          roleCode: traineeData.role,
+          roleName: traineeData.roleName,
+        }),
+      })
+
+      if (response.ok) {
+        // Mark survey as completed
+        const surveyKey = `survey_completed_${traineeData.email}`
+        localStorage.setItem(surveyKey, 'true')
+        setSurveyCompleted(true)
+      }
+    } catch (error) {
+      console.error('Failed to trigger survey:', error)
+    }
+  }, [traineeData, userName])
+
+  // Check if all training is complete
+  const isTrainingComplete = useMemo(() => {
+    if (!traineeData) return false
+
+    return traineeData.trainingDays.every(day =>
+      day.activities.every(activity =>
+        activity.status === 'completed' ||
+        activity.activityType === 'lunch' ||
+        activity.activityType === 'break'
+      )
+    )
+  }, [traineeData])
+
+  // Trigger gift reveal when training completes AND reflection is closed
+  useEffect(() => {
+    // Only proceed if training is complete and gift hasn't been revealed
+    if (!isTrainingComplete || giftRevealed || !traineeData) {
+      return
+    }
+
+    // If reflection is showing, wait for it to close
+    if (showReflection) {
+      return
+    }
+
+    // Delay to let UI settle before showing gift
+    const timer = setTimeout(() => {
+      setShowGiftReveal(true)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [isTrainingComplete, giftRevealed, traineeData, showReflection])
+
+  // Handle gift reveal completion
+  const handleGiftRevealComplete = useCallback(() => {
+    if (!traineeData) return
+
+    // Show transition screen first
+    setShowTransition(true)
+    setShowGiftReveal(false)
+
+    // After transition, reveal certificate
+    setTimeout(() => {
+      const giftKey = `gift_revealed_${traineeData.email}`
+      localStorage.setItem(giftKey, 'true')
+      setGiftRevealed(true)
+      setShowTransition(false)
+    }, 1500)
+  }, [traineeData])
+
+  // Calculate completion stats
+  const completionStats = useMemo(() => {
+    if (!traineeData) return { totalActivities: 0, completedActivities: 0, totalHours: 0 }
+
+    let totalActivities = 0
+    let completedActivities = 0
+    let totalHours = 0
+
+    traineeData.trainingDays.forEach(day => {
+      day.activities.forEach(activity => {
+        if (activity.activityType !== 'lunch' && activity.activityType !== 'break') {
+          totalActivities++
+          totalHours += activity.durationHours || 0
+          if (activity.status === 'completed') {
+            completedActivities++
+          }
+        }
+      })
+    })
+
+    return { totalActivities, completedActivities, totalHours: Math.round(totalHours) }
+  }, [traineeData])
+
   // Get search data
   const searchModules = useMemo(() => {
     if (!traineeData) return []
@@ -336,6 +467,19 @@ export default function MyTrainingPage() {
   const currentDayData = useMemo(() => {
     return traineeData?.trainingDays.find((d) => d.dayNumber === selectedDay)
   }, [traineeData, selectedDay])
+
+  // Calculate total XP (1h = 100 XP)
+  const totalXP = useMemo(() => {
+    if (!traineeData) return 0
+    return traineeData.trainingDays.reduce((total, day) => {
+      return total + day.activities.reduce((dayTotal, activity) => {
+        if (activity.activityType !== 'lunch' && activity.activityType !== 'break') {
+          return dayTotal + Math.round((activity.durationHours || 0) * 100)
+        }
+        return dayTotal
+      }, 0)
+    }, 0)
+  }, [traineeData])
 
   // Get due date for current day
   const getDueDate = (dayNumber: number): string => {
@@ -397,14 +541,128 @@ export default function MyTrainingPage() {
     )
   }
 
+  // Transition screen between gift and certificate
+  if (showTransition) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+        <div className="text-center animate-pulse">
+          <div className="text-8xl mb-6">🎓</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Preparing your certificate...</h2>
+          <p className="text-purple-200">Just a moment</p>
+          <div className="mt-8 flex justify-center gap-2">
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Training Complete - Show Gift Reveal or Certificate
+  if (isTrainingComplete && traineeData && viewMode === 'certificate') {
+    const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '')
+    const certId = `SH-${traineeData.role}-${dateStr}-${traineeData.email.slice(0, 6).toUpperCase()}`
+
+    // Survey URL - Google Form for trainee feedback
+    const surveyUrl = 'https://forms.gle/Ar8hfoPHNdJ3K1gZ7'
+
+    // Show gift reveal experience first
+    if (showGiftReveal && !giftRevealed) {
+      return (
+        <GiftReveal
+          traineeName={userName}
+          roleName={traineeData.roleName}
+          roleCode={traineeData.role}
+          totalXP={totalXP}
+          onRevealComplete={handleGiftRevealComplete}
+        />
+      )
+    }
+
+    // After gift is revealed, show certificate with toggle button
+    return (
+      <div className="animate-fade-in">
+        {/* Toggle to Activities Button */}
+        <div className="fixed top-4 right-4 z-50">
+          <button
+            onClick={() => setViewMode('activities')}
+            className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm text-slate-700 rounded-xl shadow-lg hover:bg-white hover:scale-105 transition-all border border-slate-200"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            <span className="font-medium">View Activities</span>
+          </button>
+        </div>
+
+        <CompletionCelebration
+          traineeName={userName}
+          roleName={traineeData.roleName}
+          roleCode={traineeData.role}
+          completionDate={new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+          certificateId={certId}
+          finalScore={Math.round((completionStats.completedActivities / completionStats.totalActivities) * 100)}
+          totalHours={completionStats.totalHours}
+          activitiesCompleted={completionStats.completedActivities}
+          onTakeSurvey={handleTakeSurvey}
+          surveyCompleted={surveyCompleted}
+          surveyUrl={surveyUrl}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Training Completed Banner */}
+      {isTrainingComplete && (
+        <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <span className="text-xl">🎓</span>
+              </div>
+              <div>
+                <p className="font-bold">Training Completed!</p>
+                <p className="text-sm text-green-100">You earned {totalXP.toLocaleString()} XP</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setViewMode('certificate')}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-green-600 rounded-xl font-semibold hover:bg-green-50 transition-all shadow-lg"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+              View Certificate
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header with Search */}
       <div className="bg-white border-b sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Training</h1>
-            <p className="text-gray-500 text-sm">{traineeData.roleName}</p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">My Training</h1>
+              <p className="text-gray-500 text-sm">{traineeData.roleName}</p>
+            </div>
+            <button
+              onClick={() => setShowTour(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+              title="Take a quick tour of the dashboard"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="hidden sm:inline">Tour</span>
+            </button>
           </div>
           <SearchBar
             modules={searchModules}
@@ -419,34 +677,38 @@ export default function MyTrainingPage() {
           {/* Main Column */}
           <div className="lg:col-span-3 space-y-6">
             {/* Training Roadmap */}
-            <TrainingRoadmap
-              roleName={traineeData.roleName}
-              totalDays={traineeData.totalDays}
-              trainingDays={traineeData.trainingDays}
-              trainingStartDate={traineeData.trainingStartDate}
-              currentDay={findCurrentDay(traineeData.trainingDays)}
-              onDayClick={setSelectedDay}
-              selectedDay={selectedDay}
-            />
+            <div data-tour="roadmap">
+              <TrainingRoadmap
+                roleName={traineeData.roleName}
+                totalDays={traineeData.totalDays}
+                trainingDays={traineeData.trainingDays}
+                trainingStartDate={traineeData.trainingStartDate}
+                currentDay={findCurrentDay(traineeData.trainingDays)}
+                onDayClick={setSelectedDay}
+                selectedDay={selectedDay}
+              />
+            </div>
 
             {/* Day Schedule */}
             {currentDayData && (
-              <DaySchedule
-                dayNumber={currentDayData.dayNumber}
-                title={currentDayData.title}
-                description={currentDayData.description}
-                activities={currentDayData.activities}
-                dueDate={getDueDate(currentDayData.dayNumber)}
-                isLocked={isDayLocked(currentDayData.dayNumber)}
-                onMarkComplete={handleMarkComplete}
-                onStartActivity={handleStartActivity}
-              />
+              <div data-tour="activities">
+                <DaySchedule
+                  dayNumber={currentDayData.dayNumber}
+                  title={currentDayData.title}
+                  description={currentDayData.description}
+                  activities={currentDayData.activities}
+                  dueDate={getDueDate(currentDayData.dayNumber)}
+                  isLocked={isDayLocked(currentDayData.dayNumber)}
+                  onMarkComplete={handleMarkComplete}
+                  onStartActivity={handleStartActivity}
+                />
+              </div>
             )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24">
+            <div className="sticky top-24" data-tour="progress">
               <ProgressPanel
                 trainingDays={traineeData.trainingDays}
                 totalDays={traineeData.totalDays}
@@ -479,6 +741,14 @@ export default function MyTrainingPage() {
           dayNumber={completedDayForReflection}
           dayTitle={currentDayData.title}
           onSubmit={handleReflectionSubmit}
+        />
+      )}
+
+      {/* Onboarding Tour */}
+      {showTour && (
+        <OnboardingTour
+          traineeEmail={traineeData.email}
+          onComplete={() => setShowTour(false)}
         />
       )}
     </div>
