@@ -36,16 +36,25 @@ async function getTrainee(email: string): Promise<{ trainee: Trainee | null, err
       return { trainee: null, error: null }
     }
 
+    // Calculate days since training start
+    const trainingStartDate = item['Training Start Date'] || ''
+    let daysSinceStart = 0
+    if (trainingStartDate) {
+      const start = new Date(trainingStartDate)
+      const today = new Date()
+      daysSinceStart = Math.max(1, Math.ceil((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)))
+    }
+
     const trainee: Trainee = {
       email: item['Email Address'] || '',
       fullName: item['Full Name'] || '',
-      department: item['Department'] || '',
+      department: item['Role'] || item['Department'] || '',
       country: item['Country'] || '',
-      trainingStartDate: item['Training Start Date'] || '',
+      trainingStartDate: trainingStartDate,
       status: item['Status'] || 'New',
       coachName: item['Coach Name'] || '',
       coachEmail: item['Coach Email'] || '',
-      daysSinceTrainingStart: parseInt(String(item['Days since Training Start '] || item['Days since Training Start'] || '0')) || 0,
+      daysSinceTrainingStart: daysSinceStart,
       totalAssessmentsRequired: parseInt(String(item['Total Assessments Required'] || '0')) || 0,
       totalAssessmentsCompleted: parseInt(String(item['Total Assessments Completed'] || '0')) || 0,
       totalAssessmentsIncomplete: parseInt(String(item['Total Assessments Incomplete'] || '0')) || 0,
@@ -55,6 +64,42 @@ async function getTrainee(email: string): Promise<{ trainee: Trainee | null, err
   } catch (error) {
     console.error('Error fetching trainee:', error)
     return { trainee: null, error: 'Failed to load trainee data' }
+  }
+}
+
+// Fetch activity progress from Supabase
+async function getActivityProgress(email: string): Promise<{
+  completed: number
+  total: number
+  activities: { activity_title: string; day_number: number; completed_at: string; performance_flag: string }[]
+}> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const response = await fetch(
+      `${baseUrl}/api/training/performance?email=${encodeURIComponent(email)}`,
+      { cache: 'no-store' }
+    )
+
+    if (!response.ok) {
+      return { completed: 0, total: 24, activities: [] }
+    }
+
+    const data = await response.json()
+    // All records in activity_performance are completed activities
+    const completedActivities = data.performance || []
+
+    return {
+      completed: completedActivities.length,
+      total: 24, // OC role has ~24 activities
+      activities: completedActivities.map((p: { activity_title: string; day_number: number; created_at: string; performance_flag: string }) => ({
+        activity_title: p.activity_title,
+        day_number: p.day_number,
+        completed_at: p.created_at, // Use created_at as completion timestamp
+        performance_flag: p.performance_flag,
+      })),
+    }
+  } catch {
+    return { completed: 0, total: 24, activities: [] }
   }
 }
 
@@ -81,9 +126,19 @@ export default async function TraineeDetailPage({
     notFound()
   }
 
-  const completionPercentage = trainee.totalAssessmentsRequired > 0
-    ? Math.round((trainee.totalAssessmentsCompleted / trainee.totalAssessmentsRequired) * 100)
+  // Fetch real progress from Supabase
+  const activityProgress = await getActivityProgress(email)
+
+  const completionPercentage = activityProgress.total > 0
+    ? Math.round((activityProgress.completed / activityProgress.total) * 100)
     : 0
+
+  // Determine training status based on progress
+  const getTrainingStatus = () => {
+    if (activityProgress.completed === 0) return trainee.status
+    if (activityProgress.completed >= activityProgress.total) return 'Training Complete'
+    return `Day ${trainee.daysSinceTrainingStart} - In Progress`
+  }
 
   return (
     <div className="space-y-6">
@@ -122,7 +177,7 @@ export default async function TraineeDetailPage({
               </div>
             </div>
           </div>
-          <StatusBadge status={trainee.status} />
+          <StatusBadge status={getTrainingStatus()} />
         </div>
       </div>
 
@@ -130,7 +185,7 @@ export default async function TraineeDetailPage({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard label="Training Day" value={`Day ${trainee.daysSinceTrainingStart}`} />
         <StatCard label="Completion" value={`${completionPercentage}%`} />
-        <StatCard label="Assessments Done" value={`${trainee.totalAssessmentsCompleted}/${trainee.totalAssessmentsRequired}`} />
+        <StatCard label="Activities Done" value={`${activityProgress.completed}/${activityProgress.total}`} />
         <StatCard label="Coach" value={trainee.coachName || 'Not assigned'} />
       </div>
 
@@ -148,20 +203,20 @@ export default async function TraineeDetailPage({
             />
           </div>
           <span className="text-lg font-semibold text-gray-900">
-            {trainee.totalAssessmentsCompleted} / {trainee.totalAssessmentsRequired}
+            {activityProgress.completed} / {activityProgress.total}
           </span>
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-green-50 rounded-lg p-3">
-            <p className="text-2xl font-bold text-green-600">{trainee.totalAssessmentsCompleted}</p>
+            <p className="text-2xl font-bold text-green-600">{activityProgress.completed}</p>
             <p className="text-sm text-green-700">Completed</p>
           </div>
           <div className="bg-yellow-50 rounded-lg p-3">
-            <p className="text-2xl font-bold text-yellow-600">{trainee.totalAssessmentsIncomplete}</p>
+            <p className="text-2xl font-bold text-yellow-600">{activityProgress.total - activityProgress.completed}</p>
             <p className="text-sm text-yellow-700">Remaining</p>
           </div>
           <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-2xl font-bold text-blue-600">{trainee.totalAssessmentsRequired}</p>
+            <p className="text-2xl font-bold text-blue-600">{activityProgress.total}</p>
             <p className="text-sm text-blue-700">Total Required</p>
           </div>
         </div>
@@ -191,14 +246,14 @@ export default async function TraineeDetailPage({
               status={trainee.status === 'New' ? 'pending' : 'completed'}
             />
 
-            {/* Assessments */}
+            {/* Training Progress */}
             <TimelineItem
-              title="Assessments In Progress"
-              description={`${trainee.totalAssessmentsCompleted} of ${trainee.totalAssessmentsRequired} completed`}
+              title="Training In Progress"
+              description={`${activityProgress.completed} of ${activityProgress.total} activities completed`}
               status={
-                trainee.totalAssessmentsCompleted === trainee.totalAssessmentsRequired && trainee.totalAssessmentsRequired > 0
+                activityProgress.completed >= activityProgress.total
                   ? 'completed'
-                  : trainee.totalAssessmentsCompleted > 0
+                  : activityProgress.completed > 0
                     ? 'current'
                     : 'pending'
               }
@@ -207,8 +262,8 @@ export default async function TraineeDetailPage({
             {/* Training Complete */}
             <TimelineItem
               title="Training Complete"
-              description="All assessments passed, final report generated"
-              status={['Training Complete', 'Report Sent'].includes(trainee.status) ? 'completed' : 'pending'}
+              description="All activities completed, ready for final assessment"
+              status={activityProgress.completed >= activityProgress.total ? 'completed' : 'pending'}
             />
           </div>
         </div>

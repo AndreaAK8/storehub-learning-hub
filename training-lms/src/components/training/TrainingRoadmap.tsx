@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 interface TrainingDay {
   dayNumber: number
   title: string
-  activities: { status: string }[]
+  activities: { status: string; activityType: string }[]
 }
 
 interface TrainingRoadmapProps {
@@ -27,12 +27,18 @@ export function TrainingRoadmap({
   onDayClick,
   selectedDay,
 }: TrainingRoadmapProps) {
-  // Calculate day statuses
+  // Calculate day statuses (excluding lunch/break activities)
   const dayStatuses = useMemo(() => {
     return trainingDays.map((day) => {
-      const allCompleted = day.activities.every((a) => a.status === 'completed')
-      const anyInProgress = day.activities.some((a) => a.status === 'in_progress')
-      const anyCompleted = day.activities.some((a) => a.status === 'completed')
+      // Filter out lunch and break activities
+      const trackableActivities = day.activities.filter(
+        (a) => a.activityType !== 'lunch' && a.activityType !== 'break'
+      )
+
+      const allCompleted = trackableActivities.length > 0 &&
+        trackableActivities.every((a) => a.status === 'completed')
+      const anyInProgress = trackableActivities.some((a) => a.status === 'in_progress')
+      const anyCompleted = trackableActivities.some((a) => a.status === 'completed')
 
       if (allCompleted) return 'completed'
       if (anyInProgress || anyCompleted) return 'in_progress'
@@ -71,17 +77,17 @@ export function TrainingRoadmap({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Your Training Journey</h2>
-        <p className="text-gray-600">{roleName} • {totalDays} Days</p>
+        <h2 className="text-xl font-bold" style={{ color: '#2f2922', fontFamily: 'Barlow, sans-serif' }}>Your Training Journey</h2>
+        <p style={{ color: '#7a7672' }}>{roleName} • {totalDays} Days</p>
       </div>
 
       {/* Day Progress Bar */}
       <div className="relative mb-8">
         {/* Connection Line */}
-        <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-200" />
+        <div className="absolute top-4 left-0 right-0 h-0.5 bg-slate-200" />
 
         {/* Day Dots */}
         <div className="relative flex justify-between">
@@ -103,20 +109,17 @@ export function TrainingRoadmap({
               >
                 {/* Dot */}
                 <div
-                  className={`
-                    w-8 h-8 rounded-full flex items-center justify-center
-                    transition-all duration-200 z-10
-                    ${status === 'completed'
-                      ? 'bg-green-500 text-white'
-                      : status === 'in_progress'
-                        ? 'bg-blue-500 text-white ring-4 ring-blue-100'
-                        : isUnlocked
-                          ? 'bg-gray-200 text-gray-600'
-                          : 'bg-gray-100 text-gray-400'
-                    }
-                    ${isSelected ? 'ring-4 ring-blue-200 scale-110' : ''}
-                    ${isUnlocked && !isSelected ? 'hover:scale-105' : ''}
-                  `}
+                  className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 z-10"
+                  style={{
+                    backgroundColor: status === 'completed' ? '#2a6ee8'
+                      : status === 'in_progress' ? '#ff9419'
+                      : isUnlocked ? '#eae9e8' : '#f5f5f5',
+                    color: status === 'completed' || status === 'in_progress' ? 'white'
+                      : isUnlocked ? '#2f2922' : '#a09d9a',
+                    boxShadow: status === 'in_progress' ? '0 0 0 4px #fff4e8'
+                      : isSelected ? '0 0 0 4px #ffe1bf' : 'none',
+                    transform: isSelected ? 'scale(1.1)' : 'scale(1)',
+                  }}
                 >
                   {status === 'completed' ? (
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,10 +136,10 @@ export function TrainingRoadmap({
 
                 {/* Label */}
                 <div className="mt-2 text-center">
-                  <div className={`text-xs font-medium ${isSelected ? 'text-blue-600' : 'text-gray-700'}`}>
+                  <div className="text-xs font-medium" style={{ color: isSelected ? '#ff9419' : '#2f2922' }}>
                     Day {dayNumber}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs" style={{ color: '#7a7672' }}>
                     {status === 'completed'
                       ? 'Done'
                       : status === 'in_progress'
@@ -150,7 +153,7 @@ export function TrainingRoadmap({
 
                 {/* Tooltip with due date */}
                 {isUnlocked && (
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity text-white text-xs px-2 py-1 rounded whitespace-nowrap" style={{ backgroundColor: '#2f2922' }}>
                     Due: {getDueDate(dayNumber)}
                   </div>
                 )}
@@ -162,9 +165,9 @@ export function TrainingRoadmap({
 
       {/* Info Cards */}
       <div className="grid grid-cols-3 gap-4 text-sm">
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="text-gray-500 mb-1">Training Start</div>
-          <div className="font-semibold text-gray-900">
+        <div className="rounded-lg p-3" style={{ backgroundColor: '#fff4e8' }}>
+          <div className="mb-1" style={{ color: '#7a7672' }}>Training Start</div>
+          <div className="font-semibold" style={{ color: '#2f2922' }}>
             {trainingStartDate
               ? new Date(trainingStartDate).toLocaleDateString('en-US', {
                   month: 'short',
@@ -175,15 +178,15 @@ export function TrainingRoadmap({
             }
           </div>
         </div>
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="text-gray-500 mb-1">Expected Completion</div>
-          <div className="font-semibold text-gray-900">
+        <div className="rounded-lg p-3" style={{ backgroundColor: '#e9f0fd' }}>
+          <div className="mb-1" style={{ color: '#7a7672' }}>Expected Completion</div>
+          <div className="font-semibold" style={{ color: '#2f2922' }}>
             {expectedCompletion || 'Not set'}
           </div>
         </div>
-        <div className="bg-gray-50 rounded-lg p-3">
-          <div className="text-gray-500 mb-1">Current Progress</div>
-          <div className="font-semibold text-gray-900">
+        <div className="rounded-lg p-3" style={{ backgroundColor: '#ffeef0' }}>
+          <div className="mb-1" style={{ color: '#7a7672' }}>Current Progress</div>
+          <div className="font-semibold" style={{ color: '#2f2922' }}>
             Day {currentDay} of {totalDays}
           </div>
         </div>

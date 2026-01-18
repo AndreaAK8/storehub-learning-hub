@@ -26,12 +26,6 @@ export default function MobileNav({ userRole }: MobileNavProps) {
       roles: ['trainee']
     },
     {
-      name: 'Resources',
-      href: '/dashboard/resources',
-      icon: BookIcon,
-      roles: ['trainee']
-    },
-    {
       name: 'Trainees',
       href: '/dashboard/trainees',
       icon: UsersIcon,
@@ -72,15 +66,15 @@ export default function MobileNav({ userRole }: MobileNavProps) {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-gray-900 text-white shadow-lg"
+        className="fixed top-4 left-4 z-50 p-2.5 rounded-xl bg-slate-900 text-white shadow-lg"
         aria-label="Toggle menu"
       >
         {isOpen ? (
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         )}
@@ -89,23 +83,32 @@ export default function MobileNav({ userRole }: MobileNavProps) {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* Slide-out menu */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-gray-900 z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 w-72 bg-slate-900 z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full pt-16 pb-4">
+          {/* Logo */}
           <div className="flex items-center px-4 mb-6">
-            <span className="text-xl font-bold text-white">Training LMS</span>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <span className="text-lg font-semibold text-white">Learning Hub</span>
+            </div>
           </div>
 
-          <nav className="flex-1 px-2 space-y-1 overflow-y-auto">
+          {/* Navigation */}
+          <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
             {filteredNavigation.map((item) => {
               const isActive = pathname === item.href
               return (
@@ -113,15 +116,15 @@ export default function MobileNav({ userRole }: MobileNavProps) {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 ${
                     isActive
-                      ? 'bg-gray-800 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      ? 'bg-orange-500/20 text-orange-400 border-l-2 border-orange-400'
+                      : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                   }`}
                 >
                   <item.icon
-                    className={`mr-3 h-5 w-5 flex-shrink-0 ${
-                      isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                    className={`mr-3 h-5 w-5 flex-shrink-0 transition-colors ${
+                      isActive ? 'text-orange-400' : 'text-slate-500 group-hover:text-slate-300'
                     }`}
                   />
                   {item.name}
@@ -130,9 +133,19 @@ export default function MobileNav({ userRole }: MobileNavProps) {
             })}
           </nav>
 
-          <div className="px-4 py-4 border-t border-gray-700">
-            <p className="text-xs text-gray-400">Logged in as</p>
-            <p className="text-sm font-medium text-white capitalize">{userRole}</p>
+          {/* Role Badge */}
+          <div className="px-4 py-4 border-t border-slate-700/50">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center">
+                <span className="text-xs font-medium text-slate-300 uppercase">
+                  {userRole.charAt(0)}
+                </span>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Logged in as</p>
+                <p className="text-sm font-medium text-white capitalize">{userRole}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

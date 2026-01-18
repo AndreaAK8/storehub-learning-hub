@@ -37,7 +37,7 @@ export async function GET() {
     const trainees = data.map((item: Record<string, unknown>) => ({
       email: item['Email Address'] || '',
       fullName: item['Full Name'] || '',
-      department: item['Department'] || '',
+      department: item['Role'] || '',  // Role column from Google Sheet
       country: item['Country'] || '',
       trainingStartDate: item['Training Start Date'] || '',
       status: item['Status'] || 'New',

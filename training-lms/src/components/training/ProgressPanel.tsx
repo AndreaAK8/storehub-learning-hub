@@ -89,38 +89,35 @@ export function ProgressPanel({
     const completedDays = dayProgress.filter((d) => d.isComplete).length
 
     if (completedDays >= expectedDay) {
-      return { status: 'on_track', label: 'On Schedule', color: 'text-green-600', bg: 'bg-green-100' }
+      return { status: 'on_track', label: 'On Schedule', color: 'text-blue-600', bg: 'bg-blue-100' }
     } else if (completedDays >= expectedDay - 1) {
-      return { status: 'slight_delay', label: 'Slight Delay', color: 'text-yellow-600', bg: 'bg-yellow-100' }
+      return { status: 'slight_delay', label: 'Slight Delay', color: 'text-amber-600', bg: 'bg-amber-100' }
     } else {
       return { status: 'behind', label: 'Behind Schedule', color: 'text-red-600', bg: 'bg-red-100' }
     }
   }, [trainingStartDate, totalDays, dayProgress])
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 space-y-6">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-6">
       {/* Header */}
       <div>
-        <h3 className="text-lg font-bold text-gray-900">Your Progress</h3>
-        <p className="text-sm text-gray-500">Track your training completion</p>
+        <h3 className="text-lg font-bold text-slate-900">Your Progress</h3>
+        <p className="text-sm text-slate-500">Track your training completion</p>
       </div>
 
       {/* Overall Progress */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">Overall Completion</span>
-          <span className="text-sm font-bold text-gray-900">{overallProgress}%</span>
+          <span className="text-sm font-medium text-slate-700">Overall Completion</span>
+          <span className="text-sm font-bold text-slate-900">{overallProgress}%</span>
         </div>
-        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all duration-500 ${
-              overallProgress === 100
-                ? 'bg-green-500'
-                : overallProgress >= 50
-                  ? 'bg-blue-500'
-                  : 'bg-yellow-500'
-            }`}
-            style={{ width: `${overallProgress}%` }}
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${overallProgress}%`,
+              backgroundColor: overallProgress === 100 ? '#2a6ee8' : overallProgress >= 50 ? '#ff9419' : '#f59e0b'
+            }}
           />
         </div>
       </div>
@@ -129,12 +126,12 @@ export function ProgressPanel({
       <div className={`p-3 rounded-lg ${scheduleStatus.bg}`}>
         <div className="flex items-center gap-2">
           {scheduleStatus.status === 'on_track' && (
-            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           )}
           {scheduleStatus.status === 'slight_delay' && (
-            <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           )}
@@ -151,18 +148,16 @@ export function ProgressPanel({
 
       {/* Per-Day Progress */}
       <div className="space-y-3">
-        <h4 className="text-sm font-medium text-gray-700">Daily Breakdown</h4>
+        <h4 className="text-sm font-medium text-slate-700">Daily Breakdown</h4>
         {dayProgress.map((day) => (
           <div key={day.dayNumber} className="flex items-center gap-3">
             {/* Day indicator */}
             <div
-              className={`
-                w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium
-                ${day.isComplete ? 'bg-green-500 text-white' : ''}
-                ${day.isInProgress ? 'bg-blue-500 text-white' : ''}
-                ${day.isLocked ? 'bg-gray-100 text-gray-400' : ''}
-                ${!day.isComplete && !day.isInProgress && !day.isLocked ? 'bg-gray-200 text-gray-600' : ''}
-              `}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium"
+              style={{
+                backgroundColor: day.isComplete ? '#2a6ee8' : day.isInProgress ? '#ff9419' : day.isLocked ? '#f1f5f9' : '#e2e8f0',
+                color: day.isComplete || day.isInProgress ? 'white' : day.isLocked ? '#94a3b8' : '#475569'
+              }}
             >
               {day.isComplete ? '✓' : day.isLocked ? '🔒' : day.dayNumber}
             </div>
@@ -170,15 +165,16 @@ export function ProgressPanel({
             {/* Progress bar */}
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-gray-600">Day {day.dayNumber}</span>
-                <span className="text-xs text-gray-500">{day.percentage}%</span>
+                <span className="text-xs text-slate-600">Day {day.dayNumber}</span>
+                <span className="text-xs text-slate-500">{day.percentage}%</span>
               </div>
-              <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all ${
-                    day.isComplete ? 'bg-green-500' : day.isInProgress ? 'bg-blue-500' : 'bg-gray-300'
-                  }`}
-                  style={{ width: `${day.percentage}%` }}
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: `${day.percentage}%`,
+                    backgroundColor: day.isComplete ? '#2a6ee8' : day.isInProgress ? '#ff9419' : '#cbd5e1'
+                  }}
                 />
               </div>
             </div>
@@ -190,8 +186,8 @@ export function ProgressPanel({
       {assessmentsTotal > 0 && (
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Assessments Passed</span>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm text-slate-600">Assessments Passed</span>
+            <span className="text-sm font-bold text-slate-900">
               {assessmentsPassed}/{assessmentsTotal}
             </span>
           </div>
@@ -201,19 +197,20 @@ export function ProgressPanel({
       {/* Coach Info */}
       {coachName && (
         <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Your Coach</h4>
+          <h4 className="text-sm font-medium text-slate-700 mb-2">Your Coach</h4>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-600 font-medium">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e9f0fd' }}>
+              <span className="font-medium" style={{ color: '#2a6ee8' }}>
                 {coachName.split(' ').map((n) => n[0]).join('')}
               </span>
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-900">{coachName}</div>
+              <div className="text-sm font-medium text-slate-900">{coachName}</div>
               {coachEmail && (
                 <a
                   href={`mailto:${coachEmail}`}
-                  className="text-xs text-blue-600 hover:underline"
+                  className="text-xs hover:underline"
+                  style={{ color: '#2a6ee8' }}
                 >
                   {coachEmail}
                 </a>

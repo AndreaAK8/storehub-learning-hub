@@ -10,6 +10,7 @@ import {
   HelpButton,
   ReflectionModal,
 } from '@/components/training'
+import type { ActivityPerformance } from '@/components/training'
 
 interface Activity {
   id: string
@@ -96,7 +97,18 @@ export default function MyTrainingPage() {
 
       const data = await response.json()
 
-      // Transform data for components
+      // Fetch saved progress from Supabase
+      const progressResponse = await fetch(
+        `/api/training/performance?email=${encodeURIComponent(traineeEmail || '')}`
+      )
+      const progressData = progressResponse.ok ? await progressResponse.json() : { performance: [] }
+      // All records in activity_performance are completed activities
+      const completedActivities = new Set(
+        progressData.performance
+          ?.map((p: { activity_id: string }) => p.activity_id) || []
+      )
+
+      // Transform data for components, merging saved progress
       setTraineeData({
         email: traineeEmail || '',
         role: data.role.shortCode,
@@ -107,6 +119,8 @@ export default function MyTrainingPage() {
           ...day,
           activities: day.activities.map((activity: Activity) => ({
             ...activity,
+            // Restore completed status from Supabase
+            status: completedActivities.has(activity.id) ? 'completed' : activity.status,
             // Add default success criteria based on activity type
             successCriteria: activity.successCriteria || getDefaultSuccessCriteria(activity),
             tldr: activity.tldr || getDefaultTldr(activity),
@@ -164,10 +178,17 @@ export default function MyTrainingPage() {
   }
 
   // Handle marking activity as complete
-  const handleMarkComplete = useCallback(async (activityId: string) => {
+  const handleMarkComplete = useCallback(async (activityId: string, performance?: ActivityPerformance) => {
     if (!traineeData) return
 
     try {
+      // Find the activity to get its details
+      let activityDetails: Activity | undefined
+      traineeData.trainingDays.forEach(day => {
+        const found = day.activities.find(a => a.id === activityId)
+        if (found) activityDetails = found
+      })
+
       // Update local state optimistically
       setTraineeData((prev) => {
         if (!prev) return null
@@ -183,6 +204,33 @@ export default function MyTrainingPage() {
 
         return { ...prev, trainingDays: updatedDays }
       })
+
+      // Save performance tracking data if available
+      if (performance) {
+        try {
+          await fetch('/api/training/performance', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              traineeEmail: traineeData.email,
+              traineeName: traineeData.email?.split('@')[0],
+              roleCode: traineeData.role,
+              dayNumber: selectedDay,
+              activityId: performance.activityId,
+              activityTitle: performance.activityTitle,
+              activityType: activityDetails?.activityType,
+              allocatedSeconds: performance.allocatedSeconds,
+              actualSeconds: performance.actualSeconds,
+              performanceFlag: performance.performanceFlag,
+              percentageOfAllocated: performance.percentageOfAllocated,
+            }),
+          })
+          console.log(`Activity completed: ${performance.performanceFlag} (${performance.percentageOfAllocated}% of allocated time)`)
+        } catch (perfErr) {
+          console.error('Failed to save performance data:', perfErr)
+          // Don't fail the completion, just log the error
+        }
+      }
 
       // Check if day is now complete
       const currentDayData = traineeData.trainingDays.find((d) => d.dayNumber === selectedDay)
@@ -236,11 +284,33 @@ export default function MyTrainingPage() {
     improvement: string
     confidenceLevel: number
   }) => {
-    console.log('Reflection submitted:', reflection)
-    // TODO: Save reflection to Supabase
+    try {
+      const response = await fetch('/api/training/reflection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          traineeEmail: traineeData?.email || 'demo@storehub.com',
+          traineeName: traineeData?.email?.split('@')[0] || 'Demo User',
+          roleCode: traineeData?.role || 'OC',
+          dayNumber: completedDayForReflection,
+          confusingTopic: reflection.confusingTopic,
+          improvement: reflection.improvement,
+          confidenceLevel: reflection.confidenceLevel,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save reflection')
+      }
+
+      console.log('Reflection saved successfully')
+    } catch (error) {
+      console.error('Failed to submit reflection:', error)
+    }
+
     setShowReflection(false)
     setCompletedDayForReflection(null)
-  }, [])
+  }, [traineeData, completedDayForReflection])
 
   // Handle search result click
   const handleSearchResultClick = useCallback((result: { dayNumber?: number }) => {

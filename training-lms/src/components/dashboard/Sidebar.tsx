@@ -12,6 +12,12 @@ export default function Sidebar({ userRole }: SidebarProps) {
 
   const navigation = [
     {
+      name: 'Training Overview',
+      href: '/dashboard/training-overview',
+      icon: BookIcon,
+      roles: ['trainee']
+    },
+    {
       name: 'Dashboard',
       href: '/dashboard',
       icon: HomeIcon,
@@ -21,12 +27,6 @@ export default function Sidebar({ userRole }: SidebarProps) {
       name: 'My Schedule',
       href: '/dashboard/my-training',
       icon: CalendarIcon,
-      roles: ['trainee']
-    },
-    {
-      name: 'Resources',
-      href: '/dashboard/resources',
-      icon: BookIcon,
       roles: ['trainee']
     },
     {
@@ -67,28 +67,41 @@ export default function Sidebar({ userRole }: SidebarProps) {
 
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-      <div className="flex flex-col flex-grow bg-gray-900 pt-5 pb-4 overflow-y-auto">
+      <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto" style={{ backgroundColor: '#2f2922' }}>
+        {/* Logo */}
         <div className="flex items-center flex-shrink-0 px-4">
-          <span className="text-xl font-bold text-white">Training LMS</span>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#ff9419' }}>
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <span className="text-lg font-semibold text-white" style={{ fontFamily: 'Barlow, sans-serif' }}>Learning Hub</span>
+          </div>
         </div>
-        <nav className="mt-8 flex-1 px-2 space-y-1">
+
+        {/* Navigation */}
+        <nav className="mt-8 flex-1 px-3 space-y-1">
           {filteredNavigation.map((item) => {
             const isActive = pathname === item.href
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 ${
                   isActive
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                    ? 'text-white border-l-2'
+                    : 'hover:text-white'
                 }`}
+                style={{
+                  backgroundColor: isActive ? 'rgba(255, 148, 25, 0.2)' : 'transparent',
+                  color: isActive ? '#ff9419' : '#c5c3c1',
+                  borderColor: isActive ? '#ff9419' : 'transparent',
+                }}
               >
-                <item.icon
-                  className={`mr-3 h-5 w-5 flex-shrink-0 ${
-                    isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
-                  }`}
-                />
+                <span className="mr-3 h-5 w-5 flex-shrink-0 transition-colors" style={{ color: isActive ? '#ff9419' : '#7a7672' }}>
+                  <item.icon className="h-5 w-5" />
+                </span>
                 {item.name}
               </Link>
             )
@@ -96,10 +109,15 @@ export default function Sidebar({ userRole }: SidebarProps) {
         </nav>
 
         {/* Role Badge */}
-        <div className="flex-shrink-0 px-4 py-4 border-t border-gray-700">
-          <div className="flex items-center">
-            <div className="ml-1">
-              <p className="text-xs text-gray-400">Logged in as</p>
+        <div className="flex-shrink-0 px-4 py-4" style={{ borderTop: '1px solid rgba(122, 118, 114, 0.3)' }}>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#55604a' }}>
+              <span className="text-xs font-medium uppercase" style={{ color: '#c5c3c1' }}>
+                {userRole.charAt(0)}
+              </span>
+            </div>
+            <div>
+              <p className="text-xs" style={{ color: '#7a7672' }}>Logged in as</p>
               <p className="text-sm font-medium text-white capitalize">{userRole}</p>
             </div>
           </div>

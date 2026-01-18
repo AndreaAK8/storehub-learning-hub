@@ -24,6 +24,7 @@ export default async function DashboardLayout({
     .eq('id', user.id)
     .single()
 
+  // Use role from database directly
   const userRole = (profile?.role || 'trainee') as 'admin' | 'coach' | 'trainee'
 
   return (

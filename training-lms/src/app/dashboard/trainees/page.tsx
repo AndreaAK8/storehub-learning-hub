@@ -2,12 +2,165 @@ import { createClient } from '@/lib/supabase/server'
 import TraineeTable from '@/components/dashboard/TraineeTable'
 import type { Trainee } from '@/types/trainee'
 
-async function getTrainees(): Promise<{ trainees: Trainee[], error: string | null }> {
+// Demo data - same batches as TrainerDashboard
+const demoTrainees: Trainee[] = [
+  // OC Batch - Day 2
+  {
+    email: 'sarah.chen@storehub.com',
+    fullName: 'Sarah Chen',
+    status: 'In Progress',
+    department: 'Onboarding Coordinator',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-13',
+    coachName: 'Wei Lin',
+    coachEmail: 'wei.lin@storehub.com',
+    daysSinceTrainingStart: 2,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 1,
+    totalAssessmentsIncomplete: 3,
+    role: 'OC',
+    currentTrainingDay: 2,
+  },
+  {
+    email: 'ahmad.rizal@storehub.com',
+    fullName: 'Ahmad Rizal',
+    status: 'In Progress',
+    department: 'Onboarding Coordinator',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-13',
+    coachName: 'Wei Lin',
+    coachEmail: 'wei.lin@storehub.com',
+    daysSinceTrainingStart: 2,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 1,
+    totalAssessmentsIncomplete: 3,
+    role: 'OC',
+    currentTrainingDay: 2,
+  },
+  {
+    email: 'nurul.aina@storehub.com',
+    fullName: 'Nurul Aina',
+    status: 'In Progress',
+    department: 'Onboarding Coordinator',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-13',
+    coachName: 'Wei Lin',
+    coachEmail: 'wei.lin@storehub.com',
+    daysSinceTrainingStart: 2,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 1,
+    totalAssessmentsIncomplete: 3,
+    role: 'OC',
+    currentTrainingDay: 2,
+  },
+  {
+    email: 'kevin.lim@storehub.com',
+    fullName: 'Kevin Lim',
+    status: 'In Progress',
+    department: 'Onboarding Coordinator',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-13',
+    coachName: 'Wei Lin',
+    coachEmail: 'wei.lin@storehub.com',
+    daysSinceTrainingStart: 2,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 0,
+    totalAssessmentsIncomplete: 4,
+    role: 'OC',
+    currentTrainingDay: 2,
+    performanceFlag: 'At Risk',
+  },
+  // CSM Batch - Day 4
+  {
+    email: 'priya.sharma@storehub.com',
+    fullName: 'Priya Sharma',
+    status: 'In Progress',
+    department: 'Customer Success Manager',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-10',
+    coachName: 'Jason Tan',
+    coachEmail: 'jason.tan@storehub.com',
+    daysSinceTrainingStart: 4,
+    totalAssessmentsRequired: 5,
+    totalAssessmentsCompleted: 3,
+    totalAssessmentsIncomplete: 2,
+    role: 'CSM',
+    currentTrainingDay: 4,
+  },
+  {
+    email: 'david.wong@storehub.com',
+    fullName: 'David Wong',
+    status: 'In Progress',
+    department: 'Customer Success Manager',
+    country: 'Philippines',
+    trainingStartDate: '2026-01-10',
+    coachName: 'Jason Tan',
+    coachEmail: 'jason.tan@storehub.com',
+    daysSinceTrainingStart: 4,
+    totalAssessmentsRequired: 5,
+    totalAssessmentsCompleted: 4,
+    totalAssessmentsIncomplete: 1,
+    role: 'CSM',
+    currentTrainingDay: 4,
+  },
+  // New batch - Jan 19
+  {
+    email: 'mei.ling@storehub.com',
+    fullName: 'Mei Ling Tan',
+    status: 'New',
+    department: 'Merchant Care',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-19',
+    coachName: 'Unassigned',
+    coachEmail: '',
+    daysSinceTrainingStart: 0,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 0,
+    totalAssessmentsIncomplete: 4,
+    role: 'MC',
+    currentTrainingDay: 0,
+  },
+  {
+    email: 'raj.kumar@storehub.com',
+    fullName: 'Raj Kumar',
+    status: 'New',
+    department: 'Merchant Care',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-19',
+    coachName: 'Unassigned',
+    coachEmail: '',
+    daysSinceTrainingStart: 0,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 0,
+    totalAssessmentsIncomplete: 4,
+    role: 'MC',
+    currentTrainingDay: 0,
+  },
+  // Completed trainee
+  {
+    email: 'lisa.wong@storehub.com',
+    fullName: 'Lisa Wong',
+    status: 'Training Complete',
+    department: 'Onboarding Coordinator',
+    country: 'Malaysia',
+    trainingStartDate: '2026-01-06',
+    coachName: 'Wei Lin',
+    coachEmail: 'wei.lin@storehub.com',
+    daysSinceTrainingStart: 8,
+    totalAssessmentsRequired: 4,
+    totalAssessmentsCompleted: 4,
+    totalAssessmentsIncomplete: 0,
+    role: 'OC',
+    currentTrainingDay: 4,
+  },
+]
+
+async function getTrainees(): Promise<{ trainees: Trainee[], error: string | null, isDemo: boolean }> {
   try {
     const n8nUrl = process.env.N8N_WEBHOOK_TRAINEES
 
     if (!n8nUrl) {
-      return { trainees: [], error: 'n8n webhook URL not configured' }
+      return { trainees: demoTrainees, error: null, isDemo: true }
     }
 
     // Fetch directly from n8n webhook
@@ -50,10 +203,16 @@ async function getTrainees(): Promise<{ trainees: Trainee[], error: string | nul
       currentTrainingDay: parseInt(String(item['Current Training Day'] || '0')) || undefined,
     })).filter((t: Trainee) => t.fullName) // Filter out empty rows
 
-    return { trainees, error: null }
+    // If no real trainees, return demo data
+    if (trainees.length === 0) {
+      return { trainees: demoTrainees, error: null, isDemo: true }
+    }
+
+    return { trainees, error: null, isDemo: false }
   } catch (error) {
     console.error('Error fetching trainees:', error)
-    return { trainees: [], error: 'Failed to load trainees from n8n. Make sure your workflow is active.' }
+    // Return demo data on error
+    return { trainees: demoTrainees, error: null, isDemo: true }
   }
 }
 
@@ -67,8 +226,8 @@ export default async function TraineesPage() {
     .eq('id', user?.id)
     .single()
 
-  // Fetch real data from n8n
-  const { trainees, error } = await getTrainees()
+  // Fetch real data from n8n (or demo data)
+  const { trainees, error, isDemo } = await getTrainees()
 
   // Stats
   const totalTrainees = trainees.length
@@ -89,11 +248,11 @@ export default async function TraineesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Trainees</h1>
-          <p className="text-gray-600 mt-1">Manage and track all trainees in the system</p>
+          <h1 className="text-2xl font-bold text-[var(--sh-black)]">Trainees</h1>
+          <p className="text-[var(--neutral-400)] mt-1">Manage and track all trainees in the system</p>
         </div>
         {profile?.role === 'admin' && (
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <button className="btn-brand px-4 py-2 rounded-lg flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
@@ -110,6 +269,19 @@ export default async function TraineesPage() {
         <StatCard label="Avg. Completion" value={`${avgCompletion}%`} color="purple" />
       </div>
 
+      {/* Demo Mode Banner */}
+      {isDemo && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-amber-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p className="text-amber-800 font-medium">Demo Mode</p>
+            <p className="text-amber-700 text-sm">Showing sample data. Real trainee data will appear once connected to n8n.</p>
+          </div>
+        </div>
+      )}
+
       {/* Error Banner */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
@@ -124,7 +296,7 @@ export default async function TraineesPage() {
       )}
 
       {/* Success Banner */}
-      {!error && trainees.length > 0 && (
+      {!error && !isDemo && trainees.length > 0 && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
           <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -144,10 +316,10 @@ export default async function TraineesPage() {
 
 function StatCard({ label, value, color }: { label: string; value: string | number; color: string }) {
   const colors = {
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    yellow: 'bg-yellow-50 border-yellow-200 text-yellow-700',
-    green: 'bg-green-50 border-green-200 text-green-700',
-    purple: 'bg-purple-50 border-purple-200 text-purple-700',
+    blue: 'stat-card-blue',
+    yellow: 'stat-card-orange',
+    green: 'badge-success',
+    purple: 'stat-card-pink',
   }
 
   return (

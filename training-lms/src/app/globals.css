@@ -1,26 +1,259 @@
 @import "tailwindcss";
 
+/* Google Fonts are loaded via <link> tag in layout.tsx */
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2f2922;
+
+  /* StoreHub Brand Colors */
+  --sh-orange: #ff9419;
+  --sh-orange-dark: #ff630f;
+  --sh-black: #2f2922;
+  --sh-blue: #2a6ee8;
+  --sh-pink: #ff546f;
+
+  /* Primary - StoreHub Orange */
+  --primary: #ff9419;
+  --primary-light: #ffa742;
+  --primary-dark: #ff630f;
+  --primary-50: #fff4e8;
+  --primary-100: #ffe1bf;
+
+  /* Accent - Azure Blue */
+  --accent: #2a6ee8;
+  --accent-light: #5088ec;
+
+  /* Secondary - Vivid Pink */
+  --secondary: #ff546f;
+  --secondary-light: #ff7389;
+
+  /* Sidebar - StoreHub Black */
+  --sidebar-bg: #2f2922;
+  --sidebar-hover: #55604a;
+  --sidebar-active: #ff9419;
+  --sidebar-text: #c5c3c1;
+  --sidebar-text-active: #ffffff;
+
+  /* Orange Tints */
+  --orange-100: #fff4e8;
+  --orange-200: #ffe1bf;
+  --orange-300: #ffce95;
+  --orange-400: #ffbb6c;
+  --orange-500: #ffa742;
+  --orange-600: #ff9419;
+  --orange-700: #ff630f;
+
+  /* Blue Tints */
+  --blue-100: #e9f0fd;
+  --blue-200: #c4d7f9;
+  --blue-300: #9dbcf4;
+  --blue-400: #77a2f0;
+  --blue-500: #5088ec;
+  --blue-600: #2a6ee8;
+
+  /* Pink Tints */
+  --pink-100: #ffeef0;
+  --pink-200: #ffcfd7;
+  --pink-300: #ffb1bd;
+  --pink-400: #ff92a3;
+  --pink-500: #ff7389;
+  --pink-600: #ff546f;
+
+  /* Neutral Tints (from StoreHub Black) */
+  --neutral-100: #eae9e8;
+  --neutral-200: #c5c3c1;
+  --neutral-300: #a09d9a;
+  --neutral-400: #7a7672;
+  --neutral-500: #55604a;
+  --neutral-600: #2f2922;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-open-sans), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-barlow), system-ui, -apple-system, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-open-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Headings use Barlow */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-barlow), system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  color: var(--sh-black);
+}
+
+/* Custom scrollbar with brand colors */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--neutral-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neutral-200);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--orange-500);
+}
+
+/* Brand gradient backgrounds */
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--sh-orange-dark) 0%, var(--sh-orange) 100%);
+}
+
+.bg-gradient-brand-reverse {
+  background: linear-gradient(135deg, var(--sh-orange) 0%, var(--sh-orange-dark) 100%);
+}
+
+.bg-gradient-blue-pink {
+  background: linear-gradient(135deg, var(--sh-blue) 0%, var(--sh-pink) 100%);
+}
+
+/* Brand text colors */
+.text-brand {
+  color: var(--sh-orange);
+}
+
+.text-brand-dark {
+  color: var(--sh-orange-dark);
+}
+
+/* Brand button styles */
+.btn-brand {
+  background-color: var(--sh-orange);
+  color: white;
+  font-family: var(--font-barlow), system-ui, sans-serif;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-brand:hover {
+  background-color: var(--sh-orange-dark);
+}
+
+/* Brand focus ring */
+.focus-brand:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--orange-200);
+}
+
+/* Brand Stat Card Colors */
+.stat-card-orange {
+  background-color: var(--orange-100);
+  border-color: var(--orange-300);
+  color: var(--orange-700);
+}
+
+.stat-card-blue {
+  background-color: var(--blue-100);
+  border-color: var(--blue-300);
+  color: var(--blue-600);
+}
+
+.stat-card-pink {
+  background-color: var(--pink-100);
+  border-color: var(--pink-300);
+  color: var(--pink-600);
+}
+
+.stat-card-neutral {
+  background-color: var(--neutral-100);
+  border-color: var(--neutral-200);
+  color: var(--neutral-600);
+}
+
+/* Brand Link Colors */
+.link-brand {
+  color: var(--sh-orange);
+  transition: color 0.2s ease;
+}
+
+.link-brand:hover {
+  color: var(--sh-orange-dark);
+}
+
+/* Brand Progress Bar */
+.progress-bar-brand {
+  background-color: var(--sh-orange);
+}
+
+.progress-bar-track {
+  background-color: var(--neutral-100);
+}
+
+/* Brand Table Header */
+.table-header-brand {
+  background-color: var(--orange-100);
+}
+
+/* Brand Badge Styles */
+.badge-orange {
+  background-color: var(--orange-100);
+  color: var(--orange-700);
+}
+
+.badge-blue {
+  background-color: var(--blue-100);
+  color: var(--blue-600);
+}
+
+.badge-pink {
+  background-color: var(--pink-100);
+  color: var(--pink-600);
+}
+
+.badge-success {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.badge-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Brand Card Styles */
+.card-brand {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Brand Info Banner */
+.banner-info {
+  background-color: var(--blue-100);
+  border: 1px solid var(--blue-300);
+}
+
+.banner-warning {
+  background-color: var(--orange-100);
+  border: 1px solid var(--orange-300);
+}
+
+.banner-success {
+  background-color: #dcfce7;
+  border: 1px solid #86efac;
+}
+
+/* Heading styles with brand color */
+.heading-brand {
+  color: var(--sh-black);
+  font-family: var(--font-barlow), system-ui, sans-serif;
 }
