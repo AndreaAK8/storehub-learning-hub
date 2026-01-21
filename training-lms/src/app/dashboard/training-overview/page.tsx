@@ -31,8 +31,8 @@ export default function TrainingOverviewPage() {
           .eq('id', user.id)
           .single()
 
-        // Default to OC for now - TODO: add training_role column to profiles table
-        const roleCode = 'OC'
+        // Default to OS for Feb 2 pilot (Onboarding Specialist) - TODO: add training_role column to profiles table
+        const roleCode = 'OS'
 
         // Get role details from API
         const response = await fetch(`/api/training/schedule?role=${roleCode}&email=${encodeURIComponent(user.email || '')}`)

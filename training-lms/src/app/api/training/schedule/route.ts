@@ -83,17 +83,32 @@ export async function GET(request: NextRequest) {
       if (!dayMap[module.day]) {
         dayMap[module.day] = []
       }
+
+      // Parse details to extract description, success criteria, and scorecard
+      const { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl } = parseDetails(module.details || '')
+
+      // Parse resource URLs (might have multiple separated by newlines)
+      const resourceLinks = parseResourceLinks(module.resource_url)
+
+      // Determine if timer should be hidden (Trainer-Led, Coach Review)
+      const hideTimer = ['Trainer-Led', 'Coach Review', 'TL-Led'].includes(module.type)
+
       dayMap[module.day].push({
         id: module.id,
         startTime: module.start_time,
         endTime: module.end_time,
         durationHours: parseFloat(module.duration_hours),
         title: module.topic,
-        description: module.details || '',
+        description: description,
         activityType: mapTypeToActivityType(module.type),
         pic: mapTypeToPic(module.type),
         status: progressMap[module.id] || 'pending',
-        resourceLinks: module.resource_url ? [{ title: 'View Resource', url: module.resource_url }] : []
+        resourceLinks: resourceLinks,
+        successCriteria: successCriteria,
+        successCriteriaRaw: successCriteriaRaw, // Full text with formatting
+        parsedCriteria: parsedCriteria, // Structured format
+        scorecardUrl: scorecardUrl, // For coach/trainer view
+        hideTimer: hideTimer,
       })
     })
 
@@ -130,15 +145,15 @@ export async function GET(request: NextRequest) {
 function mapTypeToActivityType(type: string): string {
   const mapping: Record<string, string> = {
     'Self-Study': 'self_study',
-    'Trainer-Led': 'briefing',
+    'Trainer-Led': 'trainer_led',
     'Assessment': 'assessment',
     'Break': 'lunch',
     'Buddy Session': 'buddy_session',
-    'Coach Review': 'review_session',
+    'Coach Review': 'coach_led',
     'Self-Prep': 'self_study',
-    'Self-Work': 'self_study',
+    'Self-Work': 'assignment',
     'Graduation': 'handover',
-    'TL-Led': 'review_session'
+    'TL-Led': 'trainer_led'
   }
   return mapping[type] || 'self_study'
 }
@@ -185,6 +200,11 @@ function getDayTitle(day: number, role: string): string {
       4: 'Buddy Session & Menu Setup',
       5: 'Mock Test & Graduation'
     },
+    'OS': {
+      3: 'Advanced System & Troubleshooting',
+      4: 'Buddy Sessions & Menu Setup',
+      5: 'Assessments & Mock Tests'
+    },
     'SC': {
       3: 'Advanced Modules & SC Tools',
       4: 'Buddy Session & Assessment',
@@ -203,6 +223,166 @@ function getDayDescription(day: number, role: string): string {
     return 'Continued foundation training with demos and quiz'
   }
   return 'Role-specific advanced training'
+}
+
+// Parse details field to extract description, success criteria, and scorecard URL
+interface ParsedCriteriaItem {
+  text: string
+  type: 'header' | 'numbered' | 'bullet' | 'sub-bullet' | 'text'
+  indent: number
+}
+
+function parseDetails(details: string): {
+  description: string
+  successCriteria: string[]
+  successCriteriaRaw: string | null
+  parsedCriteria: ParsedCriteriaItem[]
+  scorecardUrl: string | null
+} {
+  let description = details
+  let successCriteria: string[] = []
+  let successCriteriaRaw: string | null = null
+  let parsedCriteria: ParsedCriteriaItem[] = []
+  let scorecardUrl: string | null = null
+
+  // Extract success criteria
+  const successMatch = details.split('---SUCCESS_CRITERIA---')
+  if (successMatch.length > 1) {
+    description = successMatch[0].trim()
+    const criteriaAndRest = successMatch[1]
+
+    // Check if there's also a scorecard URL
+    const scorecardMatch = criteriaAndRest.split('---SCORECARD_URL---')
+    const criteriaText = scorecardMatch[0].trim()
+
+    if (scorecardMatch.length > 1) {
+      scorecardUrl = scorecardMatch[1].trim()
+    }
+
+    // Store raw criteria for detailed display
+    if (criteriaText) {
+      successCriteriaRaw = criteriaText
+
+      // Parse into structured format
+      const lines = criteriaText.split('\n')
+
+      for (const line of lines) {
+        const trimmed = line.trim()
+        if (!trimmed) continue
+
+        // Calculate indent level based on leading spaces
+        const leadingSpaces = line.match(/^(\s*)/)?.[1].length || 0
+        const indent = Math.floor(leadingSpaces / 2)
+
+        // Detect line type
+        if (/^\d+\.\s/.test(trimmed)) {
+          // Numbered item (1. 2. 3. etc)
+          parsedCriteria.push({
+            text: trimmed.replace(/^\d+\.\s*/, ''),
+            type: 'numbered',
+            indent
+          })
+        } else if (/^-\s/.test(trimmed)) {
+          // Bullet item
+          parsedCriteria.push({
+            text: trimmed.replace(/^-\s*/, ''),
+            type: indent > 0 ? 'sub-bullet' : 'bullet',
+            indent
+          })
+        } else if (trimmed.endsWith(':') || /\([^)]+\)$/.test(trimmed) || trimmed.match(/^[A-Z].*Products?$/)) {
+          // Header (ends with colon, parentheses, or is a category like "F&B Products")
+          parsedCriteria.push({
+            text: trimmed,
+            type: 'header',
+            indent
+          })
+        } else {
+          // Regular text
+          parsedCriteria.push({
+            text: trimmed,
+            type: 'text',
+            indent
+          })
+        }
+      }
+
+      // Also create simple array for backwards compatibility
+      // Only get top-level numbered items
+      successCriteria = parsedCriteria
+        .filter(item => item.type === 'numbered' && item.indent === 0)
+        .map(item => item.text)
+
+      // If no numbered items, use headers
+      if (successCriteria.length === 0) {
+        successCriteria = parsedCriteria
+          .filter(item => item.type === 'header' || item.type === 'numbered')
+          .slice(0, 5) // Limit to first 5
+          .map(item => item.text)
+      }
+    }
+  } else {
+    // Check for scorecard URL without success criteria
+    const scorecardOnlyMatch = details.split('---SCORECARD_URL---')
+    if (scorecardOnlyMatch.length > 1) {
+      description = scorecardOnlyMatch[0].trim()
+      scorecardUrl = scorecardOnlyMatch[1].trim()
+    }
+  }
+
+  return { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl }
+}
+
+// Parse resource URL field to extract multiple links
+function parseResourceLinks(resourceUrl: string | null): { title: string; url: string; region?: string }[] {
+  if (!resourceUrl || resourceUrl === '-') return []
+
+  const links: { title: string; url: string; region?: string }[] = []
+
+  // Split by newlines to get individual URLs or URL groups
+  const lines = resourceUrl.split('\n').filter(line => line.trim())
+
+  let currentRegion: string | undefined = undefined
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+
+    // Check if this is a region header (MY, PH)
+    if (trimmed === 'MY' || trimmed === 'PH') {
+      currentRegion = trimmed
+      continue
+    }
+
+    // Check if this line contains a URL
+    const urlMatch = trimmed.match(/https?:\/\/[^\s]+/)
+    if (urlMatch) {
+      const url = urlMatch[0]
+
+      // Try to extract title from the line (e.g., "F&B: https://...")
+      let title = 'View Resource'
+      const titleMatch = trimmed.match(/^([^:]+):\s*https/)
+      if (titleMatch) {
+        title = titleMatch[1].trim()
+      } else if (url.includes('lark')) {
+        title = 'Lark Resource'
+      } else if (url.includes('google.com/presentation')) {
+        title = 'Training Deck'
+      } else if (url.includes('drive.google.com')) {
+        title = 'Video Resource'
+      } else if (url.includes('intercom')) {
+        title = 'Intercom Ticket'
+      } else if (url.includes('forms.gle')) {
+        title = 'Assessment Form'
+      }
+
+      links.push({
+        title,
+        url,
+        region: currentRegion,
+      })
+    }
+  }
+
+  return links
 }
 
 // Update trainee progress

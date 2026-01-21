@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 interface TrainingDay {
   dayNumber: number
@@ -18,6 +18,7 @@ interface TrainingRoadmapProps {
   selectedDay: number
 }
 
+
 export function TrainingRoadmap({
   roleName,
   totalDays,
@@ -27,6 +28,7 @@ export function TrainingRoadmap({
   onDayClick,
   selectedDay,
 }: TrainingRoadmapProps) {
+  const [showPlan, setShowPlan] = useState(true) // Default open
   // Calculate day statuses (excluding lunch/break activities)
   const dayStatuses = useMemo(() => {
     return trainingDays.map((day) => {
@@ -42,7 +44,7 @@ export function TrainingRoadmap({
 
       if (allCompleted) return 'completed'
       if (anyInProgress || anyCompleted) return 'in_progress'
-      return 'locked'
+      return 'pending' // Changed from 'locked' - all days viewable
     })
   }, [trainingDays])
 
@@ -69,23 +71,50 @@ export function TrainingRoadmap({
     })
   }
 
-  // Check if day is unlocked (previous day completed or first day)
-  const isDayUnlocked = (dayNumber: number) => {
-    if (dayNumber === 1) return true
-    const prevDayIndex = dayNumber - 2
-    return prevDayIndex >= 0 && dayStatuses[prevDayIndex] === 'completed'
+  // All days are now unlocked - trainees can view any day for briefing purposes
+  // On rare occasions, the schedule might change and tasks may need to be brought forward
+  const isDayUnlocked = (_dayNumber: number) => {
+    return true // All days accessible
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold" style={{ color: '#2f2922', fontFamily: 'Barlow, sans-serif' }}>Your Training Journey</h2>
-        <p style={{ color: '#7a7672' }}>{roleName} • {totalDays} Days</p>
-      </div>
+    <div className="mb-6">
+      {/* Your Training Plan - Collapsible Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <button
+          onClick={() => setShowPlan(!showPlan)}
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <span className="text-xl">📅</span>
+            </div>
+            <div className="text-left">
+              <h3 className="font-bold text-lg text-slate-800">Your Training Plan</h3>
+              <p className="text-slate-500 text-sm">{roleName} • {totalDays} Days</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+              {showPlan ? 'Hide' : 'Expand'}
+            </span>
+            <svg
+              className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${showPlan ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+
+        {/* Expandable Content */}
+        <div className={`transition-all duration-300 ease-in-out ${showPlan ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
+          <div className="px-6 pb-6">
 
       {/* Day Progress Bar */}
-      <div className="relative mb-8">
+      <div className="relative mb-8 pt-2">
         {/* Connection Line */}
         <div className="absolute top-4 left-0 right-0 h-0.5 bg-slate-200" />
 
@@ -93,7 +122,7 @@ export function TrainingRoadmap({
         <div className="relative flex justify-between">
           {Array.from({ length: totalDays }, (_, i) => {
             const dayNumber = i + 1
-            const status = dayStatuses[i] || 'locked'
+            const status = dayStatuses[i] || 'pending'
             const isUnlocked = isDayUnlocked(dayNumber)
             const isSelected = selectedDay === dayNumber
 
@@ -125,10 +154,6 @@ export function TrainingRoadmap({
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                  ) : !isUnlocked ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
                   ) : (
                     <span className="text-sm font-medium">{dayNumber}</span>
                   )}
@@ -144,9 +169,7 @@ export function TrainingRoadmap({
                       ? 'Done'
                       : status === 'in_progress'
                         ? 'In Progress'
-                        : isUnlocked
-                          ? 'Ready'
-                          : 'Locked'
+                        : 'Ready'
                     }
                   </div>
                 </div>
@@ -188,6 +211,10 @@ export function TrainingRoadmap({
           <div className="mb-1" style={{ color: '#7a7672' }}>Current Progress</div>
           <div className="font-semibold" style={{ color: '#2f2922' }}>
             Day {currentDay} of {totalDays}
+          </div>
+        </div>
+      </div>
+
           </div>
         </div>
       </div>

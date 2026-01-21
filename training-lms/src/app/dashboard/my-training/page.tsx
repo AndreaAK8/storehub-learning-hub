@@ -108,9 +108,11 @@ export default function MyTrainingPage() {
         setTimeout(() => setShowTour(true), 500)
       }
 
-      // Default to OC for Jan 19 pilot
-      // TODO: Add training_role column to profiles table for role-specific training
-      const traineeRole = 'OC'
+      // Get training role from profile or URL param for testing
+      // Default to OS for Feb 2 pilot (Onboarding Specialist)
+      const urlParams = new URLSearchParams(window.location.search)
+      const roleOverride = urlParams.get('role')
+      const traineeRole = roleOverride || 'OS'
 
       // Fetch training schedule from API
       const response = await fetch(
@@ -156,9 +158,21 @@ export default function MyTrainingPage() {
         coachEmail: 'andrea.kaur@storehub.com',
       })
 
-      // Auto-select the current active day
-      const currentDay = findCurrentDay(data.trainingDays)
-      setSelectedDay(currentDay)
+      // Check if a specific day was requested via URL param (from Training Overview)
+      const dayOverride = urlParams.get('day')
+      if (dayOverride) {
+        const requestedDay = parseInt(dayOverride)
+        if (requestedDay >= 1 && requestedDay <= data.role.totalDays) {
+          setSelectedDay(requestedDay)
+        } else {
+          // Fallback to current active day
+          setSelectedDay(findCurrentDay(data.trainingDays))
+        }
+      } else {
+        // Auto-select the current active day
+        const currentDay = findCurrentDay(data.trainingDays)
+        setSelectedDay(currentDay)
+      }
     } catch (err) {
       console.error('Error fetching trainee data:', err)
       setError('Failed to load training data. Please try again.')
@@ -493,17 +507,9 @@ export default function MyTrainingPage() {
     })
   }
 
-  // Check if a day is locked
-  const isDayLocked = (dayNumber: number): boolean => {
-    if (dayNumber === 1) return false
-    if (!traineeData) return true
-
-    const prevDay = traineeData.trainingDays.find((d) => d.dayNumber === dayNumber - 1)
-    if (!prevDay) return true
-
-    return !prevDay.activities.every(
-      (a) => a.status === 'completed' || a.activityType === 'lunch' || a.activityType === 'break'
-    )
+  // Check if a day is locked - All days unlocked for overview purposes
+  const isDayLocked = (_dayNumber: number): boolean => {
+    return false // All days accessible so trainees can preview upcoming content
   }
 
   // Loading state

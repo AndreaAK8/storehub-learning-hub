@@ -544,6 +544,13 @@ function RoleMissionStep({ roleCode, roleName, content }: { roleCode: string, ro
 
 // Step 5: Journey
 function JourneyStep({ roleCode, totalDays, content }: { roleCode: string, totalDays: number, content: RoleContent }) {
+  const router = useRouter()
+
+  // Navigate to My Schedule with selected day
+  const goToDay = (dayNumber: number) => {
+    router.push(`/dashboard/my-training?day=${dayNumber}`)
+  }
+
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -558,67 +565,61 @@ function JourneyStep({ roleCode, totalDays, content }: { roleCode: string, total
         </div>
       </div>
 
-      {/* Timeline */}
-      <div className="relative mb-8">
+      {/* Timeline with Phases */}
+      <div className="relative">
         {/* Connection Line */}
         <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-400 via-[var(--sh-orange)] to-[var(--sh-blue)]" />
 
-        {/* Foundation Phase */}
-        <div className="relative pl-16 pb-6">
-          <div className="absolute left-3 top-2 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center shadow-md">
-            <span className="text-white text-xs font-bold">1</span>
-          </div>
-          <div className="p-5 rounded-xl bg-green-50 border border-green-200">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-bold px-3 py-1 rounded-full text-green-700 bg-green-200">
-                FOUNDATION
-              </span>
-              <h4 className="font-semibold text-[var(--sh-black)]">Day 1-2</h4>
-            </div>
-            <p className="text-sm text-slate-600 mb-4">Generic Training - Building your StoreHub knowledge base</p>
-            <div className="grid grid-cols-1 gap-2">
-              {content.foundationItems.map((item, index) => (
-                <div key={index} className="flex items-center gap-2 p-2 bg-white rounded-lg border border-green-100">
-                  <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  <span className="text-xs text-green-700">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        {/* Render each phase */}
+        {content.phases.map((phase, phaseIndex) => {
+          // Get days for this phase
+          const phaseDays = content.dayDetails.filter(d => {
+            const dayRange = phase.days.match(/Day (\d+)(?:-(\d+))?/)
+            if (!dayRange) return false
+            const start = parseInt(dayRange[1])
+            const end = dayRange[2] ? parseInt(dayRange[2]) : start
+            return d.day >= start && d.day <= end
+          })
 
-        {/* Specialization Phase */}
-        <div className="relative pl-16">
-          <div className="absolute left-3 top-2 w-7 h-7 rounded-full bg-[var(--sh-blue)] flex items-center justify-center shadow-md">
-            <span className="text-white text-xs font-bold">2</span>
-          </div>
-          <div className="p-5 rounded-xl bg-[var(--blue-100)] border border-[var(--blue-200)]">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-bold px-3 py-1 rounded-full text-[var(--blue-600)] bg-[var(--blue-200)]">
-                SPECIALIZATION
-              </span>
-              <h4 className="font-semibold text-[var(--sh-black)]">Day 3-{totalDays}</h4>
-            </div>
-            <p className="text-sm text-slate-600 mb-4">Role-Specific Training - Mastering your {roleCode} skills</p>
-            <div className="grid grid-cols-1 gap-2">
-              {content.specializationItems.map((item, index) => (
-                <div key={index} className="flex items-center gap-2 p-2 bg-white rounded-lg border border-[var(--blue-200)]">
-                  <svg className="w-4 h-4 text-[var(--sh-blue)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                  <span className="text-xs text-[var(--blue-600)]">{item}</span>
+          return (
+            <div key={phase.name} className="relative pl-16 pb-6">
+              <div className={`absolute left-3 top-2 w-7 h-7 rounded-full flex items-center justify-center shadow-md z-10 ${phase.bgColor}`}>
+                <span className={`text-xs font-bold ${phase.color}`}>{phaseIndex + 1}</span>
+              </div>
+              <div className={`p-5 rounded-xl border ${phase.borderColor}`} style={{ backgroundColor: phase.bgColor.includes('green') ? '#f0fdf4' : phase.bgColor.includes('blue') ? '#e9f0fd' : phase.bgColor.includes('orange') ? '#fff4e8' : '#fef3c7' }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${phase.color} ${phase.bgColor}`}>
+                    {phase.name.toUpperCase()}
+                  </span>
+                  <h4 className="font-semibold text-[var(--sh-black)]">{phase.days}</h4>
                 </div>
-              ))}
+
+                {/* Clickable activity items */}
+                <div className="space-y-2">
+                  {phaseDays.map((dayInfo) => (
+                    dayInfo.activities.map((activity, actIdx) => (
+                      <button
+                        key={`${dayInfo.day}-${actIdx}`}
+                        onClick={() => goToDay(dayInfo.day)}
+                        className={`w-full flex items-center gap-2 p-2.5 bg-white rounded-lg border transition-all hover:shadow-md hover:scale-[1.01] text-left ${phase.borderColor}`}
+                      >
+                        <svg className={`w-4 h-4 flex-shrink-0 ${phase.color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        <span className={`text-sm ${phase.color}`}>{activity}</span>
+                      </button>
+                    ))
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          )
+        })}
       </div>
 
       {/* Note */}
       {content.note && (
-        <div className="flex items-start gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200">
+        <div className="flex items-start gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200 mt-4">
           <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
             <span className="text-xl">💡</span>
           </div>
@@ -639,6 +640,20 @@ function JourneyStep({ roleCode, totalDays, content }: { roleCode: string, total
 }
 
 // Role content types and data
+interface DayDetail {
+  day: number
+  focus: string
+  activities: string[]
+}
+
+interface Phase {
+  name: string
+  days: string
+  color: string
+  bgColor: string
+  borderColor: string
+}
+
 interface RoleContent {
   missionIntro: string
   pillars: string[]
@@ -646,6 +661,8 @@ interface RoleContent {
   foundationItems: string[]
   specializationItems: string[]
   note?: string
+  phases: Phase[]
+  dayDetails: DayDetail[]
 }
 
 function getRoleContent(roleCode: string): RoleContent {
@@ -672,6 +689,16 @@ function getRoleContent(roleCode: string): RoleContent {
         "Menu Setup Task (Final Evaluation)",
       ],
       note: "OC training is streamlined—no mock test required! Your final evaluation is the Menu Setup task, which demonstrates real-world capability.",
+      phases: [
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Specialization', days: 'Day 3-4', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
+      ],
+      dayDetails: [
+        { day: 1, focus: 'Product Fundamentals', activities: ['All-in-One StoreHub Product Knowledge'] },
+        { day: 2, focus: 'System Mastery', activities: ['System Navigation & Merchant Profile Basics', 'Hardware Demo & Foundational Quiz'] },
+        { day: 3, focus: 'OC Deep Dive', activities: ['BackOffice Deep Dive & Configuration', 'Beep Store Setup & Optimization'] },
+        { day: 4, focus: 'Practical Application', activities: ['Collateral Management & Fulfillment', 'Menu Setup Task (Final Evaluation)'] },
+      ],
     },
     CSM: {
       missionIntro: "As a Customer Success Manager, your role is built on these core pillars that drive merchant success:",
@@ -694,8 +721,92 @@ function getRoleContent(roleCode: string): RoleContent {
         "Reporting & Analytics Deep Dive",
         "Role Play Assessments",
       ],
+      phases: [
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Deep Dive', days: 'Day 3-5', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
+        { name: 'Practice', days: 'Day 6-8', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200' },
+        { name: 'Validation', days: 'Day 9-10', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
+      ],
+      dayDetails: [
+        { day: 1, focus: 'Product Fundamentals', activities: ['StoreHub Software Overview', 'Hardware & Devices', 'Core Features'] },
+        { day: 2, focus: 'System Mastery', activities: ['BackOffice Setup', 'POS Navigation', 'Product Quiz'] },
+        { day: 3, focus: 'Merchant Success', activities: ['Success Playbook', 'Relationship Building', 'Communication Skills'] },
+        { day: 4, focus: 'Advanced Features', activities: ['Reporting Deep Dive', 'Analytics Tools', 'Feature Adoption'] },
+        { day: 5, focus: 'Growth Strategies', activities: ['Upselling Techniques', 'Business Consulting', 'Case Studies'] },
+        { day: 6, focus: 'Role Play Day 1', activities: ['Mock Calls', 'Scenario Practice', 'Feedback Sessions'] },
+        { day: 7, focus: 'Role Play Day 2', activities: ['Advanced Scenarios', 'Objection Handling', 'Peer Review'] },
+        { day: 8, focus: 'Integration', activities: ['Cross-Team Shadowing', 'Live Call Observation', 'Process Review'] },
+        { day: 9, focus: 'Assessments', activities: ['Knowledge Test', 'Role Play Assessment', 'Final Review'] },
+        { day: 10, focus: 'Graduation', activities: ['Final Evaluation', 'Certification', 'Onboarding to Team'] },
+      ],
+    },
+    OS: {
+      missionIntro: "As an Onboarding Specialist, your role ensures merchants have a smooth and successful start with StoreHub:",
+      pillars: [
+        "Product Expertise: Master all StoreHub products and features to guide merchants effectively",
+        "Training Delivery: Conduct engaging training sessions that empower merchants",
+        "Issue Resolution: Troubleshoot and resolve setup issues quickly",
+        "Relationship Building: Build trust and rapport with new merchants",
+        "Success Handoff: Ensure smooth transition to ongoing support teams",
+      ],
+      inspiringMessage: "You're the first impression merchants have of StoreHub—your expertise and warmth set the tone for a lasting partnership.",
+      foundationItems: [
+        "All-in-One StoreHub Product Knowledge",
+        "System Navigation & Merchant Profile Basics",
+        "Hardware Demo & Foundational Quiz",
+      ],
+      specializationItems: [
+        "Advanced Topics & Deep Dive",
+        "Training Slides Preparation",
+        "F&B & Retail Mock Tests",
+        "Graduation",
+      ],
+      phases: [
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Advanced Topics', days: 'Day 3', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
+        { name: 'Training Prep', days: 'Day 4', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200' },
+        { name: 'Mock Test', days: 'Day 5', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
+      ],
+      dayDetails: [
+        { day: 1, focus: 'Product Fundamentals', activities: ['All-in-One StoreHub Product Knowledge'] },
+        { day: 2, focus: 'System Mastery', activities: ['System Navigation & Merchant Profile Basics', 'Hardware Demo & Foundational Quiz'] },
+        { day: 3, focus: 'Advanced Topics', activities: ['Advanced Features Deep Dive', 'Troubleshooting & Tools', 'Brand Servicing'] },
+        { day: 4, focus: 'Training Slides Preparation', activities: ['Training Deck Creation', 'Presentation Practice', 'Buddy Sessions'] },
+        { day: 5, focus: 'Mock Test & Graduation', activities: ['F&B Training Assessment', 'Retail Training Assessment', 'Mock Test & Graduation'] },
+      ],
     },
   }
 
-  return content[roleCode] || content.OC
+  // Default fallback
+  const defaultContent: RoleContent = {
+    missionIntro: "Your role is essential to StoreHub's success:",
+    pillars: [
+      "Product Knowledge: Understand StoreHub products inside and out",
+      "Customer Focus: Always put merchants first",
+      "Problem Solving: Find solutions efficiently",
+      "Team Collaboration: Work together for success",
+      "Continuous Learning: Keep growing and improving",
+    ],
+    inspiringMessage: "You're an important part of the StoreHub team—your contribution makes a real difference to our merchants' success.",
+    foundationItems: [
+      "StoreHub Product Knowledge",
+      "System Navigation Basics",
+      "Foundational Quiz",
+    ],
+    specializationItems: [
+      "Role-Specific Training",
+      "Practical Exercises",
+      "Final Assessment",
+    ],
+    phases: [
+      { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+      { name: 'Role Training', days: 'Day 3+', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
+    ],
+    dayDetails: [
+      { day: 1, focus: 'Product Fundamentals', activities: ['StoreHub Software', 'Hardware Overview', 'Core Features'] },
+      { day: 2, focus: 'System Navigation', activities: ['BackOffice Setup', 'POS Navigation', 'Quiz'] },
+    ],
+  }
+
+  return content[roleCode] || defaultContent
 }

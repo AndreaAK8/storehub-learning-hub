@@ -1,10 +1,25 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { ActivityDetailModal } from './ActivityDetailModal'
 
 interface Resource {
   title: string
   url: string
+  region?: 'MY' | 'PH' | 'ALL'
+}
+
+interface ChecklistItem {
+  id: string
+  text: string
+  isHeader?: boolean
+  indent?: number
+}
+
+interface ParsedCriteriaItem {
+  text: string
+  type: 'header' | 'numbered' | 'bullet' | 'sub-bullet' | 'text'
+  indent: number
 }
 
 // Performance tracking data
@@ -29,7 +44,10 @@ interface ActivityCardProps {
   pic: string
   resourceLinks?: Resource[]
   successCriteria?: string[]
-  tldr?: string
+  successCriteriaRaw?: string // Full text with formatting preserved
+  parsedCriteria?: ParsedCriteriaItem[] // Structured format for display
+  checklist?: ChecklistItem[]
+  slideImage?: string
   isLocked?: boolean
   isRescheduled?: boolean
   rescheduledFrom?: number
@@ -38,6 +56,8 @@ interface ActivityCardProps {
   // Trainer-only props
   showReschedule?: boolean
   onReschedule?: (id: string, title: string) => void
+  // Hide timer for Trainer/Coach Led
+  hideTimer?: boolean
 }
 
 // XP Calculation: 1 hour = 100 XP
@@ -75,6 +95,8 @@ const activityTypeConfig: Record<string, { label: string; color: string; bgColor
   mock_test: { label: 'Mock Test', color: 'text-red-700', bgColor: 'bg-red-100', icon: '🎯' },
   handover: { label: 'Graduation', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '🎓' },
   coach_review: { label: 'Coach Review', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '👨‍🏫' },
+  trainer_led: { label: 'Trainer Led', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '👨‍🏫' },
+  coach_led: { label: 'Coach Led', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '🧑‍💼' },
 }
 
 // Progress Ring Component
@@ -202,7 +224,10 @@ export function ActivityCard({
   pic,
   resourceLinks,
   successCriteria,
-  tldr,
+  successCriteriaRaw,
+  parsedCriteria,
+  checklist,
+  slideImage,
   isLocked,
   isRescheduled,
   rescheduledFrom,
@@ -210,8 +235,9 @@ export function ActivityCard({
   onStartActivity,
   showReschedule,
   onReschedule,
+  hideTimer,
 }: ActivityCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isCompleting, setIsCompleting] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null)
   const [isOvertime, setIsOvertime] = useState(false)
@@ -220,6 +246,12 @@ export function ActivityCard({
   const typeConfig = activityTypeConfig[activityType] || activityTypeConfig.self_study
   const xp = calculateXP(durationHours)
   const bonusXP = calculateBonusXP(durationHours)
+
+  // Check if this is a Trainer/Coach Led activity (no timer shown)
+  const isTrainerOrCoachLed = hideTimer ||
+    activityType === 'trainer_led' ||
+    activityType === 'coach_led' ||
+    activityType === 'briefing'
 
   // Calculate progress percentage based on status
   const getProgress = () => {
@@ -429,10 +461,10 @@ export function ActivityCard({
               </span>
             )}
 
-            {/* TL;DR Preview */}
-            {tldr && !isLocked && (
+            {/* Brief description preview - first 100 chars */}
+            {description && !isLocked && (
               <p className="text-sm text-slate-600 mt-2 line-clamp-2">
-                {tldr}
+                {description.slice(0, 120)}{description.length > 120 ? '...' : ''}
               </p>
             )}
           </div>
@@ -452,7 +484,7 @@ export function ActivityCard({
         </div>
 
         {/* Success Criteria Preview (collapsed) */}
-        {successCriteria && successCriteria.length > 0 && !isLocked && !isExpanded && (
+        {successCriteria && successCriteria.length > 0 && !isLocked && (
           <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-100">
             <div className="flex items-center gap-2 text-sm font-semibold text-indigo-700 mb-1">
               <span>🎯</span>
@@ -465,122 +497,27 @@ export function ActivityCard({
           </div>
         )}
 
-        {/* Expand Button - Clear Call to Action */}
+        {/* View Details Button - Opens Modal */}
         {hasExpandableContent && !isLocked && (
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`
-              w-full mt-4 py-2.5 px-4 rounded-xl text-sm font-medium
-              flex items-center justify-center gap-2 transition-all duration-200
-              ${isExpanded
-                ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                : 'bg-gradient-to-r from-indigo-500 to-blue-500 text-white hover:from-indigo-600 hover:to-blue-600 shadow-md shadow-indigo-200'
-              }
-            `}
+            onClick={() => setIsModalOpen(true)}
+            className="w-full mt-4 py-2.5 px-4 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all duration-200 bg-gradient-to-r from-indigo-500 to-blue-500 text-white hover:from-indigo-600 hover:to-blue-600 shadow-md shadow-indigo-200"
           >
-            {isExpanded ? (
-              <>
-                <span>Hide Details</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                </svg>
-              </>
-            ) : (
-              <>
-                <span>View Full Details</span>
-                <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </>
-            )}
+            <span>View Full Details</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
           </button>
         )}
 
-        {/* Expanded Content */}
-        {isExpanded && !isLocked && (
-          <div className="mt-4 space-y-4 animate-fade-in">
-            {/* Full TL;DR */}
-            {tldr && (
-              <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">💡</span>
-                  <div>
-                    <div className="text-sm font-bold text-amber-800 mb-1">TL;DR</div>
-                    <p className="text-base text-amber-900 leading-relaxed">{tldr}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Full Success Criteria */}
-            {successCriteria && successCriteria.length > 0 && (
-              <div className="p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border border-indigo-200">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🎯</span>
-                  <div className="flex-1">
-                    <div className="text-sm font-bold text-indigo-800 mb-2">By the end, you should be able to:</div>
-                    <ul className="space-y-2">
-                      {successCriteria.map((criteria, index) => (
-                        <li key={index} className="flex items-start gap-2 text-base text-indigo-900">
-                          <span className="w-5 h-5 rounded-full bg-indigo-200 text-indigo-700 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                            {index + 1}
-                          </span>
-                          <span>{criteria}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Description */}
-            {description && (
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">📖</span>
-                  <div>
-                    <div className="text-sm font-bold text-slate-700 mb-1">Description</div>
-                    <p className="text-base text-slate-600 leading-relaxed">{description}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Resources */}
-            {resourceLinks && resourceLinks.length > 0 && (
-              <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-200">
-                <div className="text-sm font-bold text-emerald-800 mb-3 flex items-center gap-2">
-                  <span className="text-lg">📎</span>
-                  <span>Resources</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {resourceLinks.map((resource, index) => (
-                    <a
-                      key={index}
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md text-sm font-medium"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      {resource.title}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Action Footer */}
       {!isLocked && status !== 'completed' && (
         <div className="border-t-2 px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100">
-          {/* Timer Display - In Progress */}
-          {status === 'in_progress' && timeRemaining !== null && (
+          {/* Timer Display - In Progress (NOT shown for Trainer/Coach Led) */}
+          {status === 'in_progress' && timeRemaining !== null && !isTrainerOrCoachLed && (
             <div className={`mb-4 p-4 rounded-xl ${isOvertime ? 'bg-red-50 border-2 border-red-200' : 'bg-white border-2 border-slate-200'}`}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
@@ -696,6 +633,32 @@ export function ActivityCard({
           </div>
         </div>
       )}
+
+      {/* Activity Detail Modal */}
+      <ActivityDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        activity={{
+          id,
+          title,
+          description,
+          startTime,
+          endTime,
+          durationHours,
+          activityType,
+          status,
+          resourceLinks,
+          successCriteria,
+          successCriteriaRaw,
+          parsedCriteria,
+          checklist,
+          slideImage,
+          isTrainerLed: activityType === 'trainer_led' || activityType === 'briefing',
+          isCoachLed: activityType === 'coach_led',
+        }}
+        onStart={onStartActivity ? () => handleStart() : undefined}
+        onComplete={onMarkComplete ? () => handleMarkComplete() : undefined}
+      />
     </div>
   )
 }

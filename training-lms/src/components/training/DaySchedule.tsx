@@ -3,6 +3,12 @@
 import { useMemo } from 'react'
 import { ActivityCard } from './ActivityCard'
 
+interface ParsedCriteriaItem {
+  text: string
+  type: 'header' | 'numbered' | 'bullet' | 'sub-bullet' | 'text'
+  indent: number
+}
+
 interface Activity {
   id: string
   title: string
@@ -13,9 +19,11 @@ interface Activity {
   activityType: string
   status: 'pending' | 'in_progress' | 'completed' | 'skipped'
   pic: string
-  resourceLinks?: { title: string; url: string }[]
+  resourceLinks?: { title: string; url: string; region?: 'MY' | 'PH' | 'ALL' }[]
   successCriteria?: string[]
-  tldr?: string
+  successCriteriaRaw?: string
+  parsedCriteria?: ParsedCriteriaItem[]
+  hideTimer?: boolean
 }
 
 interface DayScheduleProps {
@@ -49,19 +57,10 @@ export function DaySchedule({
     return { total, completed, inProgress, percentage }
   }, [activities])
 
-  // Determine if an activity should be locked (previous non-break activities not completed)
-  const getActivityLockStatus = (index: number): boolean => {
-    if (isLocked) return true
-    if (index === 0) return false
-
-    // Find the previous non-break activity
-    for (let i = index - 1; i >= 0; i--) {
-      const prevActivity = activities[i]
-      if (prevActivity.activityType !== 'lunch' && prevActivity.activityType !== 'break') {
-        return prevActivity.status !== 'completed'
-      }
-    }
-    return false
+  // Activities are no longer locked - trainees can view and work on any activity
+  // This allows flexibility for schedule changes and trainer briefings
+  const getActivityLockStatus = (_index: number): boolean => {
+    return false // All activities accessible
   }
 
   return (
