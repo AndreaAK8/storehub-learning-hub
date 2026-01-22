@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Trainee, RiskLevel } from '@/types/trainee'
 import NeedsAttentionSection from '@/components/dashboard/NeedsAttentionSection'
@@ -194,6 +193,7 @@ export default async function DashboardPage() {
 
   // Trainee Dashboard - redirect to My Training page
   if (userRole === 'trainee') {
+    const { redirect } = await import('next/navigation')
     redirect('/dashboard/my-training')
   }
 
