@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
+import { VideoPlayer, isVideoUrl, isGoogleFormUrl, isEmbeddableUrl } from './VideoPlayer'
 
 interface Resource {
   title: string
@@ -125,8 +126,8 @@ export function ActivityDetailModal({
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-fade-in">
+      {/* Modal - wider for better form/video viewing */}
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-fade-in">
         {/* Header */}
         <div className={`
           px-6 py-4 border-b flex items-start justify-between
@@ -339,20 +340,27 @@ export function ActivityDetailModal({
               <div className="space-y-4">
                 {/* All/General Resources */}
                 {groupedResources!.ALL.length > 0 && (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {groupedResources!.ALL.map((resource, index) => (
-                      <a
-                        key={index}
-                        href={resource.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3 px-4 py-3 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
-                      >
-                        <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                        <span className="font-medium">{resource.title}</span>
-                      </a>
+                      isEmbeddableUrl(resource.url) ? (
+                        <div key={index} className="space-y-2">
+                          <div className="text-sm font-medium text-emerald-700">{resource.title}</div>
+                          <VideoPlayer url={resource.url} title={resource.title} />
+                        </div>
+                      ) : (
+                        <a
+                          key={index}
+                          href={resource.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 px-4 py-3 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
+                        >
+                          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          <span className="font-medium">{resource.title}</span>
+                        </a>
+                      )
                     ))}
                   </div>
                 )}
@@ -366,20 +374,27 @@ export function ActivityDetailModal({
                       </span>
                       Malaysia
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {groupedResources!.MY.map((resource, index) => (
-                        <a
-                          key={index}
-                          href={resource.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
-                        >
-                          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          <span className="font-medium">{resource.title}</span>
-                        </a>
+                        isEmbeddableUrl(resource.url) ? (
+                          <div key={index} className="space-y-2">
+                            <div className="text-sm font-medium text-emerald-700">{resource.title}</div>
+                            <VideoPlayer url={resource.url} title={resource.title} />
+                          </div>
+                        ) : (
+                          <a
+                            key={index}
+                            href={resource.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
+                          >
+                            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            <span className="font-medium">{resource.title}</span>
+                          </a>
+                        )
                       ))}
                     </div>
                   </div>
@@ -394,20 +409,27 @@ export function ActivityDetailModal({
                       </span>
                       Philippines
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {groupedResources!.PH.map((resource, index) => (
-                        <a
-                          key={index}
-                          href={resource.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
-                        >
-                          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          <span className="font-medium">{resource.title}</span>
-                        </a>
+                        isEmbeddableUrl(resource.url) ? (
+                          <div key={index} className="space-y-2">
+                            <div className="text-sm font-medium text-emerald-700">{resource.title}</div>
+                            <VideoPlayer url={resource.url} title={resource.title} />
+                          </div>
+                        ) : (
+                          <a
+                            key={index}
+                            href={resource.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 px-4 py-3 bg-white text-emerald-700 hover:text-emerald-900 rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
+                          >
+                            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            <span className="font-medium">{resource.title}</span>
+                          </a>
+                        )
                       ))}
                     </div>
                   </div>
