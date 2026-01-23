@@ -638,8 +638,20 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
             </div>
             <div className="p-4 max-h-96 overflow-y-auto space-y-2">
               {needsScoring.map(trainee => {
-                const pendingCount = trainee.totalAssessmentsRequired - trainee.totalAssessmentsCompleted
                 const assessments = ASSESSMENT_LINKS[trainee.department] || []
+                const traineeScores = scores[trainee.email] || []
+
+                // Filter out assessments that have already been scored
+                const pendingAssessments = assessments.filter(link => {
+                  const isScored = traineeScores.some(s =>
+                    s.assessmentName.toLowerCase().includes(link.name.toLowerCase()) ||
+                    link.name.toLowerCase().includes(s.assessmentName.toLowerCase())
+                  )
+                  return !isScored
+                })
+
+                if (pendingAssessments.length === 0) return null // Hide if all scored
+
                 return (
                   <div
                     key={trainee.email}
@@ -656,12 +668,12 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                         </div>
                       </div>
                       <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
-                        {pendingCount} pending
+                        {pendingAssessments.length} pending
                       </span>
                     </div>
-                    {/* Assessment buttons */}
+                    {/* Assessment buttons - only show pending ones */}
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {assessments.slice(0, 4).map((link, i) => (
+                      {pendingAssessments.slice(0, 4).map((link, i) => (
                         <button
                           key={i}
                           onClick={() => {
@@ -673,7 +685,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                           {link.name.length > 20 ? link.name.substring(0, 18) + '...' : link.name}
                         </button>
                       ))}
-                      {assessments.length > 4 && (
+                      {pendingAssessments.length > 4 && (
                         <button
                           onClick={() => {
                             setActiveTab('scoring')
@@ -681,7 +693,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                           }}
                           className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-xs font-medium transition-colors"
                         >
-                          +{assessments.length - 4} more
+                          +{pendingAssessments.length - 4} more
                         </button>
                       )}
                     </div>
