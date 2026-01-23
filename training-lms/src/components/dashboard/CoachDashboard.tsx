@@ -638,66 +638,34 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
             </div>
             <div className="p-4 max-h-96 overflow-y-auto space-y-2">
               {needsScoring.map(trainee => {
-                const assessments = ASSESSMENT_LINKS[trainee.department] || []
-                const traineeScores = scores[trainee.email] || []
-
-                // Filter out assessments that have already been scored
-                const pendingAssessments = assessments.filter(link => {
-                  const isScored = traineeScores.some(s =>
-                    s.assessmentName.toLowerCase().includes(link.name.toLowerCase()) ||
-                    link.name.toLowerCase().includes(s.assessmentName.toLowerCase())
-                  )
-                  return !isScored
-                })
-
-                if (pendingAssessments.length === 0) return null // Hide if all scored
-
+                const pendingCount = trainee.totalAssessmentsRequired - trainee.totalAssessmentsCompleted
                 return (
-                  <div
+                  <button
                     key={trainee.email}
-                    className="p-3 rounded-lg border border-gray-200 hover:border-amber-300 hover:bg-amber-50 transition-all"
+                    onClick={() => {
+                      setActiveTab('scoring')
+                      setStatPopup(null)
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-amber-300 hover:bg-amber-50 transition-all text-left"
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                          {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 text-sm">{trainee.fullName}</p>
-                          <p className="text-xs text-gray-500">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
-                        </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                        {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                       </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">{trainee.fullName}</p>
+                        <p className="text-xs text-gray-500">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
                       <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
-                        {pendingAssessments.length} pending
+                        {pendingCount} pending
                       </span>
+                      <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </div>
-                    {/* Assessment buttons - only show pending ones */}
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {pendingAssessments.slice(0, 4).map((link, i) => (
-                        <button
-                          key={i}
-                          onClick={() => {
-                            openFormModal(link.url, link.name, trainee.fullName, trainee.email)
-                            setStatPopup(null)
-                          }}
-                          className="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-medium transition-colors"
-                        >
-                          {link.name.length > 20 ? link.name.substring(0, 18) + '...' : link.name}
-                        </button>
-                      ))}
-                      {pendingAssessments.length > 4 && (
-                        <button
-                          onClick={() => {
-                            setActiveTab('scoring')
-                            setStatPopup(null)
-                          }}
-                          className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-xs font-medium transition-colors"
-                        >
-                          +{pendingAssessments.length - 4} more
-                        </button>
-                      )}
-                    </div>
-                  </div>
+                  </button>
                 )
               })}
             </div>
