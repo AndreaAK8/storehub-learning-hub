@@ -1,0 +1,330 @@
+Task Number,Role,Day,Activity Name,Description,Time,Duration,Type,Resource Link,Success Criteria,Scorecard Link,Video Assessment?,Publish on LMS?
+1,All,1,Training Briefing,"Trainer will conduct the ""Highs, Lows & Buffalos"" icebreaker, then brief you on the self-study structure and set clear expectations.",2:00pm - 3:00pm,1 hour,Trainer Led,-,Trainee pays attention and ensure they clearly understand the expectations set for them.,,,FALSE
+2,All,1,All in One: Software,"This is your time to dive deep, understand what each does, and how they actually help merchants in the real world. Refer to slide 8 - 13",3:00pm - 4:00pm,1 hour,Self Study,https://storehub.sg.larksuite.com/wiki/QqIDwLTciiUfhnk7dLylG5I6ghb,Complete task within the hour and move on to Hardware topic.  Keep your trainer in the loop on your progress by 6:00 pm.,,,FALSE
+3,All,1,All in One: Hardware,"POS devices, printers, scanners… meh. What matters is how they help merchants run their business smoothly. Explore the hardware, understand why it matters, and think about how it solves real merchant problems.  Refer to slide 14 - 31",4:00pm - 5:00pm,1 hour,Self Study,https://storehub.sg.larksuite.com/wiki/QqIDwLTciiUfhnk7dLylG5I6ghb,Complete task within the hour and move on to Features topic. Update your trainer by 6:00 pm.,,,FALSE
+4,All,1,All in One: Feature,"Whether it’s QR Order & Pay, Beep Delivery, or Membership- who cares? This is the part where you dive deep into StoreHub features and understand how they address real merchant pain points and opportunities. Put yourself in their shoes: what do these features mean for them, and how could they make their business more efficient and successful? Refer to slide 32 to 41",5:00pm - 6:30pm,1 hour 30 minutes,Self Study,https://storehub.sg.larksuite.com/wiki/QqIDwLTciiUfhnk7dLylG5I6ghb,Complete task within the hour and move on to System Navigation topic. Update your trainer by 6:00 pm.,,,FALSE
+5,All,2,All in One: System Navigation & BackOffice Assignment,"BackOffice, POS app- sounds new, doesn't it? But this is your playground. Use your dummy business, click around, test everything, and figure out how to make the system work like second nature. Refer to slide 42 to 47",9:30am - 1:00pm,4 hours 30 minutes,Self Study,https://storehub.sg.larksuite.com/wiki/QqIDwLTciiUfhnk7dLylG5I6ghb,"1. Create a Backoffice account and inform your trainer. Your store format must be as follows: Storehub(Yourname)(Role): e.g: StorehubAndreaTrainer.
+
+2. Simultaneously study system navigation while working on the BackOffice assignment. Complete the BackOffice checklist as you watch the BackOffice and POS videos in the Knowledge Base (slide 43 & 45)
+
+3. Complete task within the hours and move on to Merchant Profile. Update your trainer by 6:00 pm.
+
+BackOffice Assignment (Create a checklist )
+
+1. Complete all settings in BackOffice, excluding Kitchen Display System
+2. Add 2 employees (Your trainer and maybe a friend)
+3. Add 2 suppliers
+4. Add 2 customers
+5. Add Products
+F&B Products
+  - Mango Shake
+    - Fixed Pricing
+    - Simple Tracking
+  - DIY Fruit Tea Cup
+    - Fixed Pricing
+    - Composite Tracking
+    - Components: Tea Base, Fruit Mix (up to you on the number of options)
+  - Fresh Vegetables (per pack)
+    - Variable Pricing
+    - Simple Tracking
+  - Iced Latte
+    - Single & Multiple Choice Modifiers
+      - Single choice: Cup Size
+      - Multiple choice: Add-ons (Extra Shot, Syrup, Whipped Cream)
+    - Simple Tracking
+  - Pizza (2 products)
+    - Group Modifier
+      - Single choice: Size
+      - Multiple choice: Toppings
+  
+  Retail Products:
+  - Wireless Earbuds
+    - Fixed Pricing
+    - Serialized Tracking
+  - Handmade Soap (per piece)
+    - By-Unit Pricing
+    - Simple Tracking
+  - Custom Sandwich
+    - Single Choice Modifier (Bread Type)
+    - Multiple Choice Modifier (sauce/toppings)
+    - Composite Tracking
+  - Graphic T-Shirt
+    - 2 Variant Options (Size + Color)
+  - Leather Wallet
+    - Fixed Pricing
+    - 1 Variant Option (Color)
+    - Simple Tracking
+  
+6. Set Up Offline Store (If you have an iPad)
+  1. Add products to POS Layout
+  2. Activate POS Register
+  3. Purchase 4 items on your register
+7. Set Up Membership 
+  1. Add some customers to your data base
+  2. Set up all tiers, promotions, points and rewards. 
+  3. Set it Live once ready.
+8. Set Up Engage
+  1. Activate Welcome New Customers for Engage
+9. Set Up QR Order & Pay (Once complete, test your store (storename).beepit.com/dine
+10. Set Up Beep Delivery (Once complete, test your store (storename).beepit.com/delivery
+11. Set Up Webstore (Once complete, test your store (storename).storehub.me",,,FALSE
+6,All,2,Lunch,,1:00pm - 2:00pm,1 hour,,,,,,FALSE
+7,All,2,All in One: System Navigation & BackOffice Assignment (Cont),If you havent completed the Backoffice assignment- continue where you left off and complete the assignment,2:00pm - 3:00pm,1 hour,Assignment,https://storehub.sg.larksuite.com/wiki/QqIDwLTciiUfhnk7dLylG5I6ghb,"1. Create a Backoffice account and inform your trainer. Your store format must be as follows: Storehub(Yourname)(Role): e.g: StorehubAndreaTrainer.
+
+2. Simultaneously study system navigation while working on the BackOffice assignment. Complete the BackOffice checklist as you watch the BackOffice and POS videos in the Knowledge Base (slide 43 & 45)
+
+3. Complete task within the hours and move on to Merchant Profile. Update your trainer by 6:00 pm.
+
+BackOffice Assignment (Create a checklist )
+
+1. Complete all settings in BackOffice, excluding Kitchen Display System
+2. Add 2 employees (Your trainer and maybe a friend)
+3. Add 2 suppliers
+4. Add 2 customers
+5. Add Products
+F&B Products
+  - Mango Shake
+    - Fixed Pricing
+    - Simple Tracking
+  - DIY Fruit Tea Cup
+    - Fixed Pricing
+    - Composite Tracking
+    - Components: Tea Base, Fruit Mix (up to you on the number of options)
+  - Fresh Vegetables (per pack)
+    - Variable Pricing
+    - Simple Tracking
+  - Iced Latte
+    - Single & Multiple Choice Modifiers
+      - Single choice: Cup Size
+      - Multiple choice: Add-ons (Extra Shot, Syrup, Whipped Cream)
+    - Simple Tracking
+  - Pizza (2 products)
+    - Group Modifier
+      - Single choice: Size
+      - Multiple choice: Toppings
+  
+  Retail Products:
+  - Wireless Earbuds
+    - Fixed Pricing
+    - Serialized Tracking
+  - Handmade Soap (per piece)
+    - By-Unit Pricing
+    - Simple Tracking
+  - Custom Sandwich
+    - Single Choice Modifier (Bread Type)
+    - Multiple Choice Modifier (sauce/toppings)
+    - Composite Tracking
+  - Graphic T-Shirt
+    - 2 Variant Options (Size + Color)
+  - Leather Wallet
+    - Fixed Pricing
+    - 1 Variant Option (Color)
+    - Simple Tracking
+  
+6. Set Up Offline Store (If you have an iPad)
+  1. Add products to POS Layout
+  2. Activate POS Register
+  3. Purchase 4 items on your register
+7. Set Up Membership 
+  1. Add some customers to your data base
+  2. Set up all tiers, promotions, points and rewards. 
+  3. Set it Live once ready.
+8. Set Up Engage
+  1. Activate Welcome New Customers for Engage
+9. Set Up QR Order & Pay (Once complete, test your store (storename).beepit.com/dine
+10. Set Up Beep Delivery (Once complete, test your store (storename).beepit.com/delivery
+11. Set Up Webstore (Once complete, test your store (storename).storehub.me",,,FALSE
+8,All,2,Sync Up !,"This is a chance to tell your trainer if you have any confusion- feel free and shamelessly ask questions so you could stay on track. During this session, your trainer will :
+1. Recap on the topics you've read through
+2. Conduct a product demo 
+3. Discuss quiz questions",3:00pm - 4:30pm,1 hour 30 minutes,Trainer Led,-,-,,,FALSE
+9,All,2,All in One: Quiz Time !,"Complete 35 questions. Achieve a minimal score of 80%, there will be no retake. Use slides as reference as this is an open book test.
+
+P.S.: Do not submit the quiz form until you've discussed with trainer.",4:30pm - 5:30pm,1 hour,Assessment,https://forms.gle/dAiBZXvPqpfg5fjK8,Minimum passing rate is 80%,,,FALSE
+10,All,2,Role Specific Brief,Great job on building your knowledge foundation! It’s time to level up and bundle that knowledge with your role-specific skills. Your trainer will walk you through the expectations for your role-specific level.,5:30pm - 6:30pm,1 hour,Trainer Led,-,-,,,FALSE
+11,Onboarding Specialist,3,Advanced System & Features,"Reports, CSVs, promotions, price books… any many more. What really matters is how these tools help merchants understand their business, save time, and make better decisions. Go deeper into advanced features like QR Order & Pay, Beep Delivery, Membership, Engage, and more- and think about how they solve real merchant problems in the real world.",09:30am - 11:30am,2 hours,Self Study,https://storehub.sg.larksuite.com/wiki/Q6dkwGUhhiRNrKkPAY0l37KYgig,Complete task within the hour and move on to Advanced Troubleshooting.,,,FALSE
+12,Onboarding Specialist,3,Advanced Troubleshooting,"IP addresses, feed tests, printer resets… sounds technical, sure. But this is really about getting merchants unstuck when things stop printing. Self-study the basics of networking and printer troubleshooting, and understand how each step helps get operations back on track.",11:30am - 1:00pm,1 hour 30 minutes,Self Study,https://storehub.sg.larksuite.com/wiki/BV67wlB0Yic2B7k83Y4le3VigIe,Complete task within the hour and move on to Quiz. ,,,FALSE
+13,Onboarding Specialist,3,Lunch,,1:00pm - 2:00pm,1 hour,,,,,,FALSE
+14,Onboarding Specialist,3,Advanced System: Quiz Time !,"Complete 35 questions. Achieve a minimal score of 80%, there will be no retake. Use slides as reference as this is an open book test.",2:00pm - 3:00pm,1 hour,Assessment,https://forms.gle/uD9B6vzsxxvhxoFt9,Minimum passing rate is 80%,,,FALSE
+15,Onboarding Specialist,3,Sync Up !,"This is a chance to tell your trainer if you have any confusion- feel free and shamelessly ask questions so you could stay on track. During this session, your trainer will :
+1. Recap on the topics you've read through
+2. Conduct a product demo 
+3. Discuss quiz questions
+
+P.S.: Do not submit the quiz form until you've discussed with trainer.",3:00pm - 3:30pm,30 minutes,Trainer Led,-,-,,,FALSE
+16,Onboarding Specialist,3,Hardware Assessment,"Assemble hardware, search for printers, run feed tests, reset and configure devices, and troubleshoot IP issues… sounds like a lot, but this is about making sure everything works for merchants. You’ll need at least 80% to pass.",3:30pm - 4:30pm,1 hour,Trainer Led,https://forms.gle/4uqyPthsVweeZPqx6,Minimum passing rate is 80%,,,FALSE
+17,Onboarding Specialist,3,Tools & Supply Chain,"Intercom, Aircall, supply chain processes, sounds like tools. What really matters is how you use them to help merchants faster, solve problems smarter, and keep operations running smoothly.",4:30pm - 5:30pm,1 hour,Self Study,https://storehub.sg.larksuite.com/wiki/XptXwmBv1iC3MqkQBUnlyaBjgkb,Complete task within the hour and move on to Brand Servicing,,,FALSE
+18,Onboarding Specialist,3,Brand Servicing,"Communication, empathy, patience… these are the tools that actually make merchants feel heard, supported, and confident. Master these, and you’ll turn every interaction into a positive experience.",5:30pm - 6:30pm,1 hour,Self Study,https://storehub.sg.larksuite.com/wiki/Ug1Kw52ROiPFy6kQVbRlyLAKg6b,Complete task within the hour.,,,FALSE
+19,Onboarding Specialist,4,Buddy Session with Onboarding Coordinator,"Buddy sessions with OEs to learn menu setup, take notes in the Buddy Checklist, and record everything they learn, while senior players leave comments and reviews; coaches ensure checklist access, schedule seniors two days ahead, and track session timing.
+
+While self-study is a fantastic way to build your foundation, nothing beats the insight and guidance of a senior showing you their top skills in action.
+
+Enter the Buddy Session- your opportunity to learn directly from seasoned experts. This is your chance to connect with the Onboarding Coordinator, Onboarding Specialist, and Merchant Onboarding Managers. 
+
+But it’s more than just a meet-and-greet! These sessions will help you:
+- Get to know your senior teammates better.
+- Understand their workflows.
+- Learn how to communicate effectively as a team when handling merchants.
+
+What’s Expected During the Sessions ✍️
+
+1. Ask Questions: Come prepared with queries and ask away! Use this time to dig deep into their workflows and responsibilities.
+2. Observe: Pay close attention to their processes and how they manage tasks.
+3. Record Your Learnings: Create a copy of the Buddy Checklist Template to document everything you learn. This checklist will serve as a record for you and will be reviewed by your trainer.
+
+Take full advantage of these sessions—they’re not just informative, but also your gateway to building stronger relationships with your team. Remember, the more you engage, the more you’ll learn. Good luck! 🚀
+P.S.: Ensure that you've already send invitations to your Buddy.",09.30am - 10:30am,1 hour,Buddy Led,https://storehub.sg.larksuite.com/sheets/ZqDlseFE3hfXObt78Sql4vq8gsc,,,,FALSE
+20,Onboarding Specialist,4,Menu Setup!,"The purpose of this task is to help you get hands-on experience with menu setup—just like an Onboarding Executive! Upskilling starts here. 💪
+
+Below, you’ll find a table linking to real merchant tickets where they’ve sent their menus and requested item setups in their BackOffice.
+
+Here’s what you need to do:
+1. Open the Request section in each ticket and review the merchant’s menu.
+2. Use your BackOffice account (the one you created on Day 1) to set up the items from these tickets.
+3. Create at least 20 products each for both F&B and Retail businesses.
+  - Example: From the F&B Intercom ticket, add 20 products.
+  - From the Retail Intercom ticket, add another 20 products.
+
+Once you're done, it’s time to show off your skills! Inform your Buddy to review your work by sharing access to your BackOffice. Don’t forget to add them as an employee to give them a peek at your setup.
+
+Good luck—and may your menus be as smooth as your skills! 🍔🛍️",10:30am - 1:00pm,2 hours 30 minutes,Assignment,"https://app.intercom.com/a/inbox/v2axofpf/inbox/conversation/189972000831621?view=List
+
+https://app.intercom.com/a/inbox/v2axofpf/inbox/conversation/189972000848166?view=List",,,,FALSE
+21,Onboarding Specialist,4,Lunch,,1:00pm - 2:00pm,1 hour,,,,,,FALSE
+22,Onboarding Specialist,4,Training Slides & Assessment Preperation,"Training Deck Deep Dive & Assessments 🎓
+
+For this task, you’ll spend 2 hours and 30 minutes immersing yourself in the training deck that you’ll soon use to guide your beloved merchants. This is your chance to channel your inner trainer and learn the ropes!
+
+Step 1: Learn from the Masters 🏆
+
+- Begin by watching video samples of your seniors in action.
+- Observe how they ace merchant training—teaching merchants to navigate the system with ease and confidence.
+- While you watch and read through the deck, take your own notes. Trust us, these notes will be your best friend later when you’re tested.
+
+Pro Tip for Watching Videos 🎥💡
+
+We know the videos might feel a bit lengthy, but don’t worry—you’ve got options!
+- Speed things up: Play them at a higher speed to breeze through the content.
+- Skip around: Jump to the sections you need to get the gist of the guide.
+
+It’s all about making the most of your time while still getting the key takeaways. Happy watching! 🚀
+
+Step 2: Put Your Knowledge to the Test 📝
+
+Later in the day, you’ll be tested in a mock assessment with your coach. There will be 2 Training Assessments where you’ll showcase your training skills:
+- F&B Training Assessment
+- Retail Training Assessment
+
+Here’s how the assessments will flow:
+1. First 30 minutes: You’ll conduct a mock training session using the checlist below.
+2. Next 30 minutes: Your coach will provide feedback on your performance.
+
+Important Tips for Success 🌟
+
+- No Pressure: There won’t be a retake if you fail—but no worries, just have fun and stay natural.
+- Be Engaging: Treat the session like it’s with real merchants. Smile, connect, and make it enjoyable.
+- Be Prepared: Use the provided checklist to ensure you’ve covered all key points during your mock session.
+
+All the best! Remember, this is your time to shine and prove you’ve got what it takes to rock the role. 🚀",2:00pm - 04:30pm,2 hours 30 minutes,Self Study,"MY
+
+Training Deck
+F&B: https://docs.google.com/presentation/d/1U-dwU-kC8l-pJ211sBoQQS4jexhtpNCpcqE-4EEjbys/edit#slide=id.g26b7f38cc86_0_2118
+
+Retail: 
+
+- BackOffice: https://drive.google.com/file/d/12cW2Y_KCrX-mCLtVJxh-jKNEQMoZMjpS/view?usp=sharing
+- POS: https://drive.google.com/file/d/12rmHgBFt5RjwTRfLE972Crf1a5f57k_f/view?usp=sharing
+
+F&B:
+Backoffice + POS+QR Order+Composite Inventory
+https://drive.google.com/file/d/1QTENB88GpZKnxoirVeIpXZ-f2M1atCF6/view?usp=sharing
+
+Backoffice + POS
+Involves Membership,  Engage, QR Order & Pay, Composite Inventory
+https://drive.google.com/file/d/1vxGqxzoI9xYmSWMM0YPh88ounb-HBLFB/view?usp=sharing
+
+Video Samples
+
+CN Version: https://drive.google.com/file/d/1d9gq2OuoJ1O-F4y_L6cqnzBWhy-gFNnm/view?resourcekey
+
+EN Version: https://drive.google.com/file/d/1K6lZwYw7boYQL9fosVuXyHtJ5ZNEubfa/view?resourcekey
+
+PH
+
+Training Deck:
+https://drive.google.com/drive/u/0/folders/15-2zwWipbj7SbQnfXfrd_e8WzVFwuqWo
+
+Video:
+https://drive.google.com/file/d/1SuqdeUOpVQwzIwh0OeK65hVpMlksBWyZ/view?ts=65e03381
+
+Training Checklist: https://storehub.sg.larksuite.com/wiki/EEwFwJc4ZiEhebkxzT9l0QjSgjh",,,,FALSE
+23,Onboarding Specialist,4,Buddy Session with Onboarding Specialist,"Buddy sessions with OSs to learn menu setup, take notes in the Buddy Checklist, and record everything they learn, while senior players leave comments and reviews; coaches ensure checklist access, schedule seniors two days ahead, and track session timing.
+
+While self-study is a fantastic way to build your foundation, nothing beats the insight and guidance of a senior showing you their top skills in action.
+
+Enter the Buddy Session- your opportunity to learn directly from seasoned experts. This is your chance to connect with the Onboarding Coordinator, Onboarding Specialist, and Merchant Onboarding Managers. 
+
+But it’s more than just a meet-and-greet! These sessions will help you:
+- Get to know your senior teammates better.
+- Understand their workflows.
+- Learn how to communicate effectively as a team when handling merchants.
+
+What’s Expected During the Sessions ✍️
+
+1. Ask Questions: Come prepared with queries and ask away! Use this time to dig deep into their workflows and responsibilities.
+2. Observe: Pay close attention to their processes and how they manage tasks.
+3. Record Your Learnings: Create a copy of the Buddy Checklist Template to document everything you learn. This checklist will serve as a record for you and will be reviewed by your trainer.
+
+Take full advantage of these sessions—they’re not just informative, but also your gateway to building stronger relationships with your team. Remember, the more you engage, the more you’ll learn. Good luck! 🚀
+
+P.S.: Ensure that you've already send invitations to your Buddy.",4:30pm - 06:30pm,2 hour,Buddy Led,https://storehub.sg.larksuite.com/sheets/ZqDlseFE3hfXObt78Sql4vq8gsc,,,,FALSE
+24,Onboarding Specialist,5,Training Video Assessment (F&B),The time has come! Time for you to show us what you got. ,9:30am - 10:30am,1 hour,Coach Led,https://storehub.sg.larksuite.com/wiki/EEwFwJc4ZiEhebkxzT9l0QjSgjh,Passing rate of 80%,https://forms.gle/PoWWciHpStBQyoy2A,,FALSE
+25,Onboarding Specialist,5,Self Reflect,Reflect from previous assessment and apply improvement on Retail Assessment,10:30am - 11:00am,30 minutes,Self Study,,,,,FALSE
+26,Onboarding Specialist,5,Training Video Assessment (Retail),The time has come! Time for you to show us what you got. ,11:00am - 12:00pm,1 hour,Coach Led,https://storehub.sg.larksuite.com/wiki/EEwFwJc4ZiEhebkxzT9l0QjSgjh,Passing rate of 80%,https://forms.gle/NLz3fTGEzrtig3qz9,,FALSE
+27,Onboarding Specialist,5,Lunch,,1:00pm - 2:00pm,1 hour,,,,,,FALSE
+28,Onboarding Specialist,5,Buddy Session with Merchant Onboarding Manager !,"Buddy sessions with MOMs to learn menu setup, take notes in the Buddy Checklist, and record everything they learn, while senior players leave comments and reviews; coaches ensure checklist access, schedule seniors two days ahead, and track session timing.
+
+While self-study is a fantastic way to build your foundation, nothing beats the insight and guidance of a senior showing you their top skills in action.
+
+Enter the Buddy Session- your opportunity to learn directly from seasoned experts. This is your chance to connect with the Onboarding Coordinator, Onboarding Specialist, and Merchant Onboarding Managers. 
+
+But it’s more than just a meet-and-greet! These sessions will help you:
+- Get to know your senior teammates better.
+- Understand their workflows.
+- Learn how to communicate effectively as a team when handling merchants.
+
+What’s Expected During the Sessions ✍️
+
+1. Ask Questions: Come prepared with queries and ask away! Use this time to dig deep into their workflows and responsibilities.
+2. Observe: Pay close attention to their processes and how they manage tasks.
+3. Record Your Learnings: Create a copy of the Buddy Checklist Template to document everything you learn. This checklist will serve as a record for you and will be reviewed by your trainer.
+
+Take full advantage of these sessions—they’re not just informative, but also your gateway to building stronger relationships with your team. Remember, the more you engage, the more you’ll learn. Good luck! 🚀
+
+P.S.: Ensure that you've already send invitations to your Buddy.",2:00pm - 3:00pm,1 hour,Buddy Led,https://storehub.sg.larksuite.com/sheets/ZqDlseFE3hfXObt78Sql4vq8gsc,,,,FALSE
+29,Onboarding Specialist,5,Mock Test !  ,"Final Stage: Mock Test Assessment 🎓✨
+
+Congratulations on reaching the final stage of your training program! This is your ultimate challenge: two rounds of Mock Tests—one focused on Retail and the other on F&B.
+
+Unlike the Training Assessment, this is a full-on mock test designed to simulate real training scenarios with a structured training flow that you must follow.
+
+How It Works 📝
+
+- Topics: Your coach will share the topics you need to cover during the Mock Test.
+- Preparation: A ticket will be assigned to you one day prior, giving you ample time to prepare.
+- Application: Bring all your learning to life! Remember those soft skills from Brand Servicing? This is your moment to shine and apply them.
+- Evaluation: Your performance will be assessed, so give it your best shot!",03:00pm - 03:30pm,30 minutes,Trainer Led,,,,,FALSE
+30,Onboarding Specialist,5,Training Mock Test (F&B),"Final Tips 🧠💡
+- Stay calm and confident—you’ve got this!
+- Review your notes and practice the training flow beforehand.
+- Focus on both technical accuracy and delivering an excellent experience.
+
+Good luck, and may you ace your Mock Test like a pro! 🚀",3:30pm - 4:30pm,1 hour,Coach Led,,Passing rate of 80%,https://forms.gle/CcfmMcrb48cj6iMx6,,FALSE
+31,Onboarding Specialist,5,Self Reflect,Reflect from previous assessment and apply improvement on Retail Assessment,4:30pm - 5:00pm,30 minutes,Self Study,,,,,FALSE
+32,Onboarding Specialist,5,Training Mock Test (Retail),"Final Tips 🧠💡
+- Stay calm and confident—you’ve got this!
+- Review your notes and practice the training flow beforehand.
+- Focus on both technical accuracy and delivering an excellent experience.
+
+Good luck, and may you ace your Mock Test like a pro! 🚀",5:00pm - 6:00pm,1 hour,Coach Led,,Passing rate of 80%,https://forms.gle/F5SaX7CURqrNoEV66,,FALSE
+33,Onboarding Specialist,5,Feedback Session with coach ,Great job! You have reached the finising line- your coach will advice you the next steps.,6:00pm - 6:30pm,30 minutes,Coach Led,Provide certificate.,,,,FALSE

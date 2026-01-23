@@ -1,0 +1,147 @@
+{
+  "name": "Win 3: Critical Alert Emailer (SIMPLIFIED)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "triggerAtHour": 9 }]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "id": "schedule-trigger",
+      "name": "Daily 9 AM"
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Trainees", "mode": "list" }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [250, -200],
+      "id": "get-trainees",
+      "name": "Get Trainees",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Assessment_Scores", "mode": "list" }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [250, 0],
+      "id": "get-scores",
+      "name": "Get Assessment Scores",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Assessment Schedule Configuration", "mode": "list" }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [250, 200],
+      "id": "get-schedule",
+      "name": "Get Assessment Schedule",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": {
+        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
+        "sheetName": { "__rl": true, "value": "Coach & Managers Directory", "mode": "list" }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [250, 400],
+      "id": "get-coaches",
+      "name": "Get Coach Directory",
+      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+    },
+    {
+      "parameters": { "numberInputs": 4 },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [500, 100],
+      "id": "merge-all",
+      "name": "Merge All Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== WIN 3 SIMPLIFIED: RED ALERTS ONLY =====\n// Dashboard handles ORANGE alerts - this workflow only emails critical issues\n\nconst allItems = $input.all();\n\n// Categorize data\nconst trainees = [];\nconst scores = [];\nconst schedule = [];\nconst coaches = [];\n\nallItems.forEach(item => {\n  const data = item.json;\n  \n  if (data['Training Start Date'] !== undefined && data['Email Address']) {\n    trainees.push(data);\n  }\n  else if (data['Score ID']) {\n    scores.push(data);\n  }\n  else if (data['Schedule Day'] !== undefined) {\n    schedule.push(data);\n  }\n  else if (data['Coach Email'] && data['Coach Name']) {\n    coaches.push(data);\n  }\n});\n\nconsole.log(`Trainees: ${trainees.length}, Scores: ${scores.length}, Schedule: ${schedule.length}, Coaches: ${coaches.length}`);\n\n// Build schedule by role: { role -> { day -> [assessments] } }\nconst scheduleByRole = new Map();\nschedule.forEach(s => {\n  const role = s.Role;\n  const day = parseInt(s['Schedule Day']) || 0;\n  const assessment = s['Assessment Name'];\n  if (!role || !assessment || !day) return;\n  \n  if (!scheduleByRole.has(role)) {\n    scheduleByRole.set(role, new Map());\n  }\n  const roleSchedule = scheduleByRole.get(role);\n  if (!roleSchedule.has(day)) {\n    roleSchedule.set(day, []);\n  }\n  roleSchedule.get(day).push(assessment);\n});\n\n// Build coach lookup\nconst coachMap = new Map();\ncoaches.forEach(c => {\n  const role = c.Role || c.Department || '';\n  const country = c.Country || '';\n  const key = `${role}-${country}`;\n  if (!coachMap.has(key)) coachMap.set(key, []);\n  coachMap.get(key).push(c);\n});\n\n// Build scores by trainee\nconst scoresByTrainee = new Map();\nscores.forEach(s => {\n  const email = (s['Trainee Email'] || '').toLowerCase();\n  if (!email) return;\n  if (!scoresByTrainee.has(email)) {\n    scoresByTrainee.set(email, []);\n  }\n  scoresByTrainee.get(email).push(s);\n});\n\n// Helper: Get coach emails\nfunction getCoachEmails(role, country) {\n  const key = `${role}-${country}`;\n  const deptCoaches = coachMap.get(key) || [];\n  return deptCoaches.map(c => c['Coach Email']).filter(Boolean).join(', ') || 'andrea.kaur@storehub.com';\n}\n\n// Helper: Calculate expected assessments by day\nfunction getExpectedByDay(role, currentDay) {\n  const roleSchedule = scheduleByRole.get(role);\n  if (!roleSchedule) return [];\n  \n  const expected = [];\n  roleSchedule.forEach((assessments, day) => {\n    if (day <= currentDay) {\n      expected.push(...assessments);\n    }\n  });\n  return expected;\n}\n\n// Helper: Get passed assessments\nfunction getPassedAssessments(traineeScores) {\n  const passed = new Set();\n  traineeScores.forEach(s => {\n    if (s.Passed === 'Pass') {\n      passed.add(s['Assessment Name']);\n    }\n  });\n  return passed;\n}\n\n// Helper: Count total failures (not yet passed)\nfunction countFailures(traineeScores) {\n  const passedSet = getPassedAssessments(traineeScores);\n  let failures = 0;\n  const failedAssessments = [];\n  \n  const failsByAssessment = new Map();\n  traineeScores.forEach(s => {\n    const name = s['Assessment Name'];\n    if (s.Passed !== 'Pass' && !passedSet.has(name)) {\n      if (!failsByAssessment.has(name)) {\n        failsByAssessment.set(name, []);\n      }\n      failsByAssessment.get(name).push(s);\n    }\n  });\n  \n  failsByAssessment.forEach((attempts, name) => {\n    failures += attempts.length;\n    failedAssessments.push(`${name} (${attempts.length}x)`);\n  });\n  \n  return { count: failures, details: failedAssessments };\n}\n\n// Helper: Determine pace\nfunction determinePace(expected, passed) {\n  const expectedCount = expected.length;\n  const passedCount = passed.size;\n  \n  if (expectedCount === 0) return { pace: 'on-track', emoji: '✅', label: 'On Track' };\n  \n  const completionRate = passedCount / expectedCount;\n  \n  if (passedCount > expectedCount) {\n    return { pace: 'ahead', emoji: '🐇', label: 'Ahead of Schedule' };\n  } else if (completionRate < 0.7) {\n    return { pace: 'behind', emoji: '🐢', label: 'Behind Schedule' };\n  } else {\n    return { pace: 'on-track', emoji: '✅', label: 'On Track' };\n  }\n}\n\n// Process trainees - ONLY generate RED alerts\nconst alerts = [];\nconst today = new Date().toISOString();\n\ntrainees.forEach(trainee => {\n  const email = (trainee['Email Address'] || '').toLowerCase();\n  const name = trainee['Full Name'] || trainee.Name || '';\n  const role = trainee['Department/Role'] || trainee.Department || trainee.Role || '';\n  const country = trainee.Country || '';\n  const startDate = trainee['Training Start Date'];\n  const status = trainee.Status || '';\n  \n  // Skip inactive trainees\n  if (status === 'Completed' || status === 'Terminated' || status === 'On Hold') return;\n  if (!email || !name || !startDate) return;\n  \n  // Calculate current training day\n  const currentDay = Math.floor((Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1;\n  \n  // Skip if just started (day 1)\n  if (currentDay < 2) return;\n  \n  const traineeScores = scoresByTrainee.get(email) || [];\n  const expectedAssessments = getExpectedByDay(role, currentDay);\n  const passedAssessments = getPassedAssessments(traineeScores);\n  const { count: failureCount, details: failureDetails } = countFailures(traineeScores);\n  const { pace, emoji: paceEmoji, label: paceLabel } = determinePace(expectedAssessments, passedAssessments);\n  \n  const coachEmails = getCoachEmails(role, country);\n  \n  // ===== RED ALERTS ONLY =====\n  // Behind + 1+ fail → RED (Struggling)\n  // On-track + 3+ fail → RED (Knowledge gaps)\n  \n  let alertReason = '';\n  let coachingAction = '';\n  \n  if (pace === 'behind' && failureCount >= 1) {\n    alertReason = `Behind schedule + ${failureCount} failure(s) - Struggling learner`;\n    coachingAction = 'Schedule 1:1 intensive coaching session. Review fundamentals and provide additional support.';\n  }\n  else if (pace === 'on-track' && failureCount >= 3) {\n    alertReason = `On track but ${failureCount} failures - Knowledge gaps`;\n    coachingAction = 'Review failed assessments. Identify specific knowledge gaps and provide targeted coaching.';\n  }\n  else {\n    // Not a RED alert - skip (dashboard shows other statuses)\n    return;\n  }\n  \n  const expectedCount = expectedAssessments.length;\n  const passedCount = passedAssessments.size;\n  const incompleteList = expectedAssessments.filter(a => !passedAssessments.has(a));\n  \n  console.log(`🔴 RED: ${name} - ${alertReason}`);\n  \n  alerts.push({\n    json: {\n      'Trainee Email': email,\n      'Trainee Name': name,\n      'Coach Email': coachEmails,\n      'Alert Reason': alertReason,\n      '_role': role,\n      '_country': country,\n      '_currentDay': currentDay,\n      '_pace': pace,\n      '_paceLabel': paceLabel,\n      '_passedCount': passedCount,\n      '_expectedCount': expectedCount,\n      '_failureCount': failureCount,\n      '_subject': `🔴 CRITICAL: ${name} needs attention (Day ${currentDay})`,\n      '_body': `Hi Team,\\n\\n🔴 CRITICAL ALERT\\n\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `TRAINEE DETAILS\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `Name: ${name}\\n` +\n        `Role: ${role} (${country})\\n` +\n        `Training Day: ${currentDay}\\n\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `STATUS\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `Pace: ${paceEmoji} ${paceLabel}\\n` +\n        `Assessments Passed: ${passedCount}/${expectedCount}\\n` +\n        `Total Failures: ${failureCount}\\n\\n` +\n        (failureCount > 0 ? `Failed Assessments:\\n${failureDetails.map(f => `• ${f}`).join('\\n')}\\n\\n` : '') +\n        (incompleteList.length > 0 ? `Incomplete Assessments:\\n${incompleteList.map(a => `• ${a}`).join('\\n')}\\n\\n` : '') +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `ISSUE\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `${alertReason}\\n\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `RECOMMENDED ACTION\\n` +\n        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\n` +\n        `${coachingAction}\\n\\n` +\n        `View in Learning Hub: https://storehub-learning-hub.vercel.app/dashboard\\n\\n` +\n        `Cheers,\\nTraining LMS`\n    }\n  });\n});\n\nconsole.log(`\\nTotal RED alerts: ${alerts.length}`);\n\nif (alerts.length === 0) {\n  return [{ json: { _noAlerts: true, message: 'No critical alerts today' } }];\n}\n\nreturn alerts;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 100],
+      "id": "analyze-alerts",
+      "name": "Find Critical Issues"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict", "version": 2 },
+          "conditions": [{ "id": "check", "leftValue": "={{ $json._noAlerts }}", "rightValue": true, "operator": { "type": "boolean", "operation": "notEquals" } }],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [920, 100],
+      "id": "has-alerts",
+      "name": "Has Critical Alerts?"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Coach Email'] }}",
+        "subject": "={{ $json._subject }}",
+        "emailType": "text",
+        "message": "={{ $json._body }}",
+        "options": { "ccList": "andrea.kaur@storehub.com" }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1140, 0],
+      "id": "send-alert",
+      "name": "Send Critical Alert Email",
+      "credentials": { "gmailOAuth2": { "id": "M8WHs7W6uy2BUq7w", "name": "AK's" } }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1140, 200],
+      "id": "no-alerts",
+      "name": "No Critical Issues"
+    }
+  ],
+  "connections": {
+    "Daily 9 AM": {
+      "main": [[
+        {"node": "Get Trainees", "type": "main", "index": 0},
+        {"node": "Get Assessment Scores", "type": "main", "index": 0},
+        {"node": "Get Assessment Schedule", "type": "main", "index": 0},
+        {"node": "Get Coach Directory", "type": "main", "index": 0}
+      ]]
+    },
+    "Get Trainees": { "main": [[{"node": "Merge All Data", "type": "main", "index": 0}]] },
+    "Get Assessment Scores": { "main": [[{"node": "Merge All Data", "type": "main", "index": 1}]] },
+    "Get Assessment Schedule": { "main": [[{"node": "Merge All Data", "type": "main", "index": 2}]] },
+    "Get Coach Directory": { "main": [[{"node": "Merge All Data", "type": "main", "index": 3}]] },
+    "Merge All Data": { "main": [[{"node": "Find Critical Issues", "type": "main", "index": 0}]] },
+    "Find Critical Issues": { "main": [[{"node": "Has Critical Alerts?", "type": "main", "index": 0}]] },
+    "Has Critical Alerts?": {
+      "main": [
+        [{"node": "Send Critical Alert Email", "type": "main", "index": 0}],
+        [{"node": "No Critical Issues", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

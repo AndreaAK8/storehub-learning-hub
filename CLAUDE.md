@@ -394,10 +394,40 @@ N8N_WEBHOOK_FEEDBACK=        # Fetch AI feedback analysis
 - [x] **Unified Google Sheet Structure** - Consolidated all data into one master sheet
 - [x] Schedule adjustments table (Supabase + Google Sheet)
 
-### Phase 8: Polish ⏳ PENDING
+### Phase 8: Deployment & Polish ✅ COMPLETE (Jan 18, 2026)
 - [x] Add OC learning materials (Lark links in unified sheet)
-- [ ] Mobile responsive design
-- [ ] Deploy to Vercel
+- [x] **Deployed to Vercel** - https://storehub-learning-hub.vercel.app
+- [x] Configured Supabase Auth URLs for production
+- [x] Auto-create trainee profile on first Google sign-in (auth callback)
+- [ ] Mobile responsive design (deferred)
+
+### Phase 9: Gamification & Onboarding ✅ COMPLETE (Jan 18, 2026)
+**Focus: First-time user experience and engagement**
+
+- [x] **XP System** - Trainees earn XP for completing activities
+  - Base XP per activity type
+  - Bonus XP for completing early (under estimated time)
+  - Visual XP notifications on completion
+- [x] **GiftReveal.tsx** - Animated gift box → badge reveal for achievements
+- [x] **CompletionCelebration.tsx** - Confetti animation on day/training completion
+- [x] **Certificate.tsx** - Downloadable completion certificate
+- [x] **OnboardingTour.tsx** - 8-step guided tour for first-time trainees
+  - Welcome, Roadmap, Activities, Progress, Search, Help, Reflection, Get Started
+  - Keyboard navigation (arrow keys, Enter, Escape)
+  - Emoji-based illustrations (avoids z-index stacking issues)
+  - Stores completion in localStorage per user
+- [x] **OnboardingChecklist.tsx** - Pre-training checklist before starting Day 1
+- [x] **Trainee redirect flow**: Login → My Training (tour) → Training Overview (checklist) → Day 1
+
+### Phase 10: n8n Workflow Finalization ✅ COMPLETE (Jan 18, 2026)
+- [x] **Win 1 - Auto Welcome (Scheduled)** - Runs every 30 minutes
+  - Checks for Status = "New" trainees
+  - Sends welcome email with live Vercel URL
+  - Updates status to "Email Sent"
+  - Logs to Notification_Log
+  - Removed manual webhook-triggered version (redundant)
+- [x] Updated welcome email link to: `https://storehub-learning-hub.vercel.app/dashboard/my-training`
+- [x] Fixed n8n syntax error in Subject field (Log to Notification_Log node)
 
 ### Completed Files:
 ```
@@ -441,16 +471,21 @@ src/
 │   │   ├── NeedsAttentionSection.tsx     ✅ Alert cards for at-risk trainees
 │   │   ├── TrainerDashboard.tsx          ✅ Andrea's trainer view
 │   │   └── CoachDashboard.tsx            ✅ Coach-specific dashboard
-│   └── training/                         ✅ NEW: Trainee Dashboard Components
+│   └── training/                         ✅ Trainee Dashboard Components
 │       ├── index.ts                      ✅ Barrel exports
 │       ├── TrainingRoadmap.tsx           ✅ Day progress bar
 │       ├── DaySchedule.tsx               ✅ Daily activities list
-│       ├── ActivityCard.tsx              ✅ Individual activity (success criteria, TL;DR)
+│       ├── ActivityCard.tsx              ✅ Individual activity (XP, success criteria)
 │       ├── ProgressPanel.tsx             ✅ Progress sidebar
 │       ├── SearchBar.tsx                 ✅ Cmd+K search
 │       ├── HelpButton.tsx                ✅ Floating help button
 │       ├── ReflectionModal.tsx           ✅ End-of-day reflection
-│       └── RescheduleModal.tsx           ✅ Reschedule with reason codes
+│       ├── RescheduleModal.tsx           ✅ Reschedule with reason codes
+│       ├── OnboardingTour.tsx            ✅ NEW: 8-step guided tour
+│       ├── OnboardingChecklist.tsx       ✅ NEW: Pre-training checklist
+│       ├── GiftReveal.tsx                ✅ NEW: Animated badge reveal
+│       ├── CompletionCelebration.tsx     ✅ NEW: Confetti celebration
+│       └── Certificate.tsx               ✅ NEW: Downloadable certificate
 ├── lib/supabase/
 │   ├── client.ts                         ✅ Browser client
 │   ├── server.ts                         ✅ Server client
@@ -510,46 +545,94 @@ You'll need to create these webhook endpoints in n8n Cloud:
 
 ## 14. SESSION NOTES & NEXT STEPS
 
-### Last Session: Jan 14, 2026
+### Last Session: Jan 18, 2026
 
 **Completed:**
-1. **Trainee Dashboard Complete Redesign** - 8 new components for comprehensive learning experience
-   - TrainingRoadmap, DaySchedule, ActivityCard, ProgressPanel
-   - SearchBar (Cmd+K), HelpButton, ReflectionModal, RescheduleModal
-   - Fixed infinite loop error in SearchBar (stable array references)
+1. **Production Deployment**
+   - Deployed to Vercel: https://storehub-learning-hub.vercel.app
+   - Configured Supabase Auth redirect URLs for production
+   - Auto-create trainee profile on first Google sign-in
 
-2. **Unified Google Sheet Structure** - Consolidated all scattered sheets into one master
-   - Sheet ID: `1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468`
-   - Location: `/Training LMS Master - 2026/`
-   - 7 Tabs: Trainees, Schedule_Adjustments, Assessment_Config, Assessment_Scores, Coach_Directory, Notification_Log, Performance_Summary
-   - OC content populated with Lark links
+2. **Gamification System**
+   - XP rewards for activity completion with early-finish bonuses
+   - Animated GiftReveal for badge unlocks
+   - Confetti celebration on completions
+   - Downloadable completion certificates
 
-3. **Win 2.1 Daily Assessment Digest** - Replaced annoying every-30-min emails
-   - Single email at 9:30 AM with all day's assessments grouped by coach
-   - 6:30 PM deadline reminder
-   - Supports rescheduled assessments
+3. **Onboarding Tour** - 8-step guided introduction for first-time trainees
+   - Emoji-based illustrations (simplified from DOM highlighting due to z-index issues)
+   - Keyboard navigation support
+   - Redirects to checklist after completion
 
-4. **Reschedule Feature** - Trainers can reschedule activities with reason codes
-   - API: `/api/training/reschedule`
-   - Modal: `RescheduleModal.tsx`
-   - SQL: `schedule_adjustments.sql`
-   - Reasons: external (coach unavailable), leave, sick, pace (slow learner), other
+4. **n8n Workflow Updates**
+   - Win 1 - Auto Welcome now uses scheduled trigger (every 30 min)
+   - Updated email links to production Vercel URL
+   - Removed redundant webhook-triggered welcome workflow
+   - Fixed syntax error in Notification_Log Subject field
 
-**Pilot Preparation (Jan 19):**
+**Pilot Ready (Jan 19):**
 - Role: Onboarding Coordinator (OC) - 4 days
-- Learning materials: All in Lark (shareable links, no API needed)
-- Assessment schedule: Populated in unified sheet
+- Full trainee flow tested: Sign-in → Tour → Checklist → Training
+- Learning materials: Lark links in unified sheet
+- Assessment schedule: Populated
 
-**Next Session To-Do:**
-1. [ ] Deploy to Vercel
-2. [ ] Update old n8n workflows (Win 1, 2.5, 3, 4, 6) to use new unified sheet ID
-3. [ ] Test full trainee flow end-to-end
-4. [ ] Mobile responsive polish
+**Key Technical Decisions:**
+- Onboarding tour uses emoji illustrations instead of element highlighting (simpler, more reliable)
+- Welcome emails are fully automated (no manual trigger needed)
+- Trainee profiles auto-created on first sign-in (no manual Supabase entry)
+- LocalStorage tracks tour completion per user email
 
-**Key Decisions Made:**
-- Win 1.5 (Role Overview email) kept as optional proactive reminder
-- Lark integration: Just shareable links, no API needed
-- Schedule adjustments use neutral reason codes (not blame-focused)
+**Feedback Collection System (Planned):**
+- Lark Base for collecting feedback from Supervisor, Coaches, and Leadership
+- Structure designed with: Feedback ID, Role, Type, Area, Severity, Status tracking
+- Will be used during pilot to gather improvement suggestions
+
+---
+
+## 18. FEEDBACK COLLECTION (LARK BASE)
+
+**Purpose:** Collect structured feedback from stakeholders during pilot and beyond
+
+### Table Structure
+
+**Core Fields:**
+| Column | Type | Purpose |
+|--------|------|---------|
+| Feedback ID | Auto Number | Unique identifier (FB-001) |
+| Submitted By | Text | Name of person |
+| Email | Email | Contact for follow-up |
+| Role | Single Select | Supervisor / Coach / Leadership / Trainee |
+| Submitted Date | Date | When submitted |
+
+**Feedback Details:**
+| Column | Type | Options |
+|--------|------|---------|
+| Feedback Type | Single Select | Bug / Feature Request / UX Issue / Content Issue / General |
+| Area | Single Select | Onboarding Tour / Training Roadmap / Activity Cards / Progress Panel / Search / Assessments / Emails / Overall / Other |
+| Page/Feature | Text | Specific page or feature |
+| Description | Long Text | Detailed feedback |
+| Screenshot | Attachment | Visual evidence |
+
+**Rating & Priority:**
+| Column | Type | Options |
+|--------|------|---------|
+| Severity | Single Select | Critical / Major / Minor / Cosmetic |
+| User Impact | Single Select | Blocks Usage / Workaround Exists / Nice to Have |
+| Overall Rating | Rating (1-5) | Satisfaction score |
+
+**Tracking:**
+| Column | Type | Options |
+|--------|------|---------|
+| Status | Single Select | New / Reviewing / In Progress / Done / Won't Fix |
+| Assigned To | Text | Who's handling |
+| Resolution Notes | Long Text | What was done |
+| Resolved Date | Date | When fixed |
+
+**Recommended Views:**
+1. All Feedback - Default grid
+2. By Status - Kanban board
+3. By Role - Filter by stakeholder type
+4. Critical Issues - Severity filter
 
 ---
 
@@ -569,3 +652,76 @@ You'll need to create these webhook endpoints in n8n Cloud:
 | Performance_Summary | Aggregated metrics for reporting |
 
 **Note:** OC content includes Lark links for learning materials. Other roles to be populated before their pilot dates.
+
+---
+
+## 16. FUTURE IMPROVEMENTS
+
+### High Priority (Post-Pilot)
+| Feature | Description | Complexity |
+|---------|-------------|------------|
+| Mobile responsive design | Optimize trainee dashboard for mobile/tablet | Medium |
+| Push notifications | Browser notifications for assessments due | Medium |
+| Offline mode | Cache training content for offline viewing | High |
+| Progress sync | Real-time sync between devices | Medium |
+
+### Medium Priority
+| Feature | Description | Complexity |
+|---------|-------------|------------|
+| Leaderboard | Compare XP with other trainees in same batch | Low |
+| Streaks | Daily login streaks with bonus XP | Low |
+| Coach messaging | In-app chat with assigned coach | High |
+| Video progress tracking | Track video watch progress (not just completion) | Medium |
+| Dark mode | Theme toggle for trainee dashboard | Low |
+
+### Low Priority (Nice to Have)
+| Feature | Description | Complexity |
+|---------|-------------|------------|
+| Custom avatars | Profile customization for trainees | Low |
+| Achievement badges | More badge types (perfect week, early bird, etc.) | Low |
+| Training path branching | Dynamic paths based on assessment scores | High |
+| AI tutor | Gemini-powered Q&A for training content | High |
+| Export to PDF | Export progress reports as PDF | Medium |
+| Calendar integration | Sync training schedule to personal calendar | Medium |
+
+### Technical Debt
+| Item | Description |
+|------|-------------|
+| Update remaining n8n workflows | Win 2.5, 3, 4, 6 need unified sheet ID |
+| Add comprehensive error handling | Better error messages and recovery flows |
+| Implement caching layer | Redis/Vercel KV for n8n response caching |
+| Add unit tests | Jest tests for critical components |
+| Add E2E tests | Playwright tests for trainee flow |
+| Performance optimization | Lazy loading, code splitting |
+
+### Roles to Populate
+| Role | Short Code | Total Days | Status |
+|------|------------|------------|--------|
+| Onboarding Coordinator | OC | 4 | ✅ Ready (Pilot Jan 19) |
+| Customer Success Manager | CSM | 10 | ⏳ Pending |
+| Business Consultant | BC | 12 | ⏳ Pending |
+| Merchant Consultant | MC | 8 | ⏳ Pending |
+| Technical Support | TS | 6 | ⏳ Pending |
+
+---
+
+## 17. DEPLOYMENT INFO
+
+**Production URL:** https://storehub-learning-hub.vercel.app
+
+**Vercel Project:** storehub-learning-hub
+
+**Supabase Project:** Training LMS (czdofunqbroxttddmkgn)
+
+**n8n Instance:** storehub.app.n8n.cloud
+
+**Google Sheet:** Training LMS Master - 2026
+- Sheet ID: `1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468`
+
+**Key URLs:**
+| Environment | URL |
+|-------------|-----|
+| Production | https://storehub-learning-hub.vercel.app |
+| Supabase Dashboard | https://supabase.com/dashboard/project/czdofunqbroxttddmkgn |
+| n8n Workflows | https://storehub.app.n8n.cloud |
+| Google Sheet | https://docs.google.com/spreadsheets/d/1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468 |

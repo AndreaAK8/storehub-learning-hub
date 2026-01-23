@@ -64,6 +64,9 @@ export async function GET(request: NextRequest) {
       .select('*')
       .eq('role_id', roleData.id)
 
+    // Debug logging
+    console.log('Fetching resources for role_id:', roleData.id)
+    console.log('Additional resources found:', additionalResources?.length || 0)
     if (resourcesError) {
       console.error('Error fetching additional resources:', resourcesError)
     }
@@ -181,7 +184,12 @@ export async function GET(request: NextRequest) {
       },
       trainingDays,
       totalModules: allModules.length,
-      completedModules: Object.values(progressMap).filter(s => s === 'completed').length
+      completedModules: Object.values(progressMap).filter(s => s === 'completed').length,
+      _debug: {
+        additionalResourcesCount: additionalResources?.length || 0,
+        resourcesByDayKeys: Object.keys(resourcesByDay),
+        resourcesError: resourcesError?.message || null
+      }
     })
 
   } catch (error) {

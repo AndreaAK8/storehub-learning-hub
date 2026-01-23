@@ -1,0 +1,195 @@
+{
+  "name": "LMS - Fetch alerts",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "alerts",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "alerts-webhook-1",
+      "name": "GET /alerts",
+      "webhookId": "alerts-webhook"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 200751339,
+          "mode": "list",
+          "cachedResultName": "Assessments Scores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468/edit#gid=200751339"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        0
+      ],
+      "id": "alerts-gsheet-scores",
+      "name": "Get Assessment_Scores",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 721863515,
+          "mode": "list",
+          "cachedResultName": "Trainees",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468/edit#gid=721863515"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        200
+      ],
+      "id": "alerts-gsheet-trainees",
+      "name": "Get Trainees",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        512,
+        100
+      ],
+      "id": "alerts-merge",
+      "name": "Merge Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate alerts from failed scores\nconst coachEmail = $('GET /alerts').first().json.query?.coachEmail?.toLowerCase() || '';\n\nif (!coachEmail) {\n  return [{ json: { error: 'coachEmail query parameter is required', alerts: [] } }];\n}\n\nconst allItems = $input.all();\n\n// Separate scores and trainees\nconst scores = [];\nconst traineeMap = new Map();\n\nallItems.forEach(item => {\n  const data = item.json;\n  if (data['Score ID'] || data['Assessment Name']) {\n    scores.push(data);\n  } else if (data['Email Address'] && data['Coach Email']) {\n    traineeMap.set(data['Email Address'].toLowerCase(), data);\n  }\n});\n\n// Group scores by trainee + assessment to count failed attempts\nconst failedAttempts = new Map();\n\nscores.forEach(score => {\n  const traineeEmail = (score['Trainee Email'] || '').toLowerCase();\n  const assessmentName = score['Assessment Name'] || '';\n  const passed = score.Passed === 'Pass';\n  const scoreValue = parseFloat(String(score.Score || '0').replace('%', ''));\n  \n  if (!traineeEmail || !assessmentName) return;\n  \n  const key = `${traineeEmail}|||${assessmentName}`;\n  \n  if (!failedAttempts.has(key)) {\n    failedAttempts.set(key, {\n      traineeEmail,\n      assessmentName,\n      attempts: [],\n      lastAttempt: null\n    });\n  }\n  \n  const record = failedAttempts.get(key);\n  record.attempts.push({\n    passed,\n    score: scoreValue,\n    date: score['Evaluated At'] || score['Submitted At'] || new Date().toISOString()\n  });\n  \n  if (!passed) {\n    const attemptDate = new Date(score['Evaluated At'] || score['Submitted At'] || Date.now());\n    if (!record.lastAttempt || attemptDate > new Date(record.lastAttempt)) {\n      record.lastAttempt = attemptDate.toISOString();\n    }\n  }\n});\n\n// Generate alerts for trainees who:\n// 1. Failed 2+ times on same assessment (ORANGE)\n// 2. Failed 3+ times on same assessment (RED)\nconst alerts = [];\n\nfailedAttempts.forEach((record, key) => {\n  const failedCount = record.attempts.filter(a => !a.passed).length;\n  const hasPassedEventually = record.attempts.some(a => a.passed);\n  \n  // Skip if they eventually passed\n  if (hasPassedEventually) return;\n  \n  // Only create alert if failed 2+ times without passing\n  if (failedCount < 2) return;\n  \n  const trainee = traineeMap.get(record.traineeEmail);\n  if (!trainee) return;\n  \n  // Check if this trainee belongs to the requesting coach\n  const traineeCoachEmail = (trainee['Coach Email'] || '').toLowerCase();\n  if (traineeCoachEmail !== coachEmail) return;\n  \n  const alertType = failedCount >= 3 ? 'RED' : 'ORANGE';\n  const alertReason = failedCount >= 3 \n    ? `Failed ${record.assessmentName} ${failedCount} times - needs intervention`\n    : `Struggling with ${record.assessmentName} (${failedCount} failed attempts)`;\n  \n  alerts.push({\n    'Alert ID': `alert-${Date.now()}-${alerts.length}`,\n    'Trainee Email': record.traineeEmail,\n    'Trainee Name': trainee['Full Name'] || '',\n    'Alert Type': alertType,\n    'Alert Reason': alertReason,\n    'Coach Email': traineeCoachEmail,\n    'Sent At': record.lastAttempt || new Date().toISOString(),\n    'Assessment Name': record.assessmentName,\n    'Failed Attempts': failedCount,\n    'Notes': `Last score: ${record.attempts[record.attempts.length - 1].score}%`\n  });\n});\n\n// Sort by severity (RED first) then by date\nalerts.sort((a, b) => {\n  if (a['Alert Type'] !== b['Alert Type']) {\n    return a['Alert Type'] === 'RED' ? -1 : 1;\n  }\n  return new Date(b['Sent At']).getTime() - new Date(a['Sent At']).getTime();\n});\n\nreturn [{ json: { alerts } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        100
+      ],
+      "id": "alerts-analyze",
+      "name": "Analyze Failed Scores"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1024,
+        100
+      ],
+      "id": "alerts-respond",
+      "name": "Respond"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "GET /alerts": {
+      "main": [
+        [
+          {
+            "node": "Get Assessment_Scores",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Trainees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Assessment_Scores": {
+      "main": [
+        [
+          {
+            "node": "Merge Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Trainees": {
+      "main": [
+        [
+          {
+            "node": "Merge Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Data": {
+      "main": [
+        [
+          {
+            "node": "Analyze Failed Scores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Failed Scores": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "tags": []
+}

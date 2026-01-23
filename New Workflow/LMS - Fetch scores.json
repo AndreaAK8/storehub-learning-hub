@@ -1,30 +1,52 @@
 {
-  "name": "LMS Data: Fetch Scores",
+  "name": "LMS - Fetch scores",
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "GET",
         "path": "scores",
+        "responseMode": "responseNode",
         "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [0, 0],
-      "id": "webhook-scores",
+      "position": [
+        0,
+        0
+      ],
+      "id": "cc6b4bcf-266a-4b99-bf91-96597a9b821f",
       "name": "GET /scores",
       "webhookId": "scores-webhook"
     },
     {
       "parameters": {
-        "documentId": { "__rl": true, "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468", "mode": "id" },
-        "sheetName": { "__rl": true, "value": "Assessment_Scores", "mode": "name" }
+        "documentId": {
+          "__rl": true,
+          "value": "1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 200751339,
+          "mode": "list",
+          "cachedResultName": "Assessments Scores",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IFAAelyD_x2uCOQKcbj8n7wgizNtVirAYbqCv67Y468/edit#gid=200751339"
+        },
+        "options": {}
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [250, 0],
-      "id": "get-scores",
+      "position": [
+        256,
+        0
+      ],
+      "id": "a2bd6d07-ce34-4e5d-a41e-9cc4664926df",
       "name": "Get Assessment_Scores",
-      "credentials": { "googleSheetsOAuth2Api": { "id": "xWkX5ODqyr8g6JBX", "name": "AK's" } }
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xWkX5ODqyr8g6JBX",
+          "name": "AK's"
+        }
+      }
     },
     {
       "parameters": {
@@ -32,8 +54,11 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [500, 0],
-      "id": "filter-scores",
+      "position": [
+        512,
+        0
+      ],
+      "id": "07729ab2-eb88-4354-b2a6-76fbba6db789",
       "name": "Filter by Trainee Email"
     },
     {
@@ -44,24 +69,58 @@
       },
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [750, 0],
-      "id": "respond",
+      "position": [
+        752,
+        0
+      ],
+      "id": "e21e08a7-82f8-413c-89fd-913ed51477f9",
       "name": "Respond"
     }
   ],
+  "pinData": {},
   "connections": {
     "GET /scores": {
-      "main": [[{"node": "Get Assessment_Scores", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Get Assessment_Scores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Get Assessment_Scores": {
-      "main": [[{"node": "Filter by Trainee Email", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Filter by Trainee Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Filter by Trainee Email": {
-      "main": [[{"node": "Respond", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
-  "settings": { "executionOrder": "v1" },
-  "meta": { "templateCredsSetupCompleted": true },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fe8b2828-e907-4a4e-aded-8aa3f403c560",
+  "meta": {
+    "instanceId": "c6eacfac65a18e093e28166dd4b59b1b46d26a5d7ab5531653cb1cf62db95e85"
+  },
+  "id": "vw1OEhKHBwTTkl6I",
   "tags": []
 }
