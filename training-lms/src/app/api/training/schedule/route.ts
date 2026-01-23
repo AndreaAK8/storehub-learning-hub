@@ -58,6 +58,41 @@ export async function GET(request: NextRequest) {
       console.error('Error fetching role modules:', roleModulesError)
     }
 
+    // Get additional resources from training_resources table
+    const { data: additionalResources, error: resourcesError } = await supabase
+      .from('training_resources')
+      .select('*')
+      .eq('role_id', roleData.id)
+
+    if (resourcesError) {
+      console.error('Error fetching additional resources:', resourcesError)
+    }
+
+    // Group additional resources by day
+    const resourcesByDay: Record<number, { title: string; url: string; region?: string; file_type?: string }[]> = {}
+    if (additionalResources) {
+      for (const resource of additionalResources) {
+        if (!resource.day) continue
+        if (!resourcesByDay[resource.day]) {
+          resourcesByDay[resource.day] = []
+        }
+        // Extract region from title prefix if present (e.g., "[MY] Title" -> region: "MY")
+        let region = 'ALL'
+        let title = resource.title
+        const regionMatch = resource.title.match(/^\[(MY|PH|ALL)\]\s*/)
+        if (regionMatch) {
+          region = regionMatch[1]
+          title = resource.title.replace(regionMatch[0], '')
+        }
+        resourcesByDay[resource.day].push({
+          title: title,
+          url: resource.url,
+          region: region,
+          file_type: resource.file_type
+        })
+      }
+    }
+
     // Combine all modules
     const allModules = [...(commonModules || []), ...(roleModules || [])]
 
@@ -88,7 +123,24 @@ export async function GET(request: NextRequest) {
       const { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl } = parseDetails(module.details || '')
 
       // Parse resource URLs (might have multiple separated by newlines)
-      const resourceLinks = parseResourceLinks(module.resource_url)
+      let resourceLinks = parseResourceLinks(module.resource_url)
+
+      // Check if this activity should get additional video resources from training_resources table
+      // Target activities that have "Training" or "Slides" or "Assessment Preparation" in the topic
+      const shouldAddVideos = module.topic && (
+        module.topic.toLowerCase().includes('training slides') ||
+        module.topic.toLowerCase().includes('assessment preparation')
+      )
+
+      if (shouldAddVideos && resourcesByDay[module.day]) {
+        // Add video resources from training_resources table
+        const additionalLinks = resourcesByDay[module.day].map(r => ({
+          title: r.title,
+          url: r.url,
+          region: r.region
+        }))
+        resourceLinks = [...resourceLinks, ...additionalLinks]
+      }
 
       // Determine if timer should be hidden (Trainer-Led, Coach Review)
       const hideTimer = ['Trainer-Led', 'Coach Review', 'TL-Led'].includes(module.type)
