@@ -639,27 +639,52 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
             <div className="p-4 max-h-96 overflow-y-auto space-y-2">
               {needsScoring.map(trainee => {
                 const pendingCount = trainee.totalAssessmentsRequired - trainee.totalAssessmentsCompleted
+                const assessments = ASSESSMENT_LINKS[trainee.department] || []
                 return (
                   <div
                     key={trainee.email}
-                    className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-amber-300 hover:bg-amber-50 transition-all"
+                    className="p-3 rounded-lg border border-gray-200 hover:border-amber-300 hover:bg-amber-50 transition-all"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-                        {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                          {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900 text-sm">{trainee.fullName}</p>
+                          <p className="text-xs text-gray-500">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900 text-sm">{trainee.fullName}</p>
-                        <p className="text-xs text-gray-500">{pendingCount} pending • Day {trainee.daysSinceTrainingStart}</p>
-                      </div>
+                      <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                        {pendingCount} pending
+                      </span>
                     </div>
-                    <Link
-                      href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-                      onClick={() => setStatPopup(null)}
-                      className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-medium transition-colors"
-                    >
-                      Score Now
-                    </Link>
+                    {/* Assessment buttons */}
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {assessments.slice(0, 4).map((link, i) => (
+                        <button
+                          key={i}
+                          onClick={() => {
+                            openFormModal(link.url, link.name, trainee.fullName, trainee.email)
+                            setStatPopup(null)
+                          }}
+                          className="px-2 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-medium transition-colors"
+                        >
+                          {link.name.length > 20 ? link.name.substring(0, 18) + '...' : link.name}
+                        </button>
+                      ))}
+                      {assessments.length > 4 && (
+                        <button
+                          onClick={() => {
+                            setActiveTab('scoring')
+                            setStatPopup(null)
+                          }}
+                          className="px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded text-xs font-medium transition-colors"
+                        >
+                          +{assessments.length - 4} more
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )
               })}
