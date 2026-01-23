@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Trainee } from '@/types/trainee'
 import TraineeActions from '@/components/dashboard/TraineeActions'
-import ScoreSubmission from '@/components/dashboard/ScoreSubmission'
+import ActivitiesStatCard from '@/components/dashboard/ActivitiesStatCard'
+import AssessmentScoresChart from '@/components/dashboard/AssessmentScoresChart'
 
 async function getTrainee(email: string): Promise<{ trainee: Trainee | null, error: string | null }> {
   try {
@@ -58,6 +59,8 @@ async function getTrainee(email: string): Promise<{ trainee: Trainee | null, err
       totalAssessmentsRequired: parseInt(String(item['Total Assessments Required'] || '0')) || 0,
       totalAssessmentsCompleted: parseInt(String(item['Total Assessments Completed'] || '0')) || 0,
       totalAssessmentsIncomplete: parseInt(String(item['Total Assessments Incomplete'] || '0')) || 0,
+      role: String(item['Role Code'] || item['Role'] || '').trim() || undefined,
+      currentTrainingDay: parseInt(String(item['Current Training Day'] || item['Current Day'] || '0')) || undefined,
     }
 
     return { trainee, error: null }
@@ -161,10 +164,10 @@ export default async function TraineeDetailPage({
       )}
 
       {/* Header */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 rounded-xl shadow-sm border border-slate-200 p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl font-bold">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-xl font-bold shadow-lg">
               {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </div>
             <div>
@@ -183,51 +186,58 @@ export default async function TraineeDetailPage({
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard label="Training Day" value={`Day ${trainee.daysSinceTrainingStart}`} />
-        <StatCard label="Completion" value={`${completionPercentage}%`} />
-        <StatCard label="Activities Done" value={`${activityProgress.completed}/${activityProgress.total}`} />
-        <StatCard label="Coach" value={trainee.coachName || 'Not assigned'} />
+        <StatCard label="Training Day" value={`Day ${trainee.daysSinceTrainingStart}`} color="blue" />
+        <StatCard label="Completion" value={`${completionPercentage}%`} color="purple" />
+        <ActivitiesStatCard
+          completed={activityProgress.completed}
+          total={activityProgress.total}
+          traineeEmail={trainee.email}
+          traineeName={trainee.fullName}
+          roleCode={trainee.role || 'OC'}
+          currentDay={trainee.currentTrainingDay || trainee.daysSinceTrainingStart}
+        />
+        <StatCard label="Coach" value={trainee.coachName || 'Not assigned'} color="teal" />
       </div>
 
       {/* Progress Section */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-xl shadow-sm border border-purple-100 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Training Progress</h2>
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+          <div className="flex-1 h-4 bg-white/60 rounded-full overflow-hidden shadow-inner">
             <div
               className={`h-full rounded-full transition-all ${
-                completionPercentage >= 100 ? 'bg-green-500' :
-                completionPercentage >= 50 ? 'bg-blue-500' : 'bg-yellow-500'
+                completionPercentage >= 100 ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+                completionPercentage >= 50 ? 'bg-gradient-to-r from-blue-400 to-indigo-500' : 'bg-gradient-to-r from-amber-400 to-orange-500'
               }`}
               style={{ width: `${Math.min(completionPercentage, 100)}%` }}
             />
           </div>
-          <span className="text-lg font-semibold text-gray-900">
+          <span className="text-lg font-bold text-gray-900">
             {activityProgress.completed} / {activityProgress.total}
           </span>
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div className="bg-green-50 rounded-lg p-3">
-            <p className="text-2xl font-bold text-green-600">{activityProgress.completed}</p>
-            <p className="text-sm text-green-700">Completed</p>
+          <div className="bg-gradient-to-br from-emerald-100 to-green-200 rounded-xl p-4 border border-green-200">
+            <p className="text-3xl font-bold text-green-700">{activityProgress.completed}</p>
+            <p className="text-sm font-medium text-green-600">Completed</p>
           </div>
-          <div className="bg-yellow-50 rounded-lg p-3">
-            <p className="text-2xl font-bold text-yellow-600">{activityProgress.total - activityProgress.completed}</p>
-            <p className="text-sm text-yellow-700">Remaining</p>
+          <div className="bg-gradient-to-br from-amber-100 to-yellow-200 rounded-xl p-4 border border-yellow-200">
+            <p className="text-3xl font-bold text-amber-700">{activityProgress.total - activityProgress.completed}</p>
+            <p className="text-sm font-medium text-amber-600">Remaining</p>
           </div>
-          <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-2xl font-bold text-blue-600">{activityProgress.total}</p>
-            <p className="text-sm text-blue-700">Total Required</p>
+          <div className="bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl p-4 border border-indigo-200">
+            <p className="text-3xl font-bold text-indigo-700">{activityProgress.total}</p>
+            <p className="text-sm font-medium text-indigo-600">Total Required</p>
           </div>
         </div>
       </div>
 
       {/* Training Timeline */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl shadow-sm border border-slate-200 p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Training Timeline</h2>
 
         <div className="relative">
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-300 via-blue-300 to-gray-200" />
 
           <div className="space-y-6">
             {/* Training Start */}
@@ -269,78 +279,14 @@ export default async function TraineeDetailPage({
         </div>
       </div>
 
-      {/* Trainee Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Details Card */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Details</h2>
+      {/* Assessment Scores Chart */}
+      <AssessmentScoresChart
+        traineeEmail={trainee.email}
+        traineeRole={trainee.role || trainee.department || 'OS'}
+      />
 
-          <dl className="space-y-4">
-            <div>
-              <dt className="text-sm text-gray-500">Email</dt>
-              <dd className="text-gray-900">{trainee.email}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Department</dt>
-              <dd className="text-gray-900">{trainee.department || 'Not specified'}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Country</dt>
-              <dd className="text-gray-900">{trainee.country || 'Not specified'}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Training Start Date</dt>
-              <dd className="text-gray-900">{trainee.trainingStartDate || 'Not set'}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Days in Training</dt>
-              <dd className="text-gray-900">{trainee.daysSinceTrainingStart} days</dd>
-            </div>
-          </dl>
-        </div>
-
-        {/* Coach Card */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Assigned Coach</h2>
-
-          {trainee.coachName ? (
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <span className="text-purple-600 font-medium text-lg">
-                  {trainee.coachName.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                </span>
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">{trainee.coachName}</p>
-                <p className="text-sm text-gray-500">{trainee.coachEmail}</p>
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500">No coach assigned</p>
-          )}
-        </div>
-      </div>
-
-      {/* Assessment Scores Placeholder */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Assessment Scores</h2>
-
-        <div className="text-center py-8 text-gray-500">
-          <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-          </svg>
-          <p>Detailed assessment scores require an additional n8n webhook</p>
-          <p className="text-sm mt-1">Connect your score tracking workflow to display individual results here</p>
-        </div>
-      </div>
-
-      {/* Score Submission (Admin and Coach) */}
-      {(profile?.role === 'admin' || profile?.role === 'coach') && (
-        <ScoreSubmission
-          traineeEmail={trainee.email}
-          traineeName={trainee.fullName}
-        />
-      )}
+      {/* Trainee Details - Combined */}
+      <TraineeDetailsCard trainee={trainee} />
 
       {/* Actions (Admin only) */}
       {profile?.role === 'admin' && (
@@ -370,11 +316,119 @@ function StatusBadge({ status }: { status: string }) {
   )
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({ label, value, color = 'gray' }: { label: string; value: string; color?: string }) {
+  const styles: Record<string, string> = {
+    blue: 'bg-gradient-to-br from-sky-50 to-blue-100 border-blue-200 text-blue-700',
+    purple: 'bg-gradient-to-br from-violet-50 to-purple-100 border-purple-200 text-purple-700',
+    green: 'bg-gradient-to-br from-emerald-50 to-green-100 border-green-200 text-green-700',
+    teal: 'bg-gradient-to-br from-teal-50 to-cyan-100 border-cyan-200 text-cyan-700',
+    orange: 'bg-gradient-to-br from-amber-50 to-orange-100 border-orange-200 text-orange-700',
+    gray: 'bg-white border-gray-200 text-gray-700',
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow p-4">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="text-xl font-bold text-gray-900 mt-1">{value}</p>
+    <div className={`rounded-xl border-2 p-4 shadow-sm hover:shadow-md transition-shadow ${styles[color]}`}>
+      <p className="text-sm font-medium opacity-70">{label}</p>
+      <p className="text-2xl font-bold mt-1">{value}</p>
+    </div>
+  )
+}
+
+// Training duration by role (in days)
+const TRAINING_DURATION: Record<string, number> = {
+  'OC': 4,
+  'Onboarding Coordinator': 4,
+  'OS': 7,
+  'Onboarding Specialist': 7,
+  'MC': 8,
+  'Merchant Care': 8,
+  'CSM': 10,
+  'Customer Success Manager': 10,
+  'BC': 12,
+  'Business Consultant': 12,
+  'MOM': 12,
+  'Merchant Onboarding Manager': 12,
+  'SC': 5,
+  'Sales Coordinator': 5,
+}
+
+function TraineeDetailsCard({ trainee }: { trainee: Trainee }) {
+  // Calculate expected end date
+  const getExpectedEndDate = () => {
+    if (!trainee.trainingStartDate) return null
+    const duration = TRAINING_DURATION[trainee.role || ''] || TRAINING_DURATION[trainee.department || ''] || 7
+    const startDate = new Date(trainee.trainingStartDate)
+    const endDate = new Date(startDate)
+    endDate.setDate(endDate.getDate() + duration)
+    return endDate
+  }
+
+  const expectedEndDate = getExpectedEndDate()
+  const today = new Date()
+  const isOverdue = expectedEndDate && today > expectedEndDate
+  const daysOverdue = expectedEndDate ? Math.ceil((today.getTime() - expectedEndDate.getTime()) / (1000 * 60 * 60 * 24)) : 0
+
+  return (
+    <div className="bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 rounded-xl shadow-sm border border-blue-200 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
+        {/* Details */}
+        <div className="md:col-span-4">
+          <h2 className="text-lg font-semibold text-blue-900 mb-4">Details</h2>
+          <dl className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div>
+              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Email</dt>
+              <dd className="text-gray-900 text-sm mt-1">{trainee.email}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Department</dt>
+              <dd className="text-gray-900 text-sm mt-1">{trainee.department || 'Not specified'}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Country</dt>
+              <dd className="text-gray-900 text-sm mt-1">{trainee.country || 'Not specified'}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Start Date</dt>
+              <dd className="text-gray-900 text-sm mt-1">{trainee.trainingStartDate || 'Not set'}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Expected End Date</dt>
+              <dd className={`text-sm mt-1 ${isOverdue ? 'text-red-600 font-semibold' : 'text-gray-900'}`}>
+                {expectedEndDate ? expectedEndDate.toISOString().split('T')[0] : 'Not set'}
+                {isOverdue && (
+                  <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">
+                    {daysOverdue} days overdue
+                  </span>
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Days in Training</dt>
+              <dd className="text-gray-900 text-sm mt-1">{trainee.daysSinceTrainingStart} days</dd>
+            </div>
+          </dl>
+        </div>
+
+        {/* Coach */}
+        <div className="md:col-span-2 md:border-l md:border-blue-200 md:pl-6">
+          <h2 className="text-lg font-semibold text-purple-900 mb-4">Coach</h2>
+          {trainee.coachName ? (
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-violet-500 rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold">
+                  {trainee.coachName.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                </span>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">{trainee.coachName}</p>
+                <p className="text-xs text-purple-600">{trainee.coachEmail}</p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-500 text-sm">No coach assigned</p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

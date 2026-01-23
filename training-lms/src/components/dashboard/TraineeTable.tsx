@@ -116,27 +116,24 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="table-header-brand border-b border-[var(--neutral-100)]">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
+          <thead>
+            <tr className="bg-gradient-to-r from-slate-700 to-slate-600">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
                 Trainee
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
                 Risk
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
                 Progress
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
                 Day
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
                 Coach
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-[var(--sh-black)] uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -159,7 +156,7 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap text-center">
                   <RiskBadge trainee={trainee} size="sm" />
                   {trainee.delayReason && (
                     <div className="text-xs text-[var(--neutral-300)] mt-1 max-w-[120px] truncate" title={trainee.delayReason}>
@@ -168,25 +165,24 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <ProgressBar
-                    completed={trainee.totalAssessmentsCompleted}
-                    total={trainee.totalAssessmentsRequired}
-                  />
+                  <div className="flex justify-center">
+                    <ProgressBar
+                      completed={trainee.totalAssessmentsCompleted}
+                      total={trainee.totalAssessmentsRequired}
+                    />
+                  </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap text-center">
                   {['Training Complete', 'Report Sent'].includes(trainee.status) ? (
                     <span className="text-sm text-green-600 font-medium">{trainee.daysSinceTrainingStart} days</span>
                   ) : (
                     <span className="text-sm text-[var(--sh-black)]">Day {trainee.currentTrainingDay || trainee.daysSinceTrainingStart}</span>
                   )}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <StatusBadge status={trainee.status} />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap text-center">
                   <span className="text-sm text-[var(--sh-black)]">{trainee.coachName}</span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right">
+                <td className="px-6 py-4 whitespace-nowrap text-center">
                   <Link
                     href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
                     className="link-brand text-sm font-medium"
@@ -211,21 +207,6 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
         Showing {filteredTrainees.length} of {trainees.length} trainees
       </div>
     </div>
-  )
-}
-
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    'New': 'stat-card-neutral',
-    'Email Sent': 'badge-blue',
-    'Training Complete': 'badge-success',
-    'Report Sent': 'badge-pink',
-  }
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || 'stat-card-neutral'}`}>
-      {status}
-    </span>
   )
 }
 

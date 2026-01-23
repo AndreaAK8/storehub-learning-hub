@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Trainee, RiskLevel } from '@/types/trainee'
 import NeedsAttentionSection from '@/components/dashboard/NeedsAttentionSection'
 import TrainerDashboard from '@/components/dashboard/TrainerDashboard'
+import CoachDashboard from '@/components/dashboard/CoachDashboard'
 
 interface AdminStats {
   total: number
@@ -38,7 +39,7 @@ async function getAllTrainees(): Promise<Trainee[]> {
       trainingStartDate: String(item['Training Start Date'] || ''),
       coachName: String(item['Coach Name'] || ''),
       coachEmail: String(item['Coach Email'] || ''),
-      daysSinceTrainingStart: parseInt(String(item['Days since Training Start '] || item['Days since Training Start'] || '0')) || 0,
+      daysSinceTrainingStart: parseInt(String(item['Current Day'] || item['Days since Training Start '] || item['Days since Training Start'] || '0')) || 0,
       totalAssessmentsRequired: parseInt(String(item['Total Assessments Required'] || '0')) || 0,
       totalAssessmentsCompleted: parseInt(String(item['Total Assessments Completed'] || '0')) || 0,
       totalAssessmentsIncomplete: parseInt(String(item['Total Assessments Incomplete'] || '0')) || 0,
@@ -166,11 +167,21 @@ export default async function DashboardPage() {
 
   // Trainer Dashboard (for Andrea) - check before trainee to prioritize trainer view
   if (isTrainer) {
-    const stats = calculateAdminStats(allTrainees)
     return (
       <TrainerDashboard
         trainees={allTrainees}
         userName={profile?.full_name || user?.email?.split('@')[0] || 'Trainer'}
+      />
+    )
+  }
+
+  // Coach Dashboard - coaches see their assigned trainees
+  if (profile?.role === 'coach') {
+    return (
+      <CoachDashboard
+        trainees={allTrainees}
+        coachEmail={user?.email || ''}
+        coachName={profile?.full_name || user?.email?.split('@')[0] || 'Coach'}
       />
     )
   }

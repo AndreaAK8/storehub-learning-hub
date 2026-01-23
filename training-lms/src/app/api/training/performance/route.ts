@@ -128,3 +128,43 @@ export async function GET(request: Request) {
     )
   }
 }
+
+// PATCH - Update activity completion time (for coach-led activities)
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json()
+    const { activityId, traineeEmail, completedAt } = body
+
+    if (!activityId || !traineeEmail || !completedAt) {
+      return NextResponse.json(
+        { error: 'Missing required fields: activityId, traineeEmail, completedAt' },
+        { status: 400 }
+      )
+    }
+
+    // Update the created_at timestamp for this activity
+    const { data, error } = await supabase
+      .from('activity_performance')
+      .update({ created_at: completedAt })
+      .eq('activity_id', activityId)
+      .eq('trainee_email', traineeEmail)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Supabase error:', error)
+      return NextResponse.json(
+        { error: 'Failed to update activity time' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({ success: true, data })
+  } catch (error) {
+    console.error('Error updating activity time:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}

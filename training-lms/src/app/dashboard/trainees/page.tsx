@@ -182,13 +182,13 @@ async function getTrainees(): Promise<{ trainees: Trainee[], error: string | nul
     const trainees: Trainee[] = data.map((item: Record<string, unknown>) => ({
       email: item['Email Address'] || '',
       fullName: item['Full Name'] || '',
-      department: item['Department'] || '',
+      department: item['Role'] || item['Department'] || '',
       country: item['Country'] || '',
       trainingStartDate: item['Training Start Date'] || '',
       status: item['Status'] || 'New',
       coachName: item['Coach Name'] || '',
       coachEmail: item['Coach Email'] || '',
-      daysSinceTrainingStart: parseInt(String(item['Days since Training Start '] || item['Days since Training Start'] || '0')) || 0,
+      daysSinceTrainingStart: parseInt(String(item['Current Day'] || item['Days since Training Start '] || item['Days since Training Start'] || '0')) || 0,
       totalAssessmentsRequired: parseInt(String(item['Total Assessments Required'] || '0')) || 0,
       totalAssessmentsCompleted: parseInt(String(item['Total Assessments Completed'] || '0')) || 0,
       totalAssessmentsIncomplete: parseInt(String(item['Total Assessments Incomplete'] || '0')) || 0,
@@ -315,17 +315,17 @@ export default async function TraineesPage() {
 }
 
 function StatCard({ label, value, color }: { label: string; value: string | number; color: string }) {
-  const colors = {
-    blue: 'stat-card-blue',
-    yellow: 'stat-card-orange',
-    green: 'badge-success',
-    purple: 'stat-card-pink',
+  const styles = {
+    blue: 'bg-gradient-to-br from-sky-50 to-blue-100 border-blue-200 text-blue-700',
+    yellow: 'bg-gradient-to-br from-amber-50 to-orange-100 border-orange-200 text-orange-600',
+    green: 'bg-gradient-to-br from-emerald-50 to-green-100 border-green-200 text-green-600',
+    purple: 'bg-gradient-to-br from-fuchsia-50 to-pink-100 border-pink-200 text-pink-600',
   }
 
   return (
-    <div className={`rounded-lg border p-4 ${colors[color as keyof typeof colors]}`}>
-      <p className="text-sm opacity-80">{label}</p>
-      <p className="text-2xl font-bold mt-1">{value}</p>
+    <div className={`rounded-xl border-2 p-5 ${styles[color as keyof typeof styles]} shadow-sm hover:shadow-md transition-shadow`}>
+      <p className="text-sm font-medium opacity-70">{label}</p>
+      <p className="text-3xl font-bold mt-1">{value}</p>
     </div>
   )
 }
