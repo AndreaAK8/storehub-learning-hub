@@ -108,11 +108,41 @@ export default function MyTrainingPage() {
         setTimeout(() => setShowTour(true), 500)
       }
 
-      // Get training role from profile or URL param for testing
-      // Default to OS for Feb 2 pilot (Onboarding Specialist)
+      // Get training role from URL param (for testing) or from trainee data
       const urlParams = new URLSearchParams(window.location.search)
       const roleOverride = urlParams.get('role')
-      const traineeRole = roleOverride || 'OS'
+
+      // Fetch trainee's actual role from Google Sheets via trainees API
+      let traineeRole = roleOverride || 'OS' // Default fallback
+
+      if (!roleOverride) {
+        try {
+          const traineesResponse = await fetch('/api/trainees')
+          if (traineesResponse.ok) {
+            const traineesData = await traineesResponse.json()
+            // Find current user's trainee record by email
+            const currentTrainee = traineesData.find(
+              (t: { email: string }) => t.email?.toLowerCase() === traineeEmail?.toLowerCase()
+            )
+            if (currentTrainee?.department) {
+              // Map full role name to short code
+              const roleMapping: Record<string, string> = {
+                'Onboarding Specialist': 'OS',
+                'Merchant Onboarding Manager': 'MOM',
+                'Onboarding Coordinator': 'OC',
+                'Customer Success Manager': 'CSM',
+                'Business Consultant': 'BC',
+                'Merchant Care': 'MC',
+                'Sales Coordinator': 'SC',
+              }
+              traineeRole = roleMapping[currentTrainee.department] || currentTrainee.department
+              console.log(`Fetched role for ${traineeEmail}: ${currentTrainee.department} -> ${traineeRole}`)
+            }
+          }
+        } catch (roleErr) {
+          console.error('Failed to fetch trainee role, using default:', roleErr)
+        }
+      }
 
       // Fetch training schedule from API
       const response = await fetch(

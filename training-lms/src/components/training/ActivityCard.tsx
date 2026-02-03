@@ -85,18 +85,22 @@ function formatTimeRemaining(seconds: number): { hours: number; minutes: number;
 }
 
 const activityTypeConfig: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
+  // Timed activities (show Start Activity + Timer)
   self_study: { label: 'Self-Study', color: 'text-indigo-700', bgColor: 'bg-indigo-100', icon: '📚' },
-  briefing: { label: 'Briefing', color: 'text-slate-700', bgColor: 'bg-slate-100', icon: '📋' },
+  assignment: { label: 'Assignment', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: '📋' },
   assessment: { label: 'Assessment', color: 'text-amber-700', bgColor: 'bg-amber-100', icon: '📝' },
-  lunch: { label: 'Break', color: 'text-slate-600', bgColor: 'bg-slate-100', icon: '☕' },
-  break: { label: 'Break', color: 'text-slate-600', bgColor: 'bg-slate-100', icon: '☕' },
-  review_session: { label: 'Review', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: '💬' },
-  buddy_session: { label: 'Buddy Session', color: 'text-pink-700', bgColor: 'bg-pink-100', icon: '👥' },
-  mock_test: { label: 'Mock Test', color: 'text-red-700', bgColor: 'bg-red-100', icon: '🎯' },
-  handover: { label: 'Graduation', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '🎓' },
-  coach_review: { label: 'Coach Review', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '👨‍🏫' },
+  // Non-timed activities (no Start Activity / Timer)
   trainer_led: { label: 'Trainer Led', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '👨‍🏫' },
   coach_led: { label: 'Coach Led', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '🧑‍💼' },
+  buddy_led: { label: 'Buddy Led', color: 'text-pink-700', bgColor: 'bg-pink-100', icon: '👥' },
+  briefing: { label: 'Briefing', color: 'text-slate-700', bgColor: 'bg-slate-100', icon: '📋' },
+  buddy_session: { label: 'Buddy Session', color: 'text-pink-700', bgColor: 'bg-pink-100', icon: '👥' },
+  review_session: { label: 'Review', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: '💬' },
+  coach_review: { label: 'Coach Review', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '👨‍🏫' },
+  mock_test: { label: 'Mock Test', color: 'text-red-700', bgColor: 'bg-red-100', icon: '🎯' },
+  handover: { label: 'Graduation', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '🎓' },
+  lunch: { label: 'Break', color: 'text-slate-600', bgColor: 'bg-slate-100', icon: '☕' },
+  break: { label: 'Break', color: 'text-slate-600', bgColor: 'bg-slate-100', icon: '☕' },
 }
 
 // Progress Ring Component
@@ -247,11 +251,9 @@ export function ActivityCard({
   const xp = calculateXP(durationHours)
   const bonusXP = calculateBonusXP(durationHours)
 
-  // Check if this is a Trainer/Coach Led activity (no timer shown)
-  const isTrainerOrCoachLed = hideTimer ||
-    activityType === 'trainer_led' ||
-    activityType === 'coach_led' ||
-    activityType === 'briefing'
+  // Only these activity types should have Start Activity button and Timer
+  const TIMED_ACTIVITY_TYPES = ['self_study', 'assignment', 'assessment']
+  const showTimerAndStart = !hideTimer && TIMED_ACTIVITY_TYPES.includes(activityType)
 
   // Calculate progress percentage based on status
   const getProgress = () => {
@@ -297,28 +299,47 @@ export function ActivityCard({
     }
   }, [status, id, durationHours, storageKey])
 
-  // Countdown timer effect
+  // Countdown timer effect - calculates from stored start time to handle tab switching
   useEffect(() => {
-    if (status !== 'in_progress' || timeRemaining === null) return
+    if (status !== 'in_progress') return
 
-    const interval = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev === null) return null
+    const updateTimer = () => {
+      const storedStartTime = localStorage.getItem(storageKey)
+      if (!storedStartTime) return
 
-        if (isOvertime) {
-          return prev + 1
-        } else {
-          if (prev <= 1) {
-            setIsOvertime(true)
-            return 1
-          }
-          return prev - 1
-        }
-      })
-    }, 1000)
+      const startedAt = parseInt(storedStartTime, 10)
+      const totalDuration = durationHours * 3600
+      const elapsed = Math.floor((Date.now() - startedAt) / 1000)
+      const remaining = totalDuration - elapsed
 
-    return () => clearInterval(interval)
-  }, [status, timeRemaining, isOvertime])
+      if (remaining > 0) {
+        setTimeRemaining(remaining)
+        setIsOvertime(false)
+      } else {
+        setTimeRemaining(Math.abs(remaining))
+        setIsOvertime(true)
+      }
+    }
+
+    // Update immediately
+    updateTimer()
+
+    // Update every second
+    const interval = setInterval(updateTimer, 1000)
+
+    // Also update when tab becomes visible again (handles tab switching)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        updateTimer()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [status, durationHours, storageKey])
 
   const calculatePerformance = (actualSeconds: number, allocatedSeconds: number): ActivityPerformance => {
     const percentage = (actualSeconds / allocatedSeconds) * 100
@@ -516,8 +537,8 @@ export function ActivityCard({
       {/* Action Footer */}
       {!isLocked && status !== 'completed' && (
         <div className="border-t-2 px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100">
-          {/* Timer Display - In Progress (NOT shown for Trainer/Coach Led) */}
-          {status === 'in_progress' && timeRemaining !== null && !isTrainerOrCoachLed && (
+          {/* Timer Display - Only for Self Study, Assignment, Assessment */}
+          {status === 'in_progress' && timeRemaining !== null && showTimerAndStart && (
             <div className={`mb-4 p-4 rounded-xl ${isOvertime ? 'bg-red-50 border-2 border-red-200' : 'bg-white border-2 border-slate-200'}`}>
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
@@ -574,7 +595,8 @@ export function ActivityCard({
             </div>
 
             <div className="flex gap-2">
-              {status === 'pending' && onStartActivity && (
+              {/* Start Activity button - Only for Self Study, Assignment, Assessment */}
+              {status === 'pending' && onStartActivity && showTimerAndStart && (
                 <button
                   onClick={handleStart}
                   className="px-6 py-3 text-sm font-bold bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 rounded-xl transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:scale-105 flex items-center gap-2"

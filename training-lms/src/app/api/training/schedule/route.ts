@@ -196,16 +196,26 @@ export async function GET(request: NextRequest) {
 // Helper functions
 function mapTypeToActivityType(type: string): string {
   const mapping: Record<string, string> = {
+    // Timed activities (show Start Activity + Timer)
     'Self-Study': 'self_study',
-    'Trainer-Led': 'trainer_led',
-    'Assessment': 'assessment',
-    'Break': 'lunch',
-    'Buddy Session': 'buddy_session',
-    'Coach Review': 'coach_led',
+    'Self Study': 'self_study',
     'Self-Prep': 'self_study',
     'Self-Work': 'assignment',
+    'Assignment': 'assignment',
+    'Assessment': 'assessment',
+    // Non-timed activities (no Start Activity / Timer)
+    'Trainer-Led': 'trainer_led',
+    'Trainer Led': 'trainer_led',
+    'TL-Led': 'trainer_led',
+    'Coach-Led': 'coach_led',
+    'Coach Led': 'coach_led',
+    'Coach Review': 'coach_led',
+    'Buddy-Led': 'buddy_led',
+    'Buddy Led': 'buddy_led',
+    'Buddy Session': 'buddy_led',
+    'Break': 'lunch',
+    'Lunch': 'lunch',
     'Graduation': 'handover',
-    'TL-Led': 'trainer_led'
   }
   return mapping[type] || 'self_study'
 }
@@ -213,11 +223,19 @@ function mapTypeToActivityType(type: string): string {
 function mapTypeToPic(type: string): string {
   const mapping: Record<string, string> = {
     'Self-Study': 'player',
+    'Self Study': 'player',
+    'Assignment': 'player',
     'Trainer-Led': 'trainer',
+    'Trainer Led': 'trainer',
     'Assessment': 'player',
     'Break': '',
+    'Lunch': '',
     'Buddy Session': 'coach',
+    'Buddy-Led': 'coach',
+    'Buddy Led': 'coach',
     'Coach Review': 'coach',
+    'Coach-Led': 'coach',
+    'Coach Led': 'coach',
     'Self-Prep': 'player',
     'Self-Work': 'player',
     'Graduation': 'tl',
@@ -256,6 +274,12 @@ function getDayTitle(day: number, role: string): string {
       3: 'Advanced System & Troubleshooting',
       4: 'Buddy Sessions & Menu Setup',
       5: 'Assessments & Mock Tests'
+    },
+    'MOM': {
+      3: 'Advanced System & Tools',
+      4: 'Buddy Sessions & Welcome Calls',
+      5: 'Training Assessments',
+      6: 'Mock Tests & Graduation'
     },
     'SC': {
       3: 'Advanced Modules & SC Tools',
