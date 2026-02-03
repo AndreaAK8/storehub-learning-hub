@@ -63,7 +63,52 @@ export default function MyScoresPage() {
         .single()
 
       const traineeEmail = profile?.google_sheet_email || user.email
-      const traineeRole = profile?.training_role || 'OS'
+      let traineeRole = profile?.training_role || 'OS'
+
+      // Fetch trainee data from n8n FIRST to get actual role
+      let myData: {
+        email?: string
+        department?: string
+        totalAssessmentsCompleted?: number
+        totalAssessmentsRequired?: number
+        trainingStartDate?: string
+        daysSinceTrainingStart?: number
+      } | null = null
+
+      try {
+        const traineeResponse = await fetch('/api/trainees', {
+          credentials: 'include'
+        })
+        if (traineeResponse.ok) {
+          const trainees = await traineeResponse.json()
+          myData = trainees.find((t: { email: string }) =>
+            t.email?.toLowerCase() === traineeEmail?.toLowerCase()
+          )
+          if (myData) {
+            // Get actual role from trainee's department field
+            if (myData.department) {
+              const roleMapping: Record<string, string> = {
+                'Onboarding Specialist': 'OS',
+                'Merchant Onboarding Manager': 'MOM',
+                'Customer Success Manager': 'CSM',
+                'Business Consultant': 'BC',
+                'Merchant Consultant': 'MC',
+                'Onboarding Coordinator': 'OC',
+                'Support Consultant': 'SC'
+              }
+              traineeRole = roleMapping[myData.department] || myData.department
+            }
+
+            setAssessments({
+              passed: myData.totalAssessmentsCompleted || 0,
+              total: myData.totalAssessmentsRequired || 0
+            })
+            setTrainingStartDate(myData.trainingStartDate)
+          }
+        }
+      } catch {
+        // Ignore trainee fetch errors, will use default role
+      }
 
       // Fetch performance data
       const perfResponse = await fetch(
@@ -74,7 +119,7 @@ export default function MyScoresPage() {
         setPerformanceData(perfData.performance || [])
       }
 
-      // Fetch training schedule to get totals
+      // Fetch training schedule to get totals (now using correct role)
       const scheduleResponse = await fetch(
         `/api/training/schedule?role=${traineeRole}&email=${encodeURIComponent(traineeEmail || '')}`
       )
@@ -101,34 +146,14 @@ export default function MyScoresPage() {
         })
         setTotalActivities(activityCount || 20)
         setCurrentDay(Math.min(completedDays + 1, scheduleData.role?.totalDays || 4))
-      }
 
-      // Fetch trainee data from n8n for assessments
-      try {
-        const traineeResponse = await fetch('/api/trainees', {
-          credentials: 'include'
-        })
-        if (traineeResponse.ok) {
-          const trainees = await traineeResponse.json()
-          const myData = trainees.find((t: { email: string }) =>
-            t.email?.toLowerCase() === traineeEmail?.toLowerCase()
-          )
-          if (myData) {
-            setAssessments({
-              passed: myData.totalAssessmentsCompleted || 0,
-              total: myData.totalAssessmentsRequired || 0
-            })
-            setTrainingStartDate(myData.trainingStartDate)
-            if (myData.daysSinceTrainingStart) {
-              setCurrentDay(Math.min(myData.daysSinceTrainingStart, totalDays))
-            }
-          }
+        // Override current day if we have trainee data
+        if (myData?.daysSinceTrainingStart) {
+          setCurrentDay(Math.min(myData.daysSinceTrainingStart, scheduleData.role?.totalDays || 4))
         }
-      } catch {
-        // Ignore trainee fetch errors
       }
 
-      // Fetch individual assessment scores with weightages and expected assessments
+      // Fetch individual assessment scores with weightages and expected assessments (now using correct role)
       try {
         const scoresResponse = await fetch(
           `/api/training/assessment-scores?email=${encodeURIComponent(traineeEmail || '')}&role=${encodeURIComponent(traineeRole || '')}`,

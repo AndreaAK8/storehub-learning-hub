@@ -775,6 +775,45 @@ function getRoleContent(roleCode: string): RoleContent {
         { day: 5, focus: 'Mock Test & Graduation', activities: ['F&B Training Assessment', 'Retail Training Assessment', 'Mock Test & Graduation'] },
       ],
     },
+    MOM: {
+      missionIntro: "As a Merchant Onboarding Manager, you are the key driver of merchant success from day one. Your role bridges training, support, and relationship management:",
+      pillars: [
+        "Merchant Training Excellence: Deliver comprehensive F&B and Retail training that empowers merchants to use StoreHub effectively",
+        "Welcome & Go-Live Calls: Conduct professional welcome calls and guide merchants through their go-live journey",
+        "Menu Setup Mastery: Configure menus accurately and efficiently for both F&B and Retail merchants",
+        "Issue Resolution: Troubleshoot setup issues and coordinate with support teams when needed",
+        "Relationship Building: Build lasting relationships that set merchants up for long-term success",
+      ],
+      inspiringMessage: "You're the merchant's trusted guide through their StoreHub journey—from their first welcome call to their successful go-live. Your expertise and dedication directly impact merchant satisfaction and retention.",
+      foundationItems: [
+        "All-in-One StoreHub Product Knowledge",
+        "System Navigation & Merchant Profile Basics",
+        "Hardware Demo & Foundational Quiz",
+      ],
+      specializationItems: [
+        "Advanced System & Troubleshooting",
+        "F&B & Retail Training Delivery",
+        "Welcome Call & Go-Live Call Mastery",
+        "Menu Setup & Configuration",
+        "Mock Tests & Graduation",
+      ],
+      note: "MOM training includes comprehensive assessments: Training Assessments for F&B and Retail, plus Mock Tests covering Welcome Calls, Go-Live Calls, and Training delivery.",
+      phases: [
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Advanced System', days: 'Day 3', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
+        { name: 'Buddy & Practice', days: 'Day 4', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200' },
+        { name: 'Training Assessments', days: 'Day 5', color: 'text-amber-700', bgColor: 'bg-amber-100', borderColor: 'border-amber-200' },
+        { name: 'Mock Tests', days: 'Day 6', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
+      ],
+      dayDetails: [
+        { day: 1, focus: 'Product Fundamentals', activities: ['All-in-One StoreHub Product Knowledge'] },
+        { day: 2, focus: 'System Mastery', activities: ['System Navigation & Merchant Profile Basics', 'Hardware Demo & Foundational Quiz'] },
+        { day: 3, focus: 'Advanced System', activities: ['Advanced System Deep Dive', 'Troubleshooting Techniques', 'Brand Servicing'] },
+        { day: 4, focus: 'Buddy Sessions', activities: ['Welcome Call Practice', 'Go-Live Call Practice', 'Menu Setup Practice'] },
+        { day: 5, focus: 'Training Assessments', activities: ['Training Assessment (F&B)', 'Training Assessment (Retail)'] },
+        { day: 6, focus: 'Mock Tests & Graduation', activities: ['Welcome Call Assessment', 'Go Live Call Assessment', 'Training Mock Test (F&B)', 'Training Mock Test (Retail)', 'Graduation'] },
+      ],
+    },
   }
 
   // Default fallback

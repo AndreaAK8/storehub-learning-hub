@@ -24,8 +24,7 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
     'Training Assessment (Retail)': 10,
-    'Training Mock Test (F&B)': 22,
-    'Training Mock Test (Retail)': 23,
+    'Mock Test': 45,
   },
   'OS': {
     'All in One Quiz': 20,
@@ -33,8 +32,7 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
     'Training Assessment (Retail)': 10,
-    'Training Mock Test (F&B)': 22,
-    'Training Mock Test (Retail)': 23,
+    'Mock Test': 45,
   },
   'Merchant Care': {
     'All in One Quiz': 20,
@@ -54,8 +52,11 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
     'Training Assessment (Retail)': 10,
-    'Training Mock Test (F&B)': 22,
-    'Training Mock Test (Retail)': 23,
+    // Mock Test components (45% total)
+    'Welcome Call Assessment': 11.25,
+    'Go Live Call Assessment': 11.25,
+    'Training Mock Test (F&B)': 11.25,
+    'Training Mock Test (Retail)': 11.25,
   },
   'MOM': {
     'All in One Quiz': 20,
@@ -63,8 +64,11 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
     'Training Assessment (Retail)': 10,
-    'Training Mock Test (F&B)': 22,
-    'Training Mock Test (Retail)': 23,
+    // Mock Test components (45% total)
+    'Welcome Call Assessment': 11.25,
+    'Go Live Call Assessment': 11.25,
+    'Training Mock Test (F&B)': 11.25,
+    'Training Mock Test (Retail)': 11.25,
   },
   'Customer Success Manager': {
     'All in One Quiz': 20,

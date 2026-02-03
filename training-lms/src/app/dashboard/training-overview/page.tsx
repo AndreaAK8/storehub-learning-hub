@@ -27,15 +27,44 @@ export default function TrainingOverviewPage() {
         // Fetch user profile to get name
         const { data: profile } = await supabase
           .from('profiles')
-          .select('role, full_name')
+          .select('role, full_name, google_sheet_email')
           .eq('id', user.id)
           .single()
 
-        // Default to OS for Feb 2 pilot (Onboarding Specialist) - TODO: add training_role column to profiles table
-        const roleCode = 'OS'
+        const traineeEmail = profile?.google_sheet_email || user.email
+        let roleCode = 'OS' // Default fallback
+
+        // Fetch trainee's actual role from trainees API
+        try {
+          const traineeResponse = await fetch('/api/trainees', {
+            credentials: 'include'
+          })
+          if (traineeResponse.ok) {
+            const trainees = await traineeResponse.json()
+            const myData = trainees.find((t: { email: string }) =>
+              t.email?.toLowerCase() === traineeEmail?.toLowerCase()
+            )
+            if (myData?.department) {
+              const roleMapping: Record<string, string> = {
+                'Onboarding Specialist': 'OS',
+                'Merchant Onboarding Manager': 'MOM',
+                'Customer Success Manager': 'CSM',
+                'Business Consultant': 'BC',
+                'Merchant Consultant': 'MC',
+                'Merchant Care': 'MC',
+                'Onboarding Coordinator': 'OC',
+                'Support Consultant': 'SC',
+                'Sales Coordinator': 'SC'
+              }
+              roleCode = roleMapping[myData.department] || myData.department
+            }
+          }
+        } catch {
+          // Use default role on error
+        }
 
         // Get role details from API
-        const response = await fetch(`/api/training/schedule?role=${roleCode}&email=${encodeURIComponent(user.email || '')}`)
+        const response = await fetch(`/api/training/schedule?role=${roleCode}&email=${encodeURIComponent(traineeEmail || '')}`)
         if (response.ok) {
           const data = await response.json()
 
