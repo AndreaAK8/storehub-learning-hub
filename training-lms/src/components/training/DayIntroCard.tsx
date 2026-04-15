@@ -27,14 +27,61 @@ const dayIllustrations: Record<number, string> = {
   6: '/illustrations/interview.svg',
 }
 
-const dayTheme: Record<number, { bg: string; border: string; label: string; title: string; milestone: string; badge: string }> = {
-  3: { bg: 'from-sky-50 to-indigo-50',   border: 'border-sky-200',   label: 'text-sky-500',    title: 'text-sky-900',   milestone: 'text-sky-500',   badge: 'bg-sky-100 text-sky-700' },
-  4: { bg: 'from-indigo-50 to-violet-50', border: 'border-indigo-200', label: 'text-indigo-500', title: 'text-indigo-900', milestone: 'text-indigo-500', badge: 'bg-indigo-100 text-indigo-700' },
-  5: { bg: 'from-violet-50 to-purple-50', border: 'border-violet-200', label: 'text-violet-500', title: 'text-violet-900', milestone: 'text-violet-500', badge: 'bg-violet-100 text-violet-700' },
-  6: { bg: 'from-emerald-50 to-teal-50',  border: 'border-emerald-200', label: 'text-emerald-600', title: 'text-emerald-900', milestone: 'text-emerald-600', badge: 'bg-emerald-100 text-emerald-700' },
+// Brand-aligned: warm orange tints for Days 3-5, brand blue for Day 6 graduation
+const dayTheme: Record<number, {
+  bg: string
+  border: string
+  labelColor: string
+  titleColor: string
+  milestoneColor: string
+  milestoneTimeBg: string
+  badgeBg: string
+  badgeText: string
+}> = {
+  3: {
+    bg: 'linear-gradient(135deg, #FFF4E8 0%, #FFF0DF 100%)',
+    border: '#FFD4A3',
+    labelColor: '#CC6E00',
+    titleColor: '#7A3500',
+    milestoneColor: '#CC6E00',
+    milestoneTimeBg: '#FFF4E8',
+    badgeBg: '#FFE4BF',
+    badgeText: '#7A3500',
+  },
+  4: {
+    bg: 'linear-gradient(135deg, #FFF1E0 0%, #FFEBD4 100%)',
+    border: '#FFBE80',
+    labelColor: '#C25A00',
+    titleColor: '#6B3000',
+    milestoneColor: '#C25A00',
+    milestoneTimeBg: '#FFF1E0',
+    badgeBg: '#FFD9B0',
+    badgeText: '#6B3000',
+  },
+  5: {
+    bg: 'linear-gradient(135deg, #FFF0E0 0%, #FFE8D0 100%)',
+    border: '#FFAA66',
+    labelColor: '#B54A00',
+    titleColor: '#5E2800',
+    milestoneColor: '#B54A00',
+    milestoneTimeBg: '#FFF0E0',
+    badgeBg: '#FFCCA0',
+    badgeText: '#5E2800',
+  },
+  // Day 6: Brand blue — signals this is the final milestone
+  6: {
+    bg: 'linear-gradient(135deg, #EEF4FF 0%, #E6EFFF 100%)',
+    border: '#B8CFFF',
+    labelColor: '#2A6EE8',
+    titleColor: '#1A3D8A',
+    milestoneColor: '#2A6EE8',
+    milestoneTimeBg: '#EEF4FF',
+    badgeBg: '#D0E2FF',
+    badgeText: '#1A3D8A',
+  },
 }
 
-const fallbackTheme = { bg: 'from-slate-50 to-slate-100', border: 'border-slate-200', label: 'text-slate-500', title: 'text-slate-900', milestone: 'text-slate-500', badge: 'bg-slate-100 text-slate-700' }
+const fallbackTheme = dayTheme[3]
 
 export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
   const [expanded, setExpanded] = useState(true)
@@ -42,23 +89,27 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
   const theme = dayTheme[dayNumber] ?? fallbackTheme
 
   return (
-    <div className={`mb-4 rounded-2xl border ${theme.border} bg-gradient-to-br ${theme.bg} overflow-hidden`}>
+    <div
+      className="mb-4 rounded-2xl overflow-hidden"
+      style={{ background: theme.bg, border: `1px solid ${theme.border}` }}
+    >
       {/* Card header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left hover:brightness-95 transition-all"
+        className="w-full flex items-center justify-between px-5 py-4 text-left transition-all hover:brightness-95"
       >
         <div className="flex items-center gap-3">
           <span className="text-xl">📋</span>
           <div>
-            <span className={`text-xs font-medium ${theme.label} uppercase tracking-wide`}>
+            <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.labelColor }}>
               Day {dayNumber} Briefing
             </span>
-            <h3 className={`font-bold ${theme.title} text-sm`}>{data.title}</h3>
+            <h3 className="font-bold text-sm" style={{ color: theme.titleColor }}>{data.title}</h3>
           </div>
         </div>
         <svg
-          className={`w-5 h-5 ${theme.label} transition-transform ${expanded ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          style={{ color: theme.labelColor }}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -86,14 +137,18 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
           {/* Milestones */}
           {data.milestones.length > 0 && (
             <div>
-              <h4 className={`text-xs font-semibold ${theme.milestone} uppercase tracking-wide mb-2`}>
+              <h4 className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: theme.milestoneColor }}>
                 🎯 Milestones today
               </h4>
               <div className="space-y-1.5">
                 {data.milestones.map((m, idx) => (
-                  <div key={idx} className="flex items-center gap-3 bg-white rounded-lg px-3 py-2 border border-white/80 shadow-sm">
-                    <span className={`text-xs font-mono ${theme.milestone} font-medium whitespace-nowrap`}>{m.time}</span>
-                    <div className="w-px h-4 bg-slate-200" />
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 shadow-sm"
+                    style={{ background: 'rgba(255,255,255,0.75)', border: `1px solid ${theme.border}` }}
+                  >
+                    <span className="text-xs font-mono font-semibold whitespace-nowrap" style={{ color: theme.milestoneColor }}>{m.time}</span>
+                    <div className="w-px h-4" style={{ background: theme.border }} />
                     <span className="text-sm text-slate-700">{m.label}</span>
                   </div>
                 ))}
@@ -103,11 +158,11 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
 
           {/* Notes */}
           {data.notes && (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
-              <h4 className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1.5">
+            <div className="rounded-xl px-4 py-3" style={{ background: 'rgba(255,255,255,0.6)', border: `1px solid ${theme.border}` }}>
+              <h4 className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: theme.labelColor }}>
                 💡 Good to know
               </h4>
-              <p className="text-xs text-amber-800 leading-relaxed whitespace-pre-line">{data.notes}</p>
+              <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{data.notes}</p>
             </div>
           )}
         </div>

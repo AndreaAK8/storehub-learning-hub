@@ -40,11 +40,12 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
     setChecked(prev => ({ ...prev, [idx]: !prev[idx] }))
   }
 
-  const dayColors: Record<number, { card: string; badge: string }> = {
-    3: { card: 'bg-sky-50 border-sky-200 text-sky-900', badge: 'bg-sky-200 text-sky-800' },
-    4: { card: 'bg-indigo-50 border-indigo-200 text-indigo-900', badge: 'bg-indigo-200 text-indigo-800' },
-    5: { card: 'bg-violet-50 border-violet-200 text-violet-900', badge: 'bg-violet-200 text-violet-800' },
-    6: { card: 'bg-emerald-50 border-emerald-200 text-emerald-900', badge: 'bg-emerald-200 text-emerald-800' },
+  // Brand-aligned tints: warm orange for Days 3-5, brand blue for Day 6
+  const dayCardTheme: Record<number, { bg: string; border: string; badgeBg: string; text: string; badgeText: string }> = {
+    3: { bg: '#FFF4E8', border: '#FFD4A3', badgeBg: '#FFE4BF', text: '#7A3500', badgeText: '#7A3500' },
+    4: { bg: '#FFF0DC', border: '#FFBE80', badgeBg: '#FFD9B0', text: '#6B3000', badgeText: '#6B3000' },
+    5: { bg: '#FFEBD0', border: '#FFAA66', badgeBg: '#FFCCA0', text: '#5E2800', badgeText: '#5E2800' },
+    6: { bg: '#EEF4FF', border: '#B8CFFF', badgeBg: '#D0E2FF', text: '#1A3D8A', badgeText: '#1A3D8A' },
   }
 
   return (
@@ -119,39 +120,39 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                   Your Learning Path
                 </h3>
                 <div className="flex flex-col items-center gap-0 select-none">
-                  {/* Peak — Mock Test */}
-                  <div className="w-40 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto">
+                  {/* Peak — Mock Test (brand blue = aspirational final goal) */}
+                  <div className="w-44 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: 'linear-gradient(135deg, #2a6ee8 0%, #1a54cc 100%)' }}>
                     <div className="text-xs font-semibold opacity-75 mb-0.5">Day 6</div>
                     <div className="text-sm font-bold">🏆 Mock Test</div>
                   </div>
 
-                  {/* Arrow pointing UP toward Mock Test */}
+                  {/* Arrow pointing UP */}
                   <div className="flex flex-col items-center my-1">
-                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #a78bfa' }} />
-                    <div className="w-0.5 h-5 bg-violet-300" />
+                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #2a6ee8' }} />
+                    <div className="w-0.5 h-5" style={{ background: '#93b8f5' }} />
                   </div>
 
                   {/* Middle — Full Pitching */}
-                  <div className="w-60 bg-gradient-to-br from-sky-400 to-indigo-500 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto">
+                  <div className="w-60 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: 'linear-gradient(135deg, #ff630f 0%, #ff4500 100%)' }}>
                     <div className="text-xs font-semibold opacity-75 mb-0.5">Day 5</div>
                     <div className="text-sm font-bold">🎤 Full Pitching</div>
                   </div>
 
-                  {/* Arrow pointing UP toward Full Pitching */}
+                  {/* Arrow pointing UP */}
                   <div className="flex flex-col items-center my-1">
-                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #7dd3fc' }} />
-                    <div className="w-0.5 h-5 bg-sky-300" />
+                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #ff630f' }} />
+                    <div className="w-0.5 h-5" style={{ background: '#ffb380' }} />
                   </div>
 
-                  {/* Base — Pitching + SPIN + Closing */}
-                  <div className="w-full bg-gradient-to-br from-teal-400 to-cyan-500 text-white rounded-2xl py-4 px-4 shadow-md">
-                    <div className="text-xs font-semibold opacity-75 mb-2 text-center">Days 3–4 · Foundation</div>
+                  {/* Base — Foundation */}
+                  <div className="w-full text-white rounded-2xl py-4 px-4 shadow-md" style={{ background: 'linear-gradient(135deg, #ff9419 0%, #ff7a00 100%)' }}>
+                    <div className="text-xs font-semibold opacity-80 mb-2 text-center">Days 3–4 · Foundation</div>
                     <div className="flex items-center justify-center gap-2 flex-wrap">
-                      <span className="bg-white/25 rounded-xl px-3 py-1.5 text-sm font-bold">Pitching</span>
-                      <span className="opacity-50 font-bold">+</span>
-                      <span className="bg-white/25 rounded-xl px-3 py-1.5 text-sm font-bold">SPIN</span>
-                      <span className="opacity-50 font-bold">+</span>
-                      <span className="bg-white/25 rounded-xl px-3 py-1.5 text-sm font-bold">Closing</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.25)' }}>Pitching</span>
+                      <span className="opacity-60 font-bold">+</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.25)' }}>SPIN</span>
+                      <span className="opacity-60 font-bold">+</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.25)' }}>Closing</span>
                     </div>
                   </div>
                 </div>
@@ -164,16 +165,17 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                 </h3>
                 <div className="space-y-2">
                   {data.what_to_expect.map((item) => {
-                    const colors = dayColors[item.day] || { card: 'bg-slate-50 border-slate-200 text-slate-800', badge: 'bg-slate-200 text-slate-700' }
+                    const t = dayCardTheme[item.day] ?? dayCardTheme[3]
                     return (
                       <div
                         key={item.day}
-                        className={`flex items-start gap-3 p-3 rounded-lg border ${colors.card}`}
+                        className="flex items-start gap-3 p-3 rounded-xl"
+                        style={{ background: t.bg, border: `1px solid ${t.border}` }}
                       >
-                        <span className={`font-bold text-xs px-2 py-1 rounded-full whitespace-nowrap ${colors.badge}`}>Day {item.day}</span>
+                        <span className="font-bold text-xs px-2.5 py-1 rounded-full whitespace-nowrap" style={{ background: t.badgeBg, color: t.badgeText }}>Day {item.day}</span>
                         <div>
-                          <span className="font-semibold text-sm">{item.label}</span>
-                          <p className="text-xs mt-0.5 opacity-70">{item.summary}</p>
+                          <span className="font-semibold text-sm" style={{ color: t.text }}>{item.label}</span>
+                          <p className="text-xs mt-0.5" style={{ color: t.text, opacity: 0.7 }}>{item.summary}</p>
                         </div>
                       </div>
                     )
