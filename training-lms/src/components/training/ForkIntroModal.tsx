@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 interface ChecklistItem {
   text: string
@@ -51,14 +52,25 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className="bg-gradient-to-br from-[var(--sh-orange)] to-orange-600 p-6 text-white">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">🚀</span>
-            <span className="text-sm font-medium opacity-80 uppercase tracking-wide">Role-Specific Phase</span>
+        <div className="bg-gradient-to-br from-[var(--sh-orange)] to-orange-600 px-6 pt-6 pb-0 text-white flex items-end justify-between gap-4 overflow-hidden">
+          <div className="pb-6">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl">🚀</span>
+              <span className="text-sm font-medium opacity-80 uppercase tracking-wide">Role-Specific Phase</span>
+            </div>
+            <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
+              {data.title}
+            </h2>
           </div>
-          <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
-            {data.title}
-          </h2>
+          <div className="flex-shrink-0 self-end">
+            <Image
+              src="/illustrations/journey.svg"
+              alt="Your journey ahead"
+              width={160}
+              height={120}
+              className="object-contain drop-shadow-md"
+            />
+          </div>
         </div>
 
         {/* Tab nav */}
