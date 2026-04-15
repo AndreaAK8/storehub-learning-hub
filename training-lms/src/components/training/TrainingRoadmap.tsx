@@ -86,7 +86,7 @@ export function TrainingRoadmap({
           className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-all"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#fff4e8' }}>
               <span className="text-xl">📅</span>
             </div>
             <div className="text-left">
@@ -116,7 +116,7 @@ export function TrainingRoadmap({
       {/* Day Progress Bar */}
       <div className="relative mb-8 pt-2">
         {/* Connection Line */}
-        <div className="absolute top-4 left-0 right-0 h-0.5 bg-slate-200" />
+        <div className="absolute top-4 left-0 right-0 h-0.5" style={{ backgroundColor: '#ffe1bf' }} />
 
         {/* Day Dots */}
         <div className="relative flex justify-between">

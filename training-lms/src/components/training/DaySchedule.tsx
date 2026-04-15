@@ -76,7 +76,7 @@ export function DaySchedule({
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       {/* Day Header */}
-      <div className="p-6 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border-b border-amber-100">
+      <div className="p-6 border-b" style={{ background: 'linear-gradient(135deg, #fff4e8 0%, #fff0df 100%)', borderColor: '#ffe1bf' }}>
         <div className="flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-3">
@@ -173,8 +173,8 @@ export function DaySchedule({
 
       {/* Day Summary Footer */}
       {!isLocked && stats.percentage === 100 && (
-        <div className="p-4" style={{ backgroundColor: '#e9f0fd', borderTop: '1px solid #c4d7f9' }}>
-          <div className="flex items-center justify-center gap-2" style={{ color: '#2a6ee8' }}>
+        <div className="p-4" style={{ backgroundColor: '#fff4e8', borderTop: '1px solid #ffce95' }}>
+          <div className="flex items-center justify-center gap-2" style={{ color: '#ff9419' }}>
             <span className="text-xl">🎉</span>
             <span className="font-medium">Day {dayNumber} Complete!</span>
           </div>

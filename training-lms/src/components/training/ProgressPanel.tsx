@@ -89,20 +89,20 @@ export function ProgressPanel({
     const completedDays = dayProgress.filter((d) => d.isComplete).length
 
     if (completedDays >= expectedDay) {
-      return { status: 'on_track', label: 'On Schedule', color: 'text-blue-600', bg: 'bg-blue-100' }
+      return { status: 'on_track', label: 'On Schedule', color: 'text-[#2a6ee8]', bg: 'bg-[#e9f0fd]' }
     } else if (completedDays >= expectedDay - 1) {
-      return { status: 'slight_delay', label: 'Slight Delay', color: 'text-amber-600', bg: 'bg-amber-100' }
+      return { status: 'slight_delay', label: 'Slight Delay', color: 'text-[#ff9419]', bg: 'bg-[#fff4e8]' }
     } else {
-      return { status: 'behind', label: 'Behind Schedule', color: 'text-red-600', bg: 'bg-red-100' }
+      return { status: 'behind', label: 'Behind Schedule', color: 'text-red-600', bg: 'bg-red-50' }
     }
   }, [trainingStartDate, totalDays, dayProgress])
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-6">
+    <div className="bg-white rounded-xl shadow-sm border p-5 space-y-6" style={{ borderColor: '#ffe1bf' }}>
       {/* Header */}
       <div>
-        <h3 className="text-lg font-bold text-slate-900">Your Progress</h3>
-        <p className="text-sm text-slate-500">Track your training completion</p>
+        <h3 className="text-lg font-bold" style={{ color: '#2f2922' }}>Your Progress</h3>
+        <p className="text-sm text-slate-400">Keep going — you're building something real.</p>
       </div>
 
       {/* Overall Progress */}
@@ -114,10 +114,7 @@ export function ProgressPanel({
         <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: `${overallProgress}%`,
-              backgroundColor: overallProgress === 100 ? '#2a6ee8' : overallProgress >= 50 ? '#ff9419' : '#f59e0b'
-            }}
+            style={{ width: `${overallProgress}%`, backgroundColor: '#ff9419' }}
           />
         </div>
       </div>
@@ -155,11 +152,11 @@ export function ProgressPanel({
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium"
               style={{
-                backgroundColor: day.isComplete ? '#2a6ee8' : day.isInProgress ? '#ff9419' : day.isLocked ? '#f1f5f9' : '#e2e8f0',
-                color: day.isComplete || day.isInProgress ? 'white' : day.isLocked ? '#94a3b8' : '#475569'
+                backgroundColor: day.isComplete ? '#ff9419' : day.isInProgress ? '#ff630f' : '#e2e8f0',
+                color: day.isComplete || day.isInProgress ? 'white' : '#475569'
               }}
             >
-              {day.isComplete ? '✓' : day.isLocked ? '🔒' : day.dayNumber}
+              {day.isComplete ? '✓' : day.dayNumber}
             </div>
 
             {/* Progress bar */}
@@ -173,7 +170,7 @@ export function ProgressPanel({
                   className="h-full rounded-full transition-all"
                   style={{
                     width: `${day.percentage}%`,
-                    backgroundColor: day.isComplete ? '#2a6ee8' : day.isInProgress ? '#ff9419' : '#cbd5e1'
+                    backgroundColor: day.isComplete ? '#ff9419' : day.isInProgress ? '#ff630f' : '#e2e8f0'
                   }}
                 />
               </div>
@@ -199,8 +196,8 @@ export function ProgressPanel({
         <div className="pt-4 border-t">
           <h4 className="text-sm font-medium text-slate-700 mb-2">Your Coach</h4>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e9f0fd' }}>
-              <span className="font-medium" style={{ color: '#2a6ee8' }}>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fff4e8' }}>
+              <span className="font-medium" style={{ color: '#ff9419' }}>
                 {coachName.split(' ').map((n) => n[0]).join('')}
               </span>
             </div>

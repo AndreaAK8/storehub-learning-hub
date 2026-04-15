@@ -60,16 +60,6 @@ interface ActivityCardProps {
   hideTimer?: boolean
 }
 
-// XP Calculation: 1 hour = 100 XP
-function calculateXP(durationHours: number): number {
-  return Math.round(durationHours * 100)
-}
-
-// Bonus XP for finishing early (within 50% of time)
-function calculateBonusXP(durationHours: number): number {
-  return Math.round(durationHours * 50)
-}
-
 // Helper function to format time remaining
 function formatTimeRemaining(seconds: number): { hours: number; minutes: number; secs: number; display: string } {
   const hours = Math.floor(seconds / 3600)
@@ -85,22 +75,20 @@ function formatTimeRemaining(seconds: number): { hours: number; minutes: number;
 }
 
 const activityTypeConfig: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
-  // Timed activities (show Start Activity + Timer)
-  self_study: { label: 'Self-Study', color: 'text-indigo-700', bgColor: 'bg-indigo-100', icon: '📚' },
-  assignment: { label: 'Assignment', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: '📋' },
-  assessment: { label: 'Assessment', color: 'text-amber-700', bgColor: 'bg-amber-100', icon: '📝' },
-  // Non-timed activities (no Start Activity / Timer)
-  trainer_led: { label: 'Trainer Led', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '👨‍🏫' },
-  coach_led: { label: 'Coach Led', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '🧑‍💼' },
-  buddy_led: { label: 'Buddy Led', color: 'text-pink-700', bgColor: 'bg-pink-100', icon: '👥' },
-  briefing: { label: 'Briefing', color: 'text-slate-700', bgColor: 'bg-slate-100', icon: '📋' },
-  buddy_session: { label: 'Buddy Session', color: 'text-pink-700', bgColor: 'bg-pink-100', icon: '👥' },
-  review_session: { label: 'Review', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: '💬' },
-  coach_review: { label: 'Coach Review', color: 'text-teal-700', bgColor: 'bg-teal-100', icon: '👨‍🏫' },
-  mock_test: { label: 'Mock Test', color: 'text-red-700', bgColor: 'bg-red-100', icon: '🎯' },
-  handover: { label: 'Graduation', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: '🎓' },
-  lunch: { label: 'Break', color: 'text-slate-600', bgColor: 'bg-slate-100', icon: '☕' },
-  break: { label: 'Break', color: 'text-slate-600', bgColor: 'bg-slate-100', icon: '☕' },
+  self_study:     { label: 'Self-Study',    color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '📖' },
+  assignment:     { label: 'Assignment',    color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '📋' },
+  assessment:     { label: 'Assessment',    color: 'text-[#ff630f]', bgColor: 'bg-[#fff4e8]', icon: '📝' },
+  trainer_led:    { label: 'Trainer Led',   color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '👨‍🏫' },
+  coach_led:      { label: 'Coach Led',     color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '🧑‍💼' },
+  buddy_led:      { label: 'Buddy Led',     color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '👥' },
+  briefing:       { label: 'Briefing',      color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '📢' },
+  buddy_session:  { label: 'Buddy Session', color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '👥' },
+  review_session: { label: 'Review',        color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '💬' },
+  coach_review:   { label: 'Coach Review',  color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '✍️' },
+  mock_test:      { label: 'Mock Test',     color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '🎯' },
+  handover:       { label: 'Graduation',    color: 'text-[#ff630f]', bgColor: 'bg-[#fff4e8]', icon: '🎓' },
+  lunch:          { label: 'Break',         color: 'text-slate-500',  bgColor: 'bg-slate-100', icon: '☕' },
+  break:          { label: 'Break',         color: 'text-slate-500',  bgColor: 'bg-slate-100', icon: '☕' },
 }
 
 // Progress Ring Component
@@ -117,9 +105,9 @@ function ProgressRing({ progress, size = 48, strokeWidth = 4, status }: {
   const getColors = () => {
     switch (status) {
       case 'completed':
-        return { stroke: '#22c55e', bg: '#dcfce7', icon: '✓', iconColor: '#16a34a' }
+        return { stroke: '#ff9419', bg: '#fff4e8', icon: '✓', iconColor: '#ff630f' }
       case 'in_progress':
-        return { stroke: '#ff9419', bg: '#fff7ed', icon: '▶', iconColor: '#ea580c' }
+        return { stroke: '#ff9419', bg: '#fff4e8', icon: '▶', iconColor: '#ff9419' }
       default:
         return { stroke: '#e2e8f0', bg: '#f8fafc', icon: '○', iconColor: '#94a3b8' }
     }
@@ -172,45 +160,44 @@ function ProgressRing({ progress, size = 48, strokeWidth = 4, status }: {
   )
 }
 
-// XP Badge Component
-function XPBadge({ xp, bonus, earned, showCelebration }: {
-  xp: number
-  bonus: number
-  earned?: boolean
-  showCelebration?: boolean
-}) {
+// Duration Badge — replaces XP, shows time investment
+function DurationBadge({ durationHours, completed }: { durationHours: number; completed?: boolean }) {
+  const hours = Math.floor(durationHours)
+  const mins = Math.round((durationHours - hours) * 60)
+  const label = hours > 0 ? (mins > 0 ? `${hours}h ${mins}m` : `${hours}h`) : `${mins}m`
   return (
-    <div className={`
-      flex items-center gap-1.5 px-3 py-1.5 rounded-full font-semibold text-sm
-      transition-all duration-300
-      ${earned
-        ? 'bg-gradient-to-r from-amber-400 to-yellow-500 text-white shadow-lg shadow-amber-200'
-        : 'bg-gradient-to-r from-slate-100 to-slate-50 text-slate-600 border border-slate-200'
-      }
-      ${showCelebration ? 'animate-bounce scale-110' : ''}
-    `}>
-      <span className="text-base">{earned ? '⭐' : '✨'}</span>
-      <span>{earned ? `+${xp} XP` : `${xp} XP`}</span>
-      {bonus > 0 && !earned && (
-        <span className="text-xs opacity-70 ml-1">+{bonus} bonus</span>
-      )}
+    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-300 ${
+      completed
+        ? 'bg-[#fff4e8] text-[#ff630f] border-[#ffce95]'
+        : 'bg-slate-50 text-slate-500 border-slate-200'
+    }`}>
+      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{label}</span>
     </div>
   )
 }
 
-// Celebration Overlay
-function CelebrationOverlay({ xp, onComplete }: { xp: number; onComplete: () => void }) {
+// Completion Flash — subtle brand pulse, replaces bouncing emoji
+function CompletionFlash({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 2000)
+    const timer = setTimeout(onComplete, 1400)
     return () => clearTimeout(timer)
   }, [onComplete])
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-white/90 rounded-2xl z-20 animate-fade-in">
-      <div className="text-center">
-        <div className="text-5xl mb-2 animate-bounce">🎉</div>
-        <div className="text-2xl font-bold text-green-600 animate-pulse">+{xp} XP</div>
-        <div className="text-sm text-slate-500 mt-1">Activity Complete!</div>
+    <div className="absolute inset-0 flex items-center justify-center rounded-2xl z-20" style={{ background: 'rgba(255,148,25,0.08)' }}>
+      <div className="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-lg border border-[#ffce95]">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: '#fff4e8' }}>
+          <svg className="w-6 h-6" style={{ color: '#ff9419' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div>
+          <div className="font-bold text-sm" style={{ color: '#2f2922' }}>Module complete</div>
+          <div className="text-xs text-slate-400">Progress saved</div>
+        </div>
       </div>
     </div>
   )
@@ -248,8 +235,6 @@ export function ActivityCard({
   const [showCelebration, setShowCelebration] = useState(false)
 
   const typeConfig = activityTypeConfig[activityType] || activityTypeConfig.self_study
-  const xp = calculateXP(durationHours)
-  const bonusXP = calculateBonusXP(durationHours)
 
   // Only these activity types should have Start Activity button and Timer
   const TIMED_ACTIVITY_TYPES = ['self_study', 'assignment', 'assessment']
@@ -426,37 +411,30 @@ export function ActivityCard({
         ${isLocked
           ? 'opacity-50 bg-slate-50 border-slate-200 grayscale'
           : status === 'completed'
-            ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 shadow-lg shadow-green-100'
+            ? 'border-[#ffce95] shadow-sm'
             : status === 'in_progress'
-              ? 'bg-gradient-to-br from-orange-50 to-amber-50 border-orange-300 shadow-lg shadow-orange-100 ring-2 ring-orange-200 ring-offset-2'
-              : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-md'
+              ? 'bg-[#fffaf4] border-[#ffaa55] shadow-md shadow-orange-50 ring-2 ring-[#ffe1bf] ring-offset-2'
+              : 'bg-white border-slate-200 hover:border-[#ffce95] hover:shadow-md'
         }
       `}
     >
-      {/* Celebration Overlay */}
+      {/* Completion Flash */}
       {showCelebration && (
-        <CelebrationOverlay xp={xp} onComplete={() => setShowCelebration(false)} />
+        <CompletionFlash onComplete={() => setShowCelebration(false)} />
       )}
 
-      {/* XP Header Bar */}
-      <div className={`
-        flex items-center justify-between px-4 py-2 border-b
-        ${status === 'completed'
-          ? 'bg-gradient-to-r from-green-100 to-emerald-100 border-green-200'
-          : status === 'in_progress'
-            ? 'bg-gradient-to-r from-orange-100 to-amber-100 border-orange-200'
-            : 'bg-gradient-to-r from-slate-50 to-slate-100 border-slate-200'
-        }
-      `}>
-        <XPBadge xp={xp} bonus={bonusXP} earned={status === 'completed'} />
-
-        <div className="flex items-center gap-3 text-xs">
-          <span className={`${typeConfig.bgColor} ${typeConfig.color} px-2 py-1 rounded-full font-medium`}>
+      {/* Activity Meta Bar */}
+      <div className={`flex items-center justify-between px-4 py-2.5 border-b ${
+        status === 'completed' ? 'bg-[#fff4e8] border-[#ffce95]'
+        : status === 'in_progress' ? 'bg-[#fff9f2] border-[#ffbb6c]'
+        : 'bg-slate-50 border-slate-200'
+      }`}>
+        <DurationBadge durationHours={durationHours} completed={status === 'completed'} />
+        <div className="flex items-center gap-2 text-xs">
+          <span className={`${typeConfig.bgColor} ${typeConfig.color} px-2.5 py-1 rounded-full font-semibold`}>
             {typeConfig.icon} {typeConfig.label}
           </span>
-          <span className="text-slate-500 font-medium">
-            {durationHours}h • {startTime}
-          </span>
+          <span className="text-slate-400">{startTime}–{endTime}</span>
         </div>
       </div>
 
@@ -506,12 +484,12 @@ export function ActivityCard({
 
         {/* Success Criteria Preview (collapsed) */}
         {successCriteria && successCriteria.length > 0 && !isLocked && (
-          <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-100">
-            <div className="flex items-center gap-2 text-sm font-semibold text-indigo-700 mb-1">
+          <div className="mt-4 p-3 rounded-xl bg-[#fff4e8] border border-[#ffce95]">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[#ff630f] mb-1">
               <span>🎯</span>
               <span>Goals</span>
             </div>
-            <p className="text-sm text-indigo-600 line-clamp-1">
+            <p className="text-sm text-[#ff7a30] line-clamp-1">
               {successCriteria.slice(0, 2).join(' • ')}
               {successCriteria.length > 2 && ` +${successCriteria.length - 2} more`}
             </p>
@@ -522,7 +500,8 @@ export function ActivityCard({
         {hasExpandableContent && !isLocked && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full mt-4 py-2.5 px-4 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-all duration-200 bg-gradient-to-r from-indigo-500 to-blue-500 text-white hover:from-indigo-600 hover:to-blue-600 shadow-md shadow-indigo-200"
+            className="w-full mt-4 py-2.5 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-200 text-white hover:opacity-90 shadow-sm"
+            style={{ backgroundColor: '#2f2922' }}
           >
             <span>View Full Details</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -536,50 +515,36 @@ export function ActivityCard({
 
       {/* Action Footer */}
       {!isLocked && status !== 'completed' && (
-        <div className="border-t-2 px-4 py-4 bg-gradient-to-r from-slate-50 to-slate-100">
+        <div className="border-t px-4 py-4 bg-[#fffaf4] border-[#ffe1bf]">
           {/* Timer Display - Only for Self Study, Assignment, Assessment */}
           {status === 'in_progress' && timeRemaining !== null && showTimerAndStart && (
-            <div className={`mb-4 p-4 rounded-xl ${isOvertime ? 'bg-red-50 border-2 border-red-200' : 'bg-white border-2 border-slate-200'}`}>
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isOvertime ? 'bg-red-100' : 'bg-indigo-100'}`}>
-                    <svg className={`w-5 h-5 ${isOvertime ? 'text-red-600' : 'text-indigo-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+            <div className={`mb-4 p-4 rounded-xl border ${isOvertime ? 'bg-red-50 border-red-200' : 'bg-white border-[#ffe1bf]'}`}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isOvertime ? 'bg-red-100' : 'bg-[#fff4e8]'}`}>
+                  <svg className={`w-4 h-4 ${isOvertime ? 'text-red-600' : 'text-[#ff9419]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <div className={`text-xs font-semibold uppercase tracking-wide ${isOvertime ? 'text-red-600' : 'text-[#ff9419]'}`}>
+                    {isOvertime ? 'Overtime' : 'Time Remaining'}
                   </div>
-                  <div>
-                    <div className={`text-xs font-semibold uppercase tracking-wide ${isOvertime ? 'text-red-600' : 'text-indigo-600'}`}>
-                      {isOvertime ? '⚠️ Overtime' : '⏱️ Time Left'}
-                    </div>
-                    <div className={`text-2xl font-bold font-mono ${isOvertime ? 'text-red-600' : 'text-slate-900'}`}>
-                      {isOvertime && '+'}{formatTimeRemaining(timeRemaining).display}
-                    </div>
+                  <div className={`text-xl font-bold font-mono ${isOvertime ? 'text-red-600' : 'text-[#2f2922]'}`}>
+                    {isOvertime && '+'}{formatTimeRemaining(timeRemaining).display}
                   </div>
                 </div>
-
-                {/* Bonus XP Indicator */}
-                {!isOvertime && timeRemaining > (durationHours * 3600 * 0.5) && (
-                  <div className="text-right">
-                    <div className="text-xs text-amber-600 font-semibold">🚀 Speed Bonus</div>
-                    <div className="text-sm text-amber-700 font-bold">+{bonusXP} XP available</div>
-                  </div>
-                )}
               </div>
-
-              {/* Progress bar */}
-              <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-1000 ${isOvertime ? 'bg-red-500' : 'bg-gradient-to-r from-indigo-500 to-blue-500'}`}
+                  className="h-full rounded-full transition-all duration-1000"
                   style={{
-                    width: isOvertime ? '100%' : `${Math.max(0, Math.min(100, 100 - (timeRemaining / (durationHours * 3600)) * 100))}%`
+                    width: isOvertime ? '100%' : `${Math.max(0, Math.min(100, 100 - (timeRemaining / (durationHours * 3600)) * 100))}%`,
+                    backgroundColor: isOvertime ? '#ef4444' : '#ff9419'
                   }}
                 />
               </div>
-
               {isOvertime && (
-                <p className="mt-2 text-xs text-red-600">
-                  Take your time to complete properly. Quality over speed! 💪
-                </p>
+                <p className="mt-2 text-xs text-red-500">Take your time — quality over speed.</p>
               )}
             </div>
           )}
@@ -587,9 +552,9 @@ export function ActivityCard({
           <div className="flex items-center justify-between">
             <div className="text-sm text-slate-500">
               {status === 'pending' && (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2 text-slate-400">
                   <span className="w-2 h-2 rounded-full bg-slate-300"></span>
-                  Ready to start • Earn <span className="font-semibold text-indigo-600">{xp} XP</span>
+                  Ready to start
                 </span>
               )}
             </div>
@@ -599,13 +564,14 @@ export function ActivityCard({
               {status === 'pending' && onStartActivity && showTimerAndStart && (
                 <button
                   onClick={handleStart}
-                  className="px-6 py-3 text-sm font-bold bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700 rounded-xl transition-all shadow-lg shadow-indigo-200 hover:shadow-xl hover:scale-105 flex items-center gap-2"
+                  className="px-6 py-2.5 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90 hover:scale-105 flex items-center gap-2 shadow-sm"
+                  style={{ backgroundColor: '#ff9419' }}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Start Activity
+                  Begin
                 </button>
               )}
 
@@ -613,18 +579,15 @@ export function ActivityCard({
                 <button
                   onClick={handleMarkComplete}
                   disabled={isCompleting}
-                  className={`
-                    px-6 py-3 text-sm font-bold rounded-xl transition-all flex items-center gap-2
-                    ${isCompleting
-                      ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 shadow-lg shadow-green-200 hover:shadow-xl hover:scale-105'
-                    }
-                  `}
+                  className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2 ${
+                    isCompleting ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'text-white hover:opacity-90 hover:scale-105 shadow-sm'
+                  }`}
+                  style={!isCompleting ? { backgroundColor: '#2f2922' } : {}}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  {isCompleting ? 'Saving...' : 'Complete & Claim XP'}
+                  {isCompleting ? 'Saving...' : 'Mark as Complete'}
                 </button>
               )}
             </div>
@@ -634,14 +597,12 @@ export function ActivityCard({
 
       {/* Completed Footer */}
       {status === 'completed' && !isLocked && (
-        <div className="border-t-2 border-green-200 px-4 py-3 bg-gradient-to-r from-green-100 to-emerald-100">
-          <div className="flex items-center justify-center gap-2 text-green-700 font-semibold">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div className="border-t px-4 py-3 bg-[#fff4e8]" style={{ borderColor: '#ffce95' }}>
+          <div className="flex items-center justify-center gap-2 font-semibold" style={{ color: '#ff630f' }}>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
             <span>Completed</span>
-            <span className="text-green-600">•</span>
-            <span className="text-amber-600">+{xp} XP earned!</span>
           </div>
         </div>
       )}
