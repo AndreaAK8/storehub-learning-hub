@@ -53,24 +53,24 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className="bg-gradient-to-br from-[var(--sh-orange)] to-orange-600 px-6 pt-6 pb-0 text-white flex items-end justify-between gap-4 overflow-hidden">
-          <div className="pb-6">
+        <div className="relative bg-gradient-to-br from-[var(--sh-orange)] to-orange-600 px-6 py-6 text-white overflow-hidden">
+          {/* Illustration — decorative, right-aligned, partially cropped for depth */}
+          <div className="absolute right-0 top-0 bottom-0 w-36 opacity-20 pointer-events-none">
+            <Image
+              src="/illustrations/journey.svg"
+              alt=""
+              fill
+              className="object-cover object-left"
+            />
+          </div>
+          <div className="relative z-10">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-2xl">🚀</span>
-              <span className="text-sm font-medium opacity-80 uppercase tracking-wide">Role-Specific Phase</span>
+              <span className="text-xl">🚀</span>
+              <span className="text-xs font-semibold opacity-75 uppercase tracking-widest">Role-Specific Phase</span>
             </div>
             <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
               {data.title}
             </h2>
-          </div>
-          <div className="flex-shrink-0 self-end">
-            <Image
-              src="/illustrations/journey.svg"
-              alt="Your journey ahead"
-              width={160}
-              height={120}
-              className="object-contain drop-shadow-md"
-            />
           </div>
         </div>
 
@@ -120,39 +120,39 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                   Your Learning Path
                 </h3>
                 <div className="flex flex-col items-center gap-0 select-none">
-                  {/* Peak — Mock Test (brand blue = aspirational final goal) */}
-                  <div className="w-44 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: 'linear-gradient(135deg, #2a6ee8 0%, #1a54cc 100%)' }}>
-                    <div className="text-xs font-semibold opacity-75 mb-0.5">Day 6</div>
+                  {/* Peak — Mock Test (brand black = final challenge, authoritative) */}
+                  <div className="w-44 text-white rounded-2xl py-3 px-4 text-center shadow-lg mx-auto" style={{ background: 'linear-gradient(135deg, #2f2922 0%, #1a1410 100%)' }}>
+                    <div className="text-xs font-semibold opacity-60 mb-0.5">Day 6</div>
                     <div className="text-sm font-bold">🏆 Mock Test</div>
                   </div>
 
-                  {/* Arrow pointing UP */}
-                  <div className="flex flex-col items-center my-1">
-                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #2a6ee8' }} />
-                    <div className="w-0.5 h-5" style={{ background: '#93b8f5' }} />
+                  {/* Arrow UP */}
+                  <div className="flex flex-col items-center my-1.5">
+                    <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '9px solid #2f2922' }} />
+                    <div className="w-px h-5" style={{ background: '#c5c0bb' }} />
                   </div>
 
                   {/* Middle — Full Pitching */}
-                  <div className="w-60 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: 'linear-gradient(135deg, #ff630f 0%, #ff4500 100%)' }}>
-                    <div className="text-xs font-semibold opacity-75 mb-0.5">Day 5</div>
+                  <div className="w-60 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: 'linear-gradient(135deg, #ff630f 0%, #e04800 100%)' }}>
+                    <div className="text-xs font-semibold opacity-70 mb-0.5">Day 5</div>
                     <div className="text-sm font-bold">🎤 Full Pitching</div>
                   </div>
 
-                  {/* Arrow pointing UP */}
-                  <div className="flex flex-col items-center my-1">
-                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #ff630f' }} />
-                    <div className="w-0.5 h-5" style={{ background: '#ffb380' }} />
+                  {/* Arrow UP */}
+                  <div className="flex flex-col items-center my-1.5">
+                    <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '9px solid #ff630f' }} />
+                    <div className="w-px h-5" style={{ background: '#ffb380' }} />
                   </div>
 
                   {/* Base — Foundation */}
-                  <div className="w-full text-white rounded-2xl py-4 px-4 shadow-md" style={{ background: 'linear-gradient(135deg, #ff9419 0%, #ff7a00 100%)' }}>
-                    <div className="text-xs font-semibold opacity-80 mb-2 text-center">Days 3–4 · Foundation</div>
-                    <div className="flex items-center justify-center gap-2 flex-wrap">
-                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.25)' }}>Pitching</span>
-                      <span className="opacity-60 font-bold">+</span>
-                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.25)' }}>SPIN</span>
-                      <span className="opacity-60 font-bold">+</span>
-                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.25)' }}>Closing</span>
+                  <div className="w-full text-white rounded-2xl py-4 px-5 shadow-md" style={{ background: 'linear-gradient(135deg, #ff9419 0%, #ff7a00 100%)' }}>
+                    <div className="text-xs font-semibold opacity-75 mb-2.5 text-center tracking-wide">DAYS 3–4 · FOUNDATION</div>
+                    <div className="flex items-center justify-center gap-3 flex-wrap">
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.22)' }}>Pitching</span>
+                      <span className="opacity-50 text-lg font-light">+</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.22)' }}>SPIN</span>
+                      <span className="opacity-50 text-lg font-light">+</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.22)' }}>Closing</span>
                     </div>
                   </div>
                 </div>
