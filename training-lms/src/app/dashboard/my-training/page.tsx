@@ -12,6 +12,7 @@ import {
   CompletionCelebration,
   GiftReveal,
   OnboardingTour,
+  ForkIntroModal,
 } from '@/components/training'
 import type { ActivityPerformance } from '@/components/training'
 
@@ -62,6 +63,9 @@ export default function MyTrainingPage() {
   const [viewMode, setViewMode] = useState<'certificate' | 'activities'>('certificate')
   const [showTransition, setShowTransition] = useState(false)
   const [showTour, setShowTour] = useState(false)
+  const [forkIntro, setForkIntro] = useState<any>(null)
+  const [dayIntros, setDayIntros] = useState<Record<number, any>>({})
+  const [showForkIntro, setShowForkIntro] = useState(false)
 
   const supabase = createClient()
 
@@ -154,6 +158,28 @@ export default function MyTrainingPage() {
       }
 
       const data = await response.json()
+
+      // Fetch fork intro + day intros from Supabase
+      const roleId = data.role?.id
+      if (roleId) {
+        const [forkRes, dayIntrosRes] = await Promise.all([
+          supabase.from('training_fork_intros').select('*').eq('role_id', roleId).single(),
+          supabase.from('training_day_intros').select('*').eq('role_id', roleId)
+        ])
+        if (forkRes.data) {
+          setForkIntro(forkRes.data)
+          // Show fork intro if trainee hasn't seen it yet
+          const forkKey = `fork_intro_seen_${traineeEmail}_${data.role.shortCode}`
+          if (!localStorage.getItem(forkKey)) {
+            setShowForkIntro(true)
+          }
+        }
+        if (dayIntrosRes.data) {
+          const map: Record<number, any> = {}
+          dayIntrosRes.data.forEach((d: any) => { map[d.day] = d })
+          setDayIntros(map)
+        }
+      }
 
       // Fetch saved progress from Supabase
       const progressResponse = await fetch(
@@ -735,6 +761,7 @@ export default function MyTrainingPage() {
                   activities={currentDayData.activities}
                   dueDate={getDueDate(currentDayData.dayNumber)}
                   isLocked={isDayLocked(currentDayData.dayNumber)}
+                  dayIntro={dayIntros[currentDayData.dayNumber] || null}
                   onMarkComplete={handleMarkComplete}
                   onStartActivity={handleStartActivity}
                 />
@@ -777,6 +804,18 @@ export default function MyTrainingPage() {
           dayNumber={completedDayForReflection}
           dayTitle={currentDayData.title}
           onSubmit={handleReflectionSubmit}
+        />
+      )}
+
+      {/* Fork Intro Modal */}
+      {showForkIntro && forkIntro && (
+        <ForkIntroModal
+          data={forkIntro}
+          onComplete={() => {
+            const forkKey = `fork_intro_seen_${traineeData.email}_${traineeData.role}`
+            localStorage.setItem(forkKey, 'true')
+            setShowForkIntro(false)
+          }}
         />
       )}
 

@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "gdrive": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
+      "env": {
+        "GDRIVE_OAUTH_PATH": "/Users/ak/.config/gdrive-mcp/gcp-oauth.keys.json",
+        "GDRIVE_CREDENTIALS_PATH": "/Users/ak/.config/gdrive-mcp/credentials.json"
+      }
+    },
+    "lark-mcp": {
+      "type": "http",
+      "url": "https://open.larksuite.com/mcp/stream/mcp_oQ9bMh7_BCOAEBHoGveZdcduPTslwekLx6tbEQ1SW3WlA4e6y-_tvTVqAeqZs0Vtg8LXClZS7AY"
+    },
+    "n8n": {
+      "command": "npx",
+      "args": ["-y", "n8n-mcp-server"],
+      "env": {
+        "N8N_API_URL": "https://storehub.app.n8n.cloud/api/v1",
+        "N8N_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTE3NDliOS02ZjJiLTQwNjMtODY4Zi1hN2QyNzhjMmFhMGIiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzc2MDU4MjA4fQ.a8iSaggBVpRFpSZF7VMk-L4gxhZG_ydljAKZFD-SWNM"
+      }
+    }
+  }
+}

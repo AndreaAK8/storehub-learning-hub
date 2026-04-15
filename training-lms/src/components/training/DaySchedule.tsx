@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { ActivityCard } from './ActivityCard'
+import { DayIntroCard } from './DayIntroCard'
 
 interface ParsedCriteriaItem {
   text: string
@@ -26,6 +27,13 @@ interface Activity {
   hideTimer?: boolean
 }
 
+interface DayIntroData {
+  title: string
+  summary: string
+  milestones: { label: string; time: string }[]
+  notes?: string
+}
+
 interface DayScheduleProps {
   dayNumber: number
   title: string
@@ -33,6 +41,7 @@ interface DayScheduleProps {
   activities: Activity[]
   dueDate?: string
   isLocked?: boolean
+  dayIntro?: DayIntroData | null
   onMarkComplete: (activityId: string) => void
   onStartActivity: (activityId: string) => void
 }
@@ -44,6 +53,7 @@ export function DaySchedule({
   activities,
   dueDate,
   isLocked,
+  dayIntro,
   onMarkComplete,
   onStartActivity,
 }: DayScheduleProps) {
@@ -131,6 +141,11 @@ export function DaySchedule({
 
       {/* Activities List */}
       <div className="p-4 space-y-3">
+        {/* Day Intro Card */}
+        {dayIntro && (
+          <DayIntroCard dayNumber={dayNumber} data={dayIntro} />
+        )}
+
         {isLocked ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">

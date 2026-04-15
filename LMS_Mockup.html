@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StoreHub Learning Hub - Redesign Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #ff9419;
+    --orange-dark: #ff630f;
+    --blue: #2a6ee8;
+    --dark: #2f2922;
+    --taupe: #7a7672;
+    --cream: #f9f9f8;
+    --gold: #d4af37;
+    --green: #10b981;
+    --red: #ef4444;
+  }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: #0a0a0f;
+    color: white;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Barlow', sans-serif; }
+
+  /* ============================================ */
+  /* NAV - Mockup navigation between screens      */
+  /* ============================================ */
+  .mockup-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10, 10, 15, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,148,25,0.3);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+  }
+  .mockup-nav .label {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    color: var(--orange);
+    font-size: 13px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .mockup-nav button {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ccc;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .mockup-nav button:hover, .mockup-nav button.active {
+    background: var(--orange);
+    color: var(--dark);
+    border-color: var(--orange);
+  }
+
+  /* ============================================ */
+  /* SCREENS                                      */
+  /* ============================================ */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding-top: 60px;
+  }
+  .screen.active { display: block; }
+
+  /* ============================================ */
+  /* SCREEN 1: SCROLL LANDING PAGE                */
+  /* ============================================ */
+  .landing-hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #1a0f05 0%, #2f1a08 30%, #1a0f05 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 40px;
+  }
+  .landing-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,148,25,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+  }
+
+  .landing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,148,25,0.15);
+    border: 1px solid rgba(255,148,25,0.3);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    color: var(--orange);
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+    animation: fadeSlideUp 0.8s ease-out;
+  }
+  .landing-badge .dot {
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .landing-hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .landing-hero h1 .word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: wordReveal 0.6s ease-out forwards;
+  }
+  @keyframes wordReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .landing-hero h1 .highlight {
+    background: linear-gradient(135deg, var(--orange), #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .landing-hero p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    max-width: 500px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+    animation: fadeSlideUp 1s ease-out 0.8s both;
+  }
+  .landing-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white;
+    padding: 16px 36px;
+    border-radius: 14px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+    animation: fadeSlideUp 1s ease-out 1s both;
+    box-shadow: 0 8px 40px rgba(255,148,25,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .landing-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 50px rgba(255,148,25,0.4);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.3);
+    font-size: 12px;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Landing sections */
+  .landing-section {
+    padding: 100px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .landing-section h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .landing-section .subtitle {
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    margin-bottom: 60px;
+    font-size: 16px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 36px 28px;
+    transition: all 0.3s;
+  }
+  .feature-card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,148,25,0.3);
+    transform: translateY(-4px);
+  }
+  .feature-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .feature-card p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+  /* Stats counter */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 80px;
+    padding: 60px 40px;
+    background: rgba(255,148,25,0.05);
+    border: 1px solid rgba(255,148,25,0.1);
+    border-radius: 24px;
+  }
+  .stat-item { text-align: center; }
+  .stat-number {
+    font-family: 'Barlow', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--orange), #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 4px; }
+
+  /* ============================================ */
+  /* SCREEN 2: WELCOME NARRATIVE                  */
+  /* ============================================ */
+  .welcome-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Particles */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .particle {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--orange);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    33% { transform: translateY(-30px) translateX(10px); }
+    66% { transform: translateY(-15px) translateX(-10px); }
+  }
+
+  .welcome-1 { background: linear-gradient(180deg, #0a0a0f 0%, #1a1025 100%); }
+  .welcome-2 { background: linear-gradient(180deg, #1a1025 0%, #0f1a2a 100%); }
+  .welcome-3 { background: linear-gradient(180deg, #0f1a2a 0%, #0a1a15 100%); }
+  .welcome-4 { background: linear-gradient(180deg, #0a1a15 0%, #1a1510 100%); }
+  .welcome-5 { background: linear-gradient(180deg, #1a1510 0%, #1a0f05 100%); }
+
+  .welcome-logo {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 60px rgba(255,148,25,0.3);
+    animation: logoGlow 3s ease-in-out infinite;
+  }
+  @keyframes logoGlow {
+    0%, 100% { box-shadow: 0 0 60px rgba(255,148,25,0.3); }
+    50% { box-shadow: 0 0 100px rgba(255,148,25,0.5); }
+  }
+
+  .welcome-title {
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+  .welcome-subtitle {
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+  }
+
+  /* Typewriter effect */
+  .typewriter {
+    font-family: 'Barlow', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    border-right: 2px solid var(--orange);
+    padding-right: 4px;
+    animation: blink 1s step-end infinite;
+    white-space: nowrap;
+    overflow: hidden;
+    width: fit-content;
+    margin: 0 auto 40px;
+  }
+  @keyframes blink { 0%, 100% { border-color: var(--orange); } 50% { border-color: transparent; } }
+
+  /* Role card */
+  .role-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,148,25,0.2);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  .role-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white;
+    padding: 6px 20px;
+    border-radius: 50px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .role-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+  .role-card p { color: rgba(255,255,255,0.6); font-size: 15px; line-height: 1.6; }
+  .role-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    text-align: left;
+  }
+  .pillar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+  }
+  .pillar-dot {
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Coach dialogue */
+  .dialogue-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 16px 16px 0;
+    padding: 24px 28px;
+    max-width: 550px;
+    text-align: left;
+    margin-bottom: 24px;
+  }
+  .dialogue-name {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    color: var(--orange);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .dialogue-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.8);
+  }
+  .coach-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), #5088ec);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    margin: 0 auto 20px;
+    border: 3px solid rgba(42,110,232,0.3);
+  }
+
+  /* Journey timeline */
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    max-width: 700px;
+    width: 100%;
+    margin: 40px auto;
+    position: relative;
+  }
+  .timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+  }
+  .timeline-dot {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s;
+  }
+  .timeline-dot.active {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    box-shadow: 0 0 30px rgba(255,148,25,0.4);
+    transform: scale(1.1);
+  }
+  .timeline-dot.future {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+  .timeline-dot.completed {
+    background: var(--green);
+    box-shadow: 0 0 20px rgba(16,185,129,0.3);
+  }
+  .timeline-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+    text-align: center;
+  }
+  .timeline-label strong { color: rgba(255,255,255,0.7); display: block; margin-bottom: 2px; }
+  .timeline-line {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    right: 24px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    z-index: 1;
+  }
+  .timeline-line-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--orange));
+    width: 30%;
+    border-radius: 1px;
+  }
+
+  /* Continue / CTA */
+  .tap-continue {
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    animation: pulse 2s infinite;
+  }
+  .welcome-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--green), #059669);
+    color: white;
+    padding: 18px 44px;
+    border-radius: 16px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 40px rgba(16,185,129,0.3);
+    transition: all 0.2s;
+    margin-top: 20px;
+  }
+  .welcome-cta:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 50px rgba(16,185,129,0.4);
+  }
+
+  /* Screen indicator */
+  .screen-indicator {
+    display: flex;
+    gap: 8px;
+    margin-top: 30px;
+  }
+  .screen-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .screen-dot.active { background: var(--orange); width: 24px; border-radius: 4px; }
+
+  /* ============================================ */
+  /* SCREEN 3: POLISHED DASHBOARD                 */
+  /* ============================================ */
+  .dashboard-mock {
+    display: flex;
+    min-height: 100vh;
+    background: var(--cream);
+  }
+  .dash-sidebar {
+    width: 240px;
+    background: var(--dark);
+    padding: 24px 16px;
+    flex-shrink: 0;
+  }
+  .dash-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    margin-bottom: 32px;
+  }
+  .dash-logo-icon {
+    width: 36px; height: 36px;
+    background: var(--orange);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .dash-logo-text {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+  }
+
+  .dash-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #c5c3c1;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .dash-nav-item.active {
+    background: rgba(255,148,25,0.15);
+    color: var(--orange);
+  }
+  .dash-nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    background: var(--orange);
+    border-radius: 2px;
+    animation: slideIn 0.3s ease-out;
+  }
+  @keyframes slideIn {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+
+  /* Main content */
+  .dash-main {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+    color: var(--dark);
+  }
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .dash-header h1 { font-size: 28px; font-weight: 800; color: var(--dark); }
+  .xp-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+  }
+  .streak-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(239,68,68,0.1);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--red);
+  }
+  .level-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(42,110,232,0.1), rgba(80,136,236,0.1));
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--blue);
+    border: 1px solid rgba(42,110,232,0.2);
+  }
+
+  /* Roadmap */
+  .roadmap-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    margin-bottom: 24px;
+  }
+  .road-dot {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .road-dot:hover { transform: scale(1.1); }
+  .road-dot.completed { background: var(--green); color: white; }
+  .road-dot.current {
+    background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+    color: white;
+    box-shadow: 0 0 0 4px rgba(255,148,25,0.2);
+    animation: ringPulse 2s infinite;
+  }
+  @keyframes ringPulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(255,148,25,0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(255,148,25,0.1); }
+  }
+  .road-dot.future { background: #eae9e8; color: var(--taupe); }
+  .road-connector { flex: 1; height: 3px; background: #eae9e8; border-radius: 2px; }
+  .road-connector.done { background: var(--green); }
+  .road-connector.active { background: linear-gradient(90deg, var(--green), var(--orange)); }
+
+  /* Activity Cards */
+  .activities-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .activity-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid #f0efee;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    animation: cardSlideUp 0.4s ease-out both;
+  }
+  .activity-card:nth-child(1) { animation-delay: 0s; }
+  .activity-card:nth-child(2) { animation-delay: 0.06s; }
+  .activity-card:nth-child(3) { animation-delay: 0.12s; }
+  .activity-card:nth-child(4) { animation-delay: 0.18s; }
+  .activity-card:nth-child(5) { animation-delay: 0.24s; }
+  @keyframes cardSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .activity-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-color: rgba(255,148,25,0.2);
+  }
+  .activity-card.completed {
+    border-left: 3px solid var(--green);
+    background: linear-gradient(90deg, #f0fdf4, white);
+  }
+  .activity-card.in-progress {
+    border-left: 3px solid var(--orange);
+    background: linear-gradient(90deg, #fffbeb, white);
+    box-shadow: 0 0 0 2px rgba(255,148,25,0.1);
+  }
+  .activity-card.challenge {
+    border: 1px solid rgba(139,92,246,0.2);
+    background: linear-gradient(90deg, #f5f3ff, white);
+  }
+  .activity-card.challenge .act-type-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+  .act-type-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .act-type-icon.study { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+  .act-type-icon.trainer { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+  .act-type-icon.hands-on { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+
+  .act-content { flex: 1; }
+  .act-content h4 { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .act-meta { font-size: 12px; color: var(--taupe); }
+
+  .act-right { display: flex; align-items: center; gap: 12px; }
+  .act-xp {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #92400e;
+    background: #fef3c7;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .act-status {
+    padding: 5px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .act-status.done { background: #d1fae5; color: #065f46; }
+  .act-status.active { background: #fff7ed; color: #9a3412; }
+  .act-status.pending { background: #f3f4f6; color: #6b7280; }
+  .act-status.challenge-badge { background: #ede9fe; color: #6d28d9; }
+
+  /* Right sidebar */
+  .dash-sidebar-right {
+    width: 280px;
+    padding: 24px 16px;
+    flex-shrink: 0;
+  }
+  .progress-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
+  }
+  .progress-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--taupe);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .progress-bar-bg {
+    height: 10px;
+    background: #f3f4f6;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    animation: progressGrow 1s ease-out;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes progressGrow {
+    from { width: 0; }
+  }
+  .progress-pct {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    color: var(--dark);
+  }
+
+  /* Achievements */
+  .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .achievement {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    background: #f9fafb;
+    border-radius: 12px;
+    font-size: 10px;
+    color: var(--taupe);
+    text-align: center;
+  }
+  .achievement.earned {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+  }
+  .achievement .badge-icon { font-size: 24px; margin-bottom: 2px; }
+  .achievement.locked { opacity: 0.4; filter: grayscale(1); }
+
+  /* Leaderboard */
+  .leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 13px;
+  }
+  .leaderboard-item:last-child { border: none; }
+  .lb-rank {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: var(--taupe);
+  }
+  .lb-rank.gold { background: #fef3c7; color: #92400e; }
+  .lb-name { flex: 1; font-weight: 500; color: var(--dark); }
+  .lb-name.you { color: var(--orange); font-weight: 700; }
+  .lb-xp { font-family: 'Barlow', sans-serif; font-weight: 700; color: var(--taupe); font-size: 12px; }
+
+  /* ============================================ */
+  /* SCREEN 4: METRICS DASHBOARD                  */
+  /* ============================================ */
+  .metrics-page {
+    min-height: 100vh;
+    background: var(--cream);
+    display: flex;
+  }
+  .metrics-main { flex: 1; padding: 24px 32px; color: var(--dark); }
+  .metrics-main h1 { font-size: 28px; font-weight: 800; margin-bottom: 24px; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .kpi-label { font-size: 12px; font-weight: 600; color: var(--taupe); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .kpi-value {
+    font-family: 'Barlow', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--dark);
+  }
+  .kpi-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .kpi-trend.up { background: #d1fae5; color: #065f46; }
+  .kpi-trend.down { background: #fee2e2; color: #991b1b; }
+
+  /* Sparkline (fake) */
+  .sparkline {
+    height: 32px;
+    margin-top: 12px;
+    background: linear-gradient(90deg, transparent, rgba(255,148,25,0.08));
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sparkline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--orange), var(--green));
+    clip-path: polygon(0% 80%, 10% 60%, 20% 70%, 30% 40%, 40% 50%, 50% 30%, 60% 45%, 70% 20%, 80% 35%, 90% 15%, 100% 10%, 100% 100%, 0% 100%);
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  /* Before/After */
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .comparison-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .comparison-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .comparison-card.old { border-top: 3px solid #d1d5db; }
+  .comparison-card.new { border-top: 3px solid var(--green); }
+  .comp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+  }
+  .comp-row:last-child { border: none; }
+  .comp-label { color: var(--taupe); }
+  .comp-value { font-family: 'Barlow', sans-serif; font-weight: 700; }
+  .comp-value.good { color: var(--green); }
+  .comp-value.bad { color: var(--red); }
+  .comp-value.neutral { color: var(--taupe); }
+
+  /* Heat map */
+  .heatmap-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .heatmap-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 20px; }
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: 180px repeat(4, 1fr);
+    gap: 4px;
+    font-size: 12px;
+  }
+  .hm-header { font-weight: 700; color: var(--taupe); padding: 8px; text-align: center; }
+  .hm-label { padding: 8px; color: var(--dark); font-weight: 500; display: flex; align-items: center; }
+  .hm-cell {
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .hm-cell.fast { background: #d1fae5; color: #065f46; }
+  .hm-cell.on-time { background: #dbeafe; color: #1e40af; }
+  .hm-cell.slow { background: #fef3c7; color: #92400e; }
+  .hm-cell.struggling { background: #fee2e2; color: #991b1b; }
+
+  /* ============================================ */
+  /* RESPONSIVE                                   */
+  /* ============================================ */
+  @media (max-width: 768px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .comparison-grid { grid-template-columns: 1fr; }
+    .dashboard-mock { flex-direction: column; }
+    .dash-sidebar, .dash-sidebar-right { width: 100%; }
+    .heatmap-grid { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MOCKUP NAVIGATION -->
+<nav class="mockup-nav">
+  <span class="label">Mockup</span>
+  <button class="active" onclick="showScreen('landing')">Landing Page</button>
+  <button onclick="showScreen('welcome1')">Welcome: Intro</button>
+  <button onclick="showScreen('welcome2')">Welcome: Role</button>
+  <button onclick="showScreen('welcome3')">Welcome: Coach</button>
+  <button onclick="showScreen('welcome4')">Welcome: Journey</button>
+  <button onclick="showScreen('welcome5')">Welcome: Ready</button>
+  <button onclick="showScreen('dashboard')">Dashboard</button>
+  <button onclick="showScreen('metrics')">Metrics</button>
+</nav>
+
+<!-- ============================================ -->
+<!-- SCREEN 1: SCROLL LANDING PAGE                -->
+<!-- ============================================ -->
+<div id="landing" class="screen active">
+  <div class="landing-hero">
+    <div class="landing-badge">
+      <span class="dot"></span>
+      Now live for StoreHub teams
+    </div>
+    <h1>
+      <span class="word" style="animation-delay: 0.1s">Your </span>
+      <span class="word highlight" style="animation-delay: 0.3s">journey </span>
+      <span class="word" style="animation-delay: 0.5s">to </span>
+      <span class="word highlight" style="animation-delay: 0.7s">excellence </span>
+      <br>
+      <span class="word" style="animation-delay: 0.9s">starts </span>
+      <span class="word" style="animation-delay: 1.1s">here.</span>
+    </h1>
+    <p>A modern training platform for StoreHub teams. Track progress, master products, and grow your skills.</p>
+    <a class="landing-cta" href="#">Get Started <span style="font-size: 20px;">&#8594;</span></a>
+    <div class="scroll-indicator">
+      <span>Scroll to explore</span>
+      <span style="font-size: 20px;">&#8595;</span>
+    </div>
+  </div>
+
+  <div class="landing-section">
+    <h2>Everything you need to <span style="color: var(--orange)">succeed</span></h2>
+    <p class="subtitle">From Day 1 basics to role mastery — your learning path, structured and tracked.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #fff7ed, #ffedd5);">&#128218;</div>
+        <h3>Modular Learning</h3>
+        <p>5 focused modules per day. No more 56-slide marathons — learn what matters, when it matters.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #eff6ff, #dbeafe);">&#127919;</div>
+        <h3>Hands-On First</h3>
+        <p>Configure real BackOffice settings from Day 1. Every feature: demo, configure, verify.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7);">&#128200;</div>
+        <h3>Track Everything</h3>
+        <p>XP, levels, achievements, streaks. See exactly where you are and how you're improving.</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-number">7+</div>
+        <div class="stat-label">Training Roles</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Day Programs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Hands-On</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Access</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCREEN 2: WELCOME - INTRO                    -->
+<!-- ============================================ -->
+<div id="welcome1" class="screen">
+  <div class="welcome-screen welcome-1">
+    <div class="particles">
+      <div class="particle" style="top:20%;left:10%;animation-delay:0s;"></div>
+      <div class="particle" style="top:40%;left:80%;animation-delay:1s;"></div>
+      <div class="particle" style="top:70%;left:30%;animation-delay:2s;"></div>
+      <div class="particle" style="top:30%;left:60%;animation-delay:0.5s;"></div>
+      <div class="particle" style="top:80%;left:70%;animation-delay:1.5s;"></div>
+    </div>
+    <div class="welcome-logo">&#9889;</div>
+    <div class="welcome-title">Welcome to StoreHub</div>
+    <div class="typewriter">Hello, Andrea. We've been expecting you.</div>
+    <p style="color: rgba(255,255,255,0.4); max-width: 400px; line-height: 1.7;">Your training journey is about to begin. Over the next few days, you'll go from newcomer to product expert.</p>
+    <div class="screen-indicator">
+      <div class="screen-dot active"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+    </div>
+    <div class="tap-continue">Tap to continue &#9654;</div>
+  </div>
+</div>
+
+<!-- SCREEN 3: WELCOME - YOUR ROLE -->
+<div id="welcome2" class="screen">
+  <div class="welcome-screen welcome-2">
+    <div class="particles">
+      <div class="particle" style="top:15%;left:20%;animation-delay:0.3s;"></div>
+      <div class="particle" style="top:50%;left:75%;animation-delay:1.2s;"></div>
+      <div class="particle" style="top:85%;left:40%;animation-delay:0.8s;"></div>
+    </div>
+    <div style="font-size: 56px; margin-bottom: 24px;">&#128188;</div>
+    <div class="welcome-title">Your Role</div>
+    <div class="role-card">
+      <div class="role-badge">Onboarding Coordinator</div>
+      <h3>You're the operational backbone</h3>
+      <p>You ensure every new merchant gets set up smoothly — from BackOffice to delivery.</p>
+      <div class="role-pillars">
+        <div class="pillar"><div class="pillar-dot"></div>BackOffice & Beep Store Setup</div>
+        <div class="pillar"><div class="pillar-dot"></div>Manage Beep Collateral Requests</div>
+        <div class="pillar"><div class="pillar-dot"></div>Collateral Fulfillment</div>
+        <div class="pillar"><div class="pillar-dot"></div>Coordinate Collateral Delivery</div>
+        <div class="pillar"><div class="pillar-dot"></div>Manage GHL Setups</div>
+      </div>
+    </div>
+    <div class="screen-indicator">
+      <div class="screen-dot"></div>
+      <div class="screen-dot active"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+    </div>
+    <div class="tap-continue">Tap to continue &#9654;</div>
+  </div>
+</div>
+
+<!-- SCREEN 4: WELCOME - YOUR COACH -->
+<div id="welcome3" class="screen">
+  <div class="welcome-screen welcome-3">
+    <div class="particles">
+      <div class="particle" style="top:25%;left:15%;animation-delay:0.5s;"></div>
+      <div class="particle" style="top:60%;left:85%;animation-delay:1s;"></div>
+    </div>
+    <div class="coach-avatar">AK</div>
+    <div class="welcome-title" style="font-size: 36px;">Meet Your Coach</div>
+    <div class="dialogue-box" style="margin: 24px auto;">
+      <div class="dialogue-name">Andrea Kaur</div>
+      <div class="dialogue-text">Hi there! I'm Andrea, and I'll be guiding you through the next 4 days. Don't worry — I've got your back every step of the way. Let's make this fun. &#128522;</div>
+    </div>
+    <p style="color: rgba(255,255,255,0.4); font-size: 14px;">Your coach will check in daily and review your progress.</p>
+    <div class="screen-indicator">
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot active"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+    </div>
+    <div class="tap-continue">Tap to continue &#9654;</div>
+  </div>
+</div>
+
+<!-- SCREEN 5: WELCOME - YOUR JOURNEY -->
+<div id="welcome4" class="screen">
+  <div class="welcome-screen welcome-4">
+    <div style="font-size: 56px; margin-bottom: 24px;">&#128506;</div>
+    <div class="welcome-title" style="font-size: 36px;">Your Journey</div>
+    <div class="welcome-subtitle">4 days from newcomer to specialist</div>
+    <div class="timeline">
+      <div class="timeline-line"><div class="timeline-line-fill"></div></div>
+      <div class="timeline-node">
+        <div class="timeline-dot active">1</div>
+        <div class="timeline-label"><strong>What & Why</strong>StoreHub overview</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-dot future">2</div>
+        <div class="timeline-label"><strong>The How</strong>Hands-on config</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-dot future">3</div>
+        <div class="timeline-label"><strong>Integrate</strong>Connect & fix</div>
+      </div>
+      <div class="timeline-node">
+        <div class="timeline-dot future">4</div>
+        <div class="timeline-label"><strong>Specialize</strong>Role mastery</div>
+      </div>
+    </div>
+
+    <div class="dialogue-box" style="margin: 40px auto 0; max-width: 480px;">
+      <div class="dialogue-name">Scoring</div>
+      <div class="dialogue-text">
+        <strong>Learning Score (80%)</strong> — Quizzes + assessments<br>
+        <strong>Participation (5-20%)</strong> — Task completion, culture, attendance<br><br>
+        <span style="color: var(--orange);">High participation = insurance against weaker assessments!</span>
+      </div>
+    </div>
+
+    <div class="screen-indicator">
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot active"></div>
+      <div class="screen-dot"></div>
+    </div>
+    <div class="tap-continue">Tap to continue &#9654;</div>
+  </div>
+</div>
+
+<!-- SCREEN 6: WELCOME - READY -->
+<div id="welcome5" class="screen">
+  <div class="welcome-screen welcome-5">
+    <div class="particles">
+      <div class="particle" style="top:20%;left:25%;animation-delay:0s;width:6px;height:6px;background:var(--green);"></div>
+      <div class="particle" style="top:40%;left:70%;animation-delay:0.7s;width:6px;height:6px;background:var(--orange);"></div>
+      <div class="particle" style="top:75%;left:35%;animation-delay:1.4s;width:6px;height:6px;background:var(--blue);"></div>
+    </div>
+    <div style="font-size: 72px; margin-bottom: 20px;">&#127891;</div>
+    <div class="welcome-title">You're Ready</div>
+    <div class="welcome-subtitle">Your training starts now. Earn XP, level up, and become a StoreHub expert.</div>
+    <div style="display: flex; gap: 24px; margin: 24px 0;">
+      <div style="text-align: center;">
+        <div style="font-size: 28px; margin-bottom: 4px;">&#9889;</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5);">Earn XP</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-size: 28px; margin-bottom: 4px;">&#128293;</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5);">Build Streaks</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-size: 28px; margin-bottom: 4px;">&#127942;</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5);">Unlock Badges</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-size: 28px; margin-bottom: 4px;">&#128200;</div>
+        <div style="font-size: 12px; color: rgba(255,255,255,0.5);">Level Up</div>
+      </div>
+    </div>
+    <button class="welcome-cta">Start My Training &#8594;</button>
+    <div style="margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.3);">+50 XP for completing onboarding</div>
+    <div class="screen-indicator">
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot"></div>
+      <div class="screen-dot active"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCREEN 7: POLISHED DASHBOARD                 -->
+<!-- ============================================ -->
+<div id="dashboard" class="screen">
+  <div class="dashboard-mock">
+    <!-- Sidebar -->
+    <div class="dash-sidebar">
+      <div class="dash-logo">
+        <div class="dash-logo-icon">&#9889;</div>
+        <div class="dash-logo-text">Learning Hub</div>
+      </div>
+      <div class="dash-nav-item active">&#128218; My Training</div>
+      <div class="dash-nav-item">&#128200; My Scores</div>
+      <div class="dash-nav-item">&#128218; Resources</div>
+      <div class="dash-nav-item">&#127891; Certificate</div>
+    </div>
+
+    <!-- Main -->
+    <div class="dash-main">
+      <div class="dash-header">
+        <div>
+          <h1>My Training</h1>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <div class="level-badge">&#11088; Level 2: Explorer</div>
+            <div class="streak-badge">&#128293; 3 day streak</div>
+          </div>
+        </div>
+        <div class="xp-badge">&#9889; 450 XP</div>
+      </div>
+
+      <!-- Roadmap -->
+      <div class="roadmap-bar">
+        <div class="road-dot completed">&#10003;</div>
+        <div class="road-connector done"></div>
+        <div class="road-dot completed">&#10003;</div>
+        <div class="road-connector active"></div>
+        <div class="road-dot current">3</div>
+        <div class="road-connector"></div>
+        <div class="road-dot future">4</div>
+        <div class="road-connector"></div>
+        <div class="road-dot future">5</div>
+      </div>
+
+      <!-- Day header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 20px; font-weight: 700;">Day 3: Integrate & Fix</h2>
+          <div style="font-size: 13px; color: var(--taupe);">Wednesday, Apr 9 &bull; 6 activities</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;">&#128270; Cmd+K</div>
+        </div>
+      </div>
+
+      <!-- Activities -->
+      <div class="activities-grid">
+        <div class="activity-card completed">
+          <div class="act-type-icon trainer">&#128218;</div>
+          <div class="act-content">
+            <h4>Module F: External Platform Connections</h4>
+            <div class="act-meta">9:30 AM - 10:30 AM &bull; 1h &bull; Self-Study</div>
+          </div>
+          <div class="act-right">
+            <div class="act-xp">+100 XP</div>
+            <div class="act-status done">&#10003; Done</div>
+          </div>
+        </div>
+
+        <div class="activity-card in-progress">
+          <div class="act-type-icon hands-on">&#128736;</div>
+          <div class="act-content">
+            <h4>KDS & MRS Configuration</h4>
+            <div class="act-meta">10:30 AM - 12:00 PM &bull; 1.5h &bull; Hands-On</div>
+          </div>
+          <div class="act-right">
+            <div class="act-xp" style="background: #fff7ed; color: #9a3412;">~150 XP</div>
+            <div class="act-status active">&#9201; 42:15</div>
+          </div>
+        </div>
+
+        <div class="activity-card" style="opacity: 0.5;">
+          <div class="act-type-icon" style="background: #f3f4f6;">&#127860;</div>
+          <div class="act-content">
+            <h4>Lunch Break</h4>
+            <div class="act-meta">12:00 PM - 1:00 PM &bull; 1h</div>
+          </div>
+          <div class="act-right">
+            <div class="act-status pending">Break</div>
+          </div>
+        </div>
+
+        <div class="activity-card">
+          <div class="act-type-icon study">&#128218;</div>
+          <div class="act-content">
+            <h4>Report Discrepancies & Troubleshooting</h4>
+            <div class="act-meta">1:00 PM - 2:30 PM &bull; 1.5h &bull; Self-Study</div>
+          </div>
+          <div class="act-right">
+            <div class="act-xp" style="background: #f3f4f6; color: #9ca3af;">150 XP</div>
+            <div class="act-status pending">Pending</div>
+          </div>
+        </div>
+
+        <div class="activity-card challenge">
+          <div class="act-type-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">&#9876;</div>
+          <div class="act-content">
+            <h4>&#9876; Hardware Assessment Challenge</h4>
+            <div class="act-meta">3:00 PM - 4:00 PM &bull; 1h &bull; Assessment</div>
+          </div>
+          <div class="act-right">
+            <div class="act-xp" style="background: #ede9fe; color: #6d28d9;">200 XP</div>
+            <div class="act-status challenge-badge">Challenge</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right sidebar -->
+    <div class="dash-sidebar-right">
+      <div class="progress-card">
+        <h4>Overall Progress</h4>
+        <div class="progress-pct">58%</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" style="width: 58%; background: linear-gradient(90deg, var(--green), var(--orange));"></div>
+        </div>
+        <div style="font-size: 12px; color: var(--taupe); margin-top: 4px;">Day 3 of 5 &bull; On schedule</div>
+      </div>
+
+      <div class="progress-card">
+        <h4>Achievements</h4>
+        <div class="badge-grid">
+          <div class="achievement earned">
+            <span class="badge-icon">&#9889;</span>
+            <span>Early Bird</span>
+          </div>
+          <div class="achievement earned">
+            <span class="badge-icon">&#11088;</span>
+            <span>Perfect Day</span>
+          </div>
+          <div class="achievement">
+            <span class="badge-icon">&#128270;</span>
+            <span>Curious</span>
+          </div>
+          <div class="achievement locked">
+            <span class="badge-icon">&#127942;</span>
+            <span>Champion</span>
+          </div>
+          <div class="achievement locked">
+            <span class="badge-icon">&#128161;</span>
+            <span>Reflective</span>
+          </div>
+          <div class="achievement locked">
+            <span class="badge-icon">&#127891;</span>
+            <span>Graduate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-card">
+        <h4>Batch Leaderboard</h4>
+        <div class="leaderboard-item">
+          <div class="lb-rank gold">1</div>
+          <div class="lb-name you">You &#128293;</div>
+          <div class="lb-xp">450 XP</div>
+        </div>
+        <div class="leaderboard-item">
+          <div class="lb-rank">2</div>
+          <div class="lb-name">Amirul H.</div>
+          <div class="lb-xp">380 XP</div>
+        </div>
+        <div class="leaderboard-item">
+          <div class="lb-rank">3</div>
+          <div class="lb-name">Sarah L.</div>
+          <div class="lb-xp">320 XP</div>
+        </div>
+        <div class="leaderboard-item">
+          <div class="lb-rank">4</div>
+          <div class="lb-name">Jason T.</div>
+          <div class="lb-xp">290 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SCREEN 8: METRICS DASHBOARD                  -->
+<!-- ============================================ -->
+<div id="metrics" class="screen">
+  <div class="metrics-page">
+    <div class="dash-sidebar">
+      <div class="dash-logo">
+        <div class="dash-logo-icon">&#9889;</div>
+        <div class="dash-logo-text">Learning Hub</div>
+      </div>
+      <div class="dash-nav-item">&#128100; Trainees</div>
+      <div class="dash-nav-item">&#128218; Assessments</div>
+      <div class="dash-nav-item">&#128200; Reports</div>
+      <div class="dash-nav-item active">&#128202; Metrics</div>
+      <div class="dash-nav-item">&#9881; Settings</div>
+    </div>
+
+    <div class="metrics-main">
+      <h1>Training Quality Dashboard</h1>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Engagement Score</div>
+          <div class="kpi-value">82</div>
+          <div class="kpi-trend up">&#9650; +12% vs last week</div>
+          <div class="sparkline"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Completion Velocity</div>
+          <div class="kpi-value">4.2d</div>
+          <div class="kpi-trend up">&#9650; 0.8d faster</div>
+          <div class="sparkline"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Module Effectiveness</div>
+          <div class="kpi-value">78%</div>
+          <div class="kpi-trend up">&#9650; +5%</div>
+          <div class="sparkline"></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Trainee Satisfaction</div>
+          <div class="kpi-value">4.3</div>
+          <div class="kpi-trend up">&#9650; +0.4</div>
+          <div class="sparkline"></div>
+        </div>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="comparison-card old">
+          <h3><span style="color: #9ca3af;">&#9711;</span> Old Training (Pre-LMS)</h3>
+          <div class="comp-row">
+            <span class="comp-label">Completion Rate</span>
+            <span class="comp-value neutral">71%</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Avg Assessment Score</span>
+            <span class="comp-value neutral">68%</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Time to Competency</span>
+            <span class="comp-value bad">5.8 days</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Trainee Confidence</span>
+            <span class="comp-value neutral">3.1 / 5</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Coach Escalations / Week</span>
+            <span class="comp-value bad">12</span>
+          </div>
+        </div>
+        <div class="comparison-card new">
+          <h3><span style="color: var(--green);">&#9679;</span> New LMS (Current)</h3>
+          <div class="comp-row">
+            <span class="comp-label">Completion Rate</span>
+            <span class="comp-value good">89% (+18%)</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Avg Assessment Score</span>
+            <span class="comp-value good">81% (+13%)</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Time to Competency</span>
+            <span class="comp-value good">4.2 days (-28%)</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Trainee Confidence</span>
+            <span class="comp-value good">4.3 / 5 (+39%)</span>
+          </div>
+          <div class="comp-row">
+            <span class="comp-label">Coach Escalations / Week</span>
+            <span class="comp-value good">5 (-58%)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="heatmap-card">
+        <h3>Module Effectiveness Heat Map</h3>
+        <div class="heatmap-grid">
+          <div class="hm-header"></div>
+          <div class="hm-header">&#9889; Fast</div>
+          <div class="hm-header">&#10003; On Time</div>
+          <div class="hm-header">&#128260; Slow</div>
+          <div class="hm-header">&#9888; Struggling</div>
+
+          <div class="hm-label">Module A: Welcome</div>
+          <div class="hm-cell fast">45%</div>
+          <div class="hm-cell on-time">40%</div>
+          <div class="hm-cell slow">12%</div>
+          <div class="hm-cell">3%</div>
+
+          <div class="hm-label">Module B: Software</div>
+          <div class="hm-cell fast">30%</div>
+          <div class="hm-cell on-time">45%</div>
+          <div class="hm-cell slow">18%</div>
+          <div class="hm-cell">7%</div>
+
+          <div class="hm-label">Module C: Hardware</div>
+          <div class="hm-cell">15%</div>
+          <div class="hm-cell on-time">35%</div>
+          <div class="hm-cell slow">30%</div>
+          <div class="hm-cell struggling">20%</div>
+
+          <div class="hm-label">Module D: Features</div>
+          <div class="hm-cell fast">25%</div>
+          <div class="hm-cell on-time">42%</div>
+          <div class="hm-cell slow">23%</div>
+          <div class="hm-cell">10%</div>
+
+          <div class="hm-label">BackOffice Config</div>
+          <div class="hm-cell">10%</div>
+          <div class="hm-cell on-time">30%</div>
+          <div class="hm-cell struggling">35%</div>
+          <div class="hm-cell struggling">25%</div>
+
+          <div class="hm-label">Hardware Assessment</div>
+          <div class="hm-cell fast">20%</div>
+          <div class="hm-cell on-time">38%</div>
+          <div class="hm-cell slow">27%</div>
+          <div class="hm-cell">15%</div>
+        </div>
+        <div style="margin-top: 16px; padding: 12px 16px; background: #fef2f2; border-radius: 10px; font-size: 13px; color: #991b1b;">
+          &#9888; <strong>Needs attention:</strong> BackOffice Config has 60% slow/struggling — consider adding guided walkthrough video
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.mockup-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>

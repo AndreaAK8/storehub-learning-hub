@@ -1,4 +1,6 @@
 export { TrainingRoadmap } from './TrainingRoadmap'
+export { ForkIntroModal } from './ForkIntroModal'
+export { DayIntroCard } from './DayIntroCard'
 export { DaySchedule } from './DaySchedule'
 export { ActivityCard } from './ActivityCard'
 export type { ActivityPerformance } from './ActivityCard'
