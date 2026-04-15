@@ -40,10 +40,10 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
   }
 
   const dayColors: Record<number, { card: string; badge: string }> = {
-    3: { card: 'bg-amber-50 border-amber-200 text-amber-900', badge: 'bg-amber-200 text-amber-800' },
-    4: { card: 'bg-orange-50 border-orange-200 text-orange-900', badge: 'bg-orange-200 text-orange-800' },
-    5: { card: 'bg-orange-100 border-orange-300 text-orange-900', badge: 'bg-orange-300 text-orange-900' },
-    6: { card: 'bg-red-50 border-red-200 text-red-900', badge: 'bg-red-200 text-red-800' },
+    3: { card: 'bg-sky-50 border-sky-200 text-sky-900', badge: 'bg-sky-200 text-sky-800' },
+    4: { card: 'bg-indigo-50 border-indigo-200 text-indigo-900', badge: 'bg-indigo-200 text-indigo-800' },
+    5: { card: 'bg-violet-50 border-violet-200 text-violet-900', badge: 'bg-violet-200 text-violet-800' },
+    6: { card: 'bg-emerald-50 border-emerald-200 text-emerald-900', badge: 'bg-emerald-200 text-emerald-800' },
   }
 
   return (
@@ -108,42 +108,38 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                 </h3>
                 <div className="flex flex-col items-center gap-0 select-none">
                   {/* Peak — Mock Test */}
-                  <div className="flex flex-col items-center w-full">
-                    <div className="w-36 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl py-3 px-4 text-center shadow-md">
-                      <div className="text-xs font-semibold opacity-80 mb-0.5">Day 6</div>
-                      <div className="text-sm font-bold">🏆 Mock Test</div>
-                    </div>
-                    {/* Arrow up */}
-                    <div className="flex flex-col items-center my-1">
-                      <div className="w-0.5 h-4 bg-slate-300" />
-                      <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '8px solid #cbd5e1', transform: 'rotate(180deg)' }} />
-                    </div>
+                  <div className="w-40 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto">
+                    <div className="text-xs font-semibold opacity-75 mb-0.5">Day 6</div>
+                    <div className="text-sm font-bold">🏆 Mock Test</div>
+                  </div>
+
+                  {/* Arrow pointing UP toward Mock Test */}
+                  <div className="flex flex-col items-center my-1">
+                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #a78bfa' }} />
+                    <div className="w-0.5 h-5 bg-violet-300" />
                   </div>
 
                   {/* Middle — Full Pitching */}
-                  <div className="flex flex-col items-center w-full">
-                    <div className="w-56 bg-gradient-to-br from-orange-400 to-orange-500 text-white rounded-xl py-3 px-4 text-center shadow-md">
-                      <div className="text-xs font-semibold opacity-80 mb-0.5">Day 5</div>
-                      <div className="text-sm font-bold">🎤 Full Pitching</div>
-                    </div>
-                    {/* Arrow up */}
-                    <div className="flex flex-col items-center my-1">
-                      <div className="w-0.5 h-4 bg-slate-300" />
-                      <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '8px solid #cbd5e1', transform: 'rotate(180deg)' }} />
-                    </div>
+                  <div className="w-60 bg-gradient-to-br from-sky-400 to-indigo-500 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto">
+                    <div className="text-xs font-semibold opacity-75 mb-0.5">Day 5</div>
+                    <div className="text-sm font-bold">🎤 Full Pitching</div>
+                  </div>
+
+                  {/* Arrow pointing UP toward Full Pitching */}
+                  <div className="flex flex-col items-center my-1">
+                    <div className="w-0 h-0" style={{ borderLeft: '7px solid transparent', borderRight: '7px solid transparent', borderBottom: '10px solid #7dd3fc' }} />
+                    <div className="w-0.5 h-5 bg-sky-300" />
                   </div>
 
                   {/* Base — Pitching + SPIN + Closing */}
-                  <div className="w-full">
-                    <div className="w-full bg-gradient-to-br from-amber-400 to-amber-500 text-white rounded-xl py-3 px-4 shadow-md">
-                      <div className="text-xs font-semibold opacity-80 mb-1 text-center">Days 3–4 · Foundation</div>
-                      <div className="flex items-center justify-center gap-2 flex-wrap">
-                        <span className="bg-white/25 rounded-lg px-3 py-1 text-sm font-bold">Pitching</span>
-                        <span className="opacity-60 text-lg">+</span>
-                        <span className="bg-white/25 rounded-lg px-3 py-1 text-sm font-bold">SPIN</span>
-                        <span className="opacity-60 text-lg">+</span>
-                        <span className="bg-white/25 rounded-lg px-3 py-1 text-sm font-bold">Closing</span>
-                      </div>
+                  <div className="w-full bg-gradient-to-br from-teal-400 to-cyan-500 text-white rounded-2xl py-4 px-4 shadow-md">
+                    <div className="text-xs font-semibold opacity-75 mb-2 text-center">Days 3–4 · Foundation</div>
+                    <div className="flex items-center justify-center gap-2 flex-wrap">
+                      <span className="bg-white/25 rounded-xl px-3 py-1.5 text-sm font-bold">Pitching</span>
+                      <span className="opacity-50 font-bold">+</span>
+                      <span className="bg-white/25 rounded-xl px-3 py-1.5 text-sm font-bold">SPIN</span>
+                      <span className="opacity-50 font-bold">+</span>
+                      <span className="bg-white/25 rounded-xl px-3 py-1.5 text-sm font-bold">Closing</span>
                     </div>
                   </div>
                 </div>
