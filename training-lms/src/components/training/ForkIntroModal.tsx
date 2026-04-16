@@ -54,7 +54,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
         {/* Header */}
         <div className="px-6 py-5 text-white" style={{ background: '#2f2922' }}>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-widest px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.12)', color: '#c5c0bb', border: '1px solid rgba(255,255,255,0.15)' }}>
+            <span className="text-xs font-semibold uppercase tracking-widest px-2.5 py-0.5 rounded-full" style={{ background: '#ff9419', color: 'white' }}>
               Role-Specific Phase
             </span>
           </div>
