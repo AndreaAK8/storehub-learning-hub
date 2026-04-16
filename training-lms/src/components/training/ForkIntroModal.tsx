@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 
 interface ChecklistItem {
   text: string
@@ -53,25 +52,16 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
-        <div className="relative bg-gradient-to-br from-[var(--sh-orange)] to-orange-600 px-6 py-6 text-white overflow-hidden">
-          {/* Illustration — decorative, right-aligned, partially cropped for depth */}
-          <div className="absolute right-0 top-0 bottom-0 w-36 opacity-20 pointer-events-none">
-            <Image
-              src="/illustrations/journey.svg"
-              alt=""
-              fill
-              className="object-cover object-left"
-            />
+        <div className="px-6 py-5 text-white" style={{ background: '#2f2922' }}>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: '#ff9419', color: 'white' }}>
+              Role-Specific Phase
+            </span>
           </div>
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">🚀</span>
-              <span className="text-xs font-semibold opacity-75 uppercase tracking-widest">Role-Specific Phase</span>
-            </div>
-            <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
-              {data.title}
-            </h2>
-          </div>
+          <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
+            {data.title}
+          </h2>
+          <p className="text-sm mt-1" style={{ color: '#c5c0bb' }}>Days 3 – 6 · Your path to becoming a BC</p>
         </div>
 
         {/* Tab nav */}
