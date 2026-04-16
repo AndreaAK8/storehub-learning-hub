@@ -61,7 +61,10 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
           <h2 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
             {data.title}
           </h2>
-          <p className="text-sm mt-1" style={{ color: '#c5c0bb' }}>Days 3 – 6 · Your path to becoming a BC</p>
+          <h1 className="text-xl mt-2" style={{ color: '#ffffff', fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
+            <span className="font-bold">Days 3 – 6.</span>
+            <span className="font-normal"> Your path to becoming a BC.</span>
+          </h1>
         </div>
 
         {/* Tab nav */}
