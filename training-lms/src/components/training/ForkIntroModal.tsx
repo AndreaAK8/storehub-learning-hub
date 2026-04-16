@@ -6,6 +6,7 @@ interface ChecklistItem {
   text: string
   required: boolean
   steps?: string[]
+  gif?: string
 }
 
 interface WhatToExpectItem {
@@ -235,6 +236,11 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                     {/* Expandable steps */}
                     {item.steps && expanded[idx] && (
                       <div className="px-4 pb-3 pt-0 border-t" style={{ borderColor: checked[idx] ? '#bbf7d0' : item.required ? '#fecaca' : '#e2e8f0' }}>
+                        {item.gif && (
+                          <div className="mt-3 mb-2 rounded-lg overflow-hidden border border-slate-200">
+                            <img src={item.gif} alt="How-to guide" className="w-full h-auto" />
+                          </div>
+                        )}
                         <ol className="mt-2 space-y-1.5">
                           {item.steps.map((step, si) => (
                             <li key={si} className="flex items-start gap-2 text-xs text-slate-600">
