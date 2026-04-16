@@ -54,7 +54,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
         {/* Header */}
         <div className="px-6 py-5 text-white" style={{ background: '#2f2922' }}>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: '#ff9419', color: 'white' }}>
+            <span className="text-xs font-semibold uppercase tracking-widest px-2.5 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.12)', color: '#c5c0bb', border: '1px solid rgba(255,255,255,0.15)' }}>
               Role-Specific Phase
             </span>
           </div>
@@ -113,39 +113,39 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                   Your Learning Path
                 </h3>
                 <div className="flex flex-col items-center gap-0 select-none">
-                  {/* Peak — Mock Test (brand black = final challenge, authoritative) */}
-                  <div className="w-44 text-white rounded-2xl py-3 px-4 text-center shadow-lg mx-auto" style={{ background: 'linear-gradient(135deg, #2f2922 0%, #1a1410 100%)' }}>
-                    <div className="text-xs font-semibold opacity-60 mb-0.5">Day 6</div>
+                  {/* Peak — Mock Test: brand black, authoritative */}
+                  <div className="w-44 text-white rounded-2xl py-3 px-4 text-center shadow-lg mx-auto" style={{ background: '#2f2922' }}>
+                    <div className="text-xs font-medium mb-0.5" style={{ color: '#8a8480' }}>Day 6</div>
                     <div className="text-sm font-bold">🏆 Mock Test</div>
                   </div>
 
                   {/* Arrow UP */}
                   <div className="flex flex-col items-center my-1.5">
-                    <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '9px solid #2f2922' }} />
-                    <div className="w-px h-5" style={{ background: '#c5c0bb' }} />
+                    <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '8px solid #8a8480' }} />
+                    <div className="w-px h-5" style={{ background: '#d4cfc9' }} />
                   </div>
 
-                  {/* Middle — Full Pitching */}
-                  <div className="w-60 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: 'linear-gradient(135deg, #ff630f 0%, #e04800 100%)' }}>
-                    <div className="text-xs font-semibold opacity-70 mb-0.5">Day 5</div>
+                  {/* Middle — Full Pitching: warm charcoal */}
+                  <div className="w-60 text-white rounded-2xl py-3 px-4 text-center shadow-md mx-auto" style={{ background: '#6b6259' }}>
+                    <div className="text-xs font-medium mb-0.5" style={{ color: '#c5bfb8' }}>Day 5</div>
                     <div className="text-sm font-bold">🎤 Full Pitching</div>
                   </div>
 
                   {/* Arrow UP */}
                   <div className="flex flex-col items-center my-1.5">
-                    <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '9px solid #ff630f' }} />
-                    <div className="w-px h-5" style={{ background: '#ffb380' }} />
+                    <div className="w-0 h-0" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: '8px solid #c5bfb8' }} />
+                    <div className="w-px h-5" style={{ background: '#d4cfc9' }} />
                   </div>
 
-                  {/* Base — Foundation */}
-                  <div className="w-full text-white rounded-2xl py-4 px-5 shadow-md" style={{ background: 'linear-gradient(135deg, #ff9419 0%, #ff7a00 100%)' }}>
-                    <div className="text-xs font-semibold opacity-75 mb-2.5 text-center tracking-wide">DAYS 3–4 · FOUNDATION</div>
+                  {/* Base — Foundation: light warm stone */}
+                  <div className="w-full rounded-2xl py-4 px-5 shadow-sm" style={{ background: '#f0ede9', border: '1px solid #e0d9d0' }}>
+                    <div className="text-xs font-semibold mb-2.5 text-center tracking-wider" style={{ color: '#8a8480' }}>DAYS 3–4 · FOUNDATION</div>
                     <div className="flex items-center justify-center gap-3 flex-wrap">
-                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.22)' }}>Pitching</span>
-                      <span className="opacity-50 text-lg font-light">+</span>
-                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.22)' }}>SPIN</span>
-                      <span className="opacity-50 text-lg font-light">+</span>
-                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: 'rgba(255,255,255,0.22)' }}>Closing</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: '#2f2922', color: 'white' }}>Pitching</span>
+                      <span className="text-lg font-light" style={{ color: '#c5bfb8' }}>+</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: '#2f2922', color: 'white' }}>SPIN</span>
+                      <span className="text-lg font-light" style={{ color: '#c5bfb8' }}>+</span>
+                      <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: '#2f2922', color: 'white' }}>Closing</span>
                     </div>
                   </div>
                 </div>
