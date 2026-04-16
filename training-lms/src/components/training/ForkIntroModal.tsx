@@ -5,6 +5,7 @@ import { useState } from 'react'
 interface ChecklistItem {
   text: string
   required: boolean
+  steps?: string[]
 }
 
 interface WhatToExpectItem {
@@ -27,6 +28,7 @@ interface ForkIntroModalProps {
 
 export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
   const [checked, setChecked] = useState<Record<number, boolean>>({})
+  const [expanded, setExpanded] = useState<Record<number, boolean>>({})
   const [page, setPage] = useState<'overview' | 'checklist'>('overview')
 
   const requiredItems = data.checklist.filter(i => i.required)
@@ -37,6 +39,10 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
 
   const toggleCheck = (idx: number) => {
     setChecked(prev => ({ ...prev, [idx]: !prev[idx] }))
+  }
+
+  const toggleExpand = (idx: number) => {
+    setExpanded(prev => ({ ...prev, [idx]: !prev[idx] }))
   }
 
   // Brand-aligned tints: warm orange for Days 3-5, brand blue for Day 6
@@ -183,31 +189,65 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
               </p>
               <div className="space-y-3">
                 {data.checklist.map((item, idx) => (
-                  <label
+                  <div
                     key={idx}
-                    className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                    className={`rounded-lg border transition-colors ${
                       checked[idx]
                         ? 'bg-green-50 border-green-200'
                         : item.required
-                        ? 'bg-red-50 border-red-100 hover:bg-red-100'
-                        : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
+                        ? 'bg-red-50 border-red-100'
+                        : 'bg-slate-50 border-slate-200'
                     }`}
                   >
-                    <input
-                      type="checkbox"
-                      checked={!!checked[idx]}
-                      onChange={() => toggleCheck(idx)}
-                      className="mt-0.5 w-4 h-4 accent-[var(--sh-orange)]"
-                    />
-                    <div className="flex-1">
-                      <span className={`text-sm ${checked[idx] ? 'text-green-800 line-through' : 'text-slate-700'}`}>
-                        {item.text}
-                      </span>
-                      {item.required && !checked[idx] && (
-                        <span className="ml-2 text-xs text-red-500 font-medium">Required</span>
+                    {/* Main row */}
+                    <div className="flex items-start gap-3 p-3">
+                      <input
+                        type="checkbox"
+                        checked={!!checked[idx]}
+                        onChange={() => toggleCheck(idx)}
+                        className="mt-0.5 w-4 h-4 accent-[var(--sh-orange)] cursor-pointer flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <span className={`text-sm ${checked[idx] ? 'text-green-800 line-through' : 'text-slate-700'}`}>
+                          {item.text}
+                        </span>
+                        {item.required && !checked[idx] && (
+                          <span className="ml-2 text-xs text-red-500 font-medium">Required</span>
+                        )}
+                      </div>
+                      {item.steps && item.steps.length > 0 && (
+                        <button
+                          onClick={() => toggleExpand(idx)}
+                          className="flex-shrink-0 flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full transition-colors"
+                          style={{ color: '#ff9419', background: '#fff4e8' }}
+                        >
+                          How?
+                          <svg
+                            className={`w-3 h-3 transition-transform ${expanded[idx] ? 'rotate-180' : ''}`}
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
                       )}
                     </div>
-                  </label>
+
+                    {/* Expandable steps */}
+                    {item.steps && expanded[idx] && (
+                      <div className="px-4 pb-3 pt-0 border-t" style={{ borderColor: checked[idx] ? '#bbf7d0' : item.required ? '#fecaca' : '#e2e8f0' }}>
+                        <ol className="mt-2 space-y-1.5">
+                          {item.steps.map((step, si) => (
+                            <li key={si} className="flex items-start gap-2 text-xs text-slate-600">
+                              <span className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-white text-[10px] font-bold mt-0.5" style={{ background: '#ff9419' }}>
+                                {si + 1}
+                              </span>
+                              {step}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
