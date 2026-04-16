@@ -93,7 +93,7 @@ export function ProgressPanel({
     } else if (completedDays >= expectedDay - 1) {
       return { status: 'slight_delay', label: 'Slight Delay', color: 'text-[#ff9419]', bg: 'bg-[#fff4e8]' }
     } else {
-      return { status: 'behind', label: 'Behind Schedule', color: 'text-red-600', bg: 'bg-red-50' }
+      return { status: 'behind', label: 'Behind Schedule', color: 'text-[#ff546f]', bg: 'bg-[#ffeef0]' }
     }
   }, [trainingStartDate, totalDays, dayProgress])
 
@@ -102,16 +102,16 @@ export function ProgressPanel({
       {/* Header */}
       <div>
         <h3 className="text-lg font-bold" style={{ color: '#2f2922' }}>Your Progress</h3>
-        <p className="text-sm text-slate-400">Keep going — you're building something real.</p>
+        <p className="text-sm text-[#a09d9a]">Keep going — you're building something real.</p>
       </div>
 
       {/* Overall Progress */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-slate-700">Overall Completion</span>
-          <span className="text-sm font-bold text-slate-900">{overallProgress}%</span>
+          <span className="text-sm font-medium text-[#55504a]">Overall Completion</span>
+          <span className="text-sm font-bold text-[#2f2922]">{overallProgress}%</span>
         </div>
-        <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-3 bg-[#eae9e8] rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{ width: `${overallProgress}%`, backgroundColor: '#ff9419' }}
@@ -128,12 +128,12 @@ export function ProgressPanel({
             </svg>
           )}
           {scheduleStatus.status === 'slight_delay' && (
-            <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-[#ff9419]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           )}
           {scheduleStatus.status === 'behind' && (
-            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-[#ff546f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           )}
@@ -145,7 +145,7 @@ export function ProgressPanel({
 
       {/* Per-Day Progress */}
       <div className="space-y-3">
-        <h4 className="text-sm font-medium text-slate-700">Daily Breakdown</h4>
+        <h4 className="text-sm font-medium text-[#55504a]">Daily Breakdown</h4>
         {dayProgress.map((day) => (
           <div key={day.dayNumber} className="flex items-center gap-3">
             {/* Day indicator */}
@@ -162,10 +162,10 @@ export function ProgressPanel({
             {/* Progress bar */}
             <div className="flex-1">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-slate-600">Day {day.dayNumber}</span>
-                <span className="text-xs text-slate-500">{day.percentage}%</span>
+                <span className="text-xs text-[#55504a]">Day {day.dayNumber}</span>
+                <span className="text-xs text-[#7a7672]">{day.percentage}%</span>
               </div>
-              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-[#eae9e8] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
@@ -183,8 +183,8 @@ export function ProgressPanel({
       {assessmentsTotal > 0 && (
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-600">Assessments Passed</span>
-            <span className="text-sm font-bold text-slate-900">
+            <span className="text-sm text-[#55504a]">Assessments Passed</span>
+            <span className="text-sm font-bold text-[#2f2922]">
               {assessmentsPassed}/{assessmentsTotal}
             </span>
           </div>
@@ -194,7 +194,7 @@ export function ProgressPanel({
       {/* Coach Info */}
       {coachName && (
         <div className="pt-4 border-t">
-          <h4 className="text-sm font-medium text-slate-700 mb-2">Your Coach</h4>
+          <h4 className="text-sm font-medium text-[#55504a] mb-2">Your Coach</h4>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fff4e8' }}>
               <span className="font-medium" style={{ color: '#ff9419' }}>
@@ -202,7 +202,7 @@ export function ProgressPanel({
               </span>
             </div>
             <div>
-              <div className="text-sm font-medium text-slate-900">{coachName}</div>
+              <div className="text-sm font-medium text-[#2f2922]">{coachName}</div>
               {coachEmail && (
                 <a
                   href={`mailto:${coachEmail}`}

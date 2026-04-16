@@ -165,19 +165,19 @@ export default function ResourcesPage() {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'slides': return 'bg-blue-100 text-blue-700'
-      case 'document': return 'bg-green-100 text-green-700'
-      case 'video': return 'bg-purple-100 text-purple-700'
-      case 'wiki': return 'bg-yellow-100 text-yellow-700'
-      case 'quiz': return 'bg-red-100 text-red-700'
-      default: return 'bg-gray-100 text-gray-700'
+      case 'slides': return 'bg-[#2a6ee8] text-[#2a6ee8]'
+      case 'document': return 'bg-[#e9f0fd] text-[#2a6ee8]'
+      case 'video': return 'bg-[#55504a] text-[#55504a]'
+      case 'wiki': return 'bg-[#fff4e8] text-[#ff9419]'
+      case 'quiz': return 'bg-[#ffeef0] text-[#ff546f]'
+      default: return 'bg-[#eae9e8] text-[#55504a]'
     }
   }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="w-8 h-8 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin"></div>
       </div>
     )
   }
@@ -187,7 +187,7 @@ export default function ResourcesPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg shadow-lg p-6 text-white">
         <h1 className="text-2xl font-bold">Training Resources</h1>
-        <p className="text-purple-100 mt-1">
+        <p className="text-[#55504a] mt-1">
           Access all your training materials, guides, and assessments
         </p>
       </div>
@@ -197,7 +197,7 @@ export default function ResourcesPage() {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#a09d9a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
@@ -205,7 +205,7 @@ export default function ResourcesPage() {
                 placeholder="Search resources..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-[#c5c3c1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -213,7 +213,7 @@ export default function ResourcesPage() {
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full sm:w-auto px-4 py-2 border border-[#c5c3c1] rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             >
               <option value="all">All Categories</option>
               {categories.map(cat => (
@@ -228,53 +228,53 @@ export default function ResourcesPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#2a6ee8] rounded-lg flex items-center justify-center">
               {getTypeIcon('slides')}
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-[#2f2922]">
                 {resources.filter(r => r.type === 'slides').length}
               </p>
-              <p className="text-sm text-gray-500">Slides</p>
+              <p className="text-sm text-[#7a7672]">Slides</p>
             </div>
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#fff4e8] rounded-lg flex items-center justify-center">
               {getTypeIcon('wiki')}
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-[#2f2922]">
                 {resources.filter(r => r.type === 'wiki').length}
               </p>
-              <p className="text-sm text-gray-500">Wiki Pages</p>
+              <p className="text-sm text-[#7a7672]">Wiki Pages</p>
             </div>
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#e9f0fd] rounded-lg flex items-center justify-center">
               {getTypeIcon('document')}
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-[#2f2922]">
                 {resources.filter(r => r.type === 'document').length}
               </p>
-              <p className="text-sm text-gray-500">Documents</p>
+              <p className="text-sm text-[#7a7672]">Documents</p>
             </div>
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#ffeef0] rounded-lg flex items-center justify-center">
               {getTypeIcon('quiz')}
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-[#2f2922]">
                 {resources.filter(r => r.type === 'quiz').length}
               </p>
-              <p className="text-sm text-gray-500">Quizzes</p>
+              <p className="text-sm text-[#7a7672]">Quizzes</p>
             </div>
           </div>
         </div>
@@ -282,21 +282,21 @@ export default function ResourcesPage() {
 
       {/* Resources List */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">
+        <div className="px-6 py-4 border-b border-[#c5c3c1]">
+          <h2 className="text-lg font-semibold text-[#2f2922]">
             Your Resources ({resources.length})
           </h2>
         </div>
         <div className="divide-y divide-gray-200">
           {resources.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
+            <div className="p-6 text-center text-[#7a7672]">
               No resources found matching your search.
             </div>
           ) : (
             resources.map((resource) => (
               <div
                 key={resource.id}
-                className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="p-4 hover:bg-[#f5f5f4] transition-colors cursor-pointer"
               >
                 <div className="flex items-start gap-4">
                   <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${getTypeColor(resource.type)}`}>
@@ -305,21 +305,21 @@ export default function ResourcesPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h3 className="font-medium text-gray-900 hover:text-purple-600">
+                        <h3 className="font-medium text-[#2f2922] hover:text-[#55504a]">
                           {resource.title}
                         </h3>
                         {resource.description && (
-                          <p className="text-sm text-gray-500 mt-1">{resource.description}</p>
+                          <p className="text-sm text-[#7a7672] mt-1">{resource.description}</p>
                         )}
                         <div className="flex items-center gap-3 mt-2">
-                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#eae9e8] text-[#55504a]">
                             {resource.category}
                           </span>
-                          <span className="text-xs text-gray-500 capitalize">
+                          <span className="text-xs text-[#7a7672] capitalize">
                             {resource.type}
                           </span>
                           {resource.duration && (
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-[#7a7672]">
                               {resource.duration}
                             </span>
                           )}
@@ -327,11 +327,11 @@ export default function ResourcesPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         {resource.isRequired && (
-                          <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 font-medium">
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#ffeef0] text-[#ff546f] font-medium">
                             Required
                           </span>
                         )}
-                        <button className="p-2 text-gray-400 hover:text-purple-600 rounded-lg hover:bg-purple-50 transition-colors">
+                        <button className="p-2 text-[#a09d9a] hover:text-[#55504a] rounded-lg hover:bg-[#55504a] transition-colors">
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
@@ -347,21 +347,21 @@ export default function ResourcesPage() {
       </div>
 
       {/* Help Section */}
-      <div className="bg-purple-50 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-purple-900 mb-2">Need Help?</h3>
-        <p className="text-purple-700 mb-4">
+      <div className="bg-[#55504a] rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-[#55504a] mb-2">Need Help?</h3>
+        <p className="text-[#55504a] mb-4">
           If you can&apos;t find a resource or need access to additional materials, contact your coach or the training team.
         </p>
         <div className="flex gap-3">
           <a
             href="mailto:training@storehub.com"
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="px-4 py-2 bg-[#55504a] text-white rounded-lg hover:bg-[#55504a] transition-colors"
           >
             Contact Training Team
           </a>
           <a
             href="#"
-            className="px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors"
+            className="px-4 py-2 border border-purple-600 text-[#55504a] rounded-lg hover:bg-[#55504a] transition-colors"
           >
             View Training Wiki
           </a>

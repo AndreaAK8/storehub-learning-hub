@@ -227,17 +227,17 @@ export default async function DashboardPage() {
           href="/dashboard/trainees?filter=critical"
           className={`p-4 rounded-xl border-2 transition-all ${
             stats.critical.length > 0
-              ? 'bg-red-50 border-red-200 hover:border-red-400'
-              : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+              ? 'bg-[#ffeef0] border-[#ffcfd7] hover:border-[#ff546f]'
+              : 'bg-[#f5f5f4] border-[#c5c3c1] hover:border-[#a09d9a]'
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className={`w-3 h-3 rounded-full ${stats.critical.length > 0 ? 'bg-red-500' : 'bg-slate-300'}`} />
+            <div className={`w-3 h-3 rounded-full ${stats.critical.length > 0 ? 'bg-[#ff546f]' : 'bg-[#a09d9a]'}`} />
             <div>
-              <span className={`text-2xl font-bold ${stats.critical.length > 0 ? 'text-red-700' : 'text-slate-500'}`}>
+              <span className={`text-2xl font-bold ${stats.critical.length > 0 ? 'text-[#ff546f]' : 'text-[#7a7672]'}`}>
                 {stats.critical.length}
               </span>
-              <p className={`text-sm font-medium ${stats.critical.length > 0 ? 'text-red-600' : 'text-slate-500'}`}>
+              <p className={`text-sm font-medium ${stats.critical.length > 0 ? 'text-[#ff546f]' : 'text-[#7a7672]'}`}>
                 Overdue
               </p>
             </div>
@@ -248,18 +248,18 @@ export default async function DashboardPage() {
           href="/dashboard/trainees?filter=at-risk"
           className={`p-4 rounded-xl border-2 transition-all ${
             stats.atRisk.length > 0
-              ? 'bg-amber-50 border-amber-200 hover:border-amber-400'
-              : 'bg-slate-50 border-slate-200 hover:border-slate-300'
+              ? 'bg-[#fff4e8] border-[#ffe1bf] hover:border-[#ff9419]'
+              : 'bg-[#f5f5f4] border-[#c5c3c1] hover:border-[#a09d9a]'
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className={`w-3 h-3 rounded-full ${stats.atRisk.length > 0 ? 'bg-amber-500' : 'bg-slate-300'}`} />
+            <div className={`w-3 h-3 rounded-full ${stats.atRisk.length > 0 ? 'bg-[#ff9419]' : 'bg-[#a09d9a]'}`} />
             <div>
-              <span className={`text-2xl font-bold ${stats.atRisk.length > 0 ? 'text-amber-700' : 'text-slate-500'}`}>
+              <span className={`text-2xl font-bold ${stats.atRisk.length > 0 ? 'text-[#ff9419]' : 'text-[#7a7672]'}`}>
                 {stats.atRisk.length}
               </span>
-              <p className={`text-sm font-medium ${stats.atRisk.length > 0 ? 'text-amber-600' : 'text-slate-500'}`}>
-                At Risk
+              <p className={`text-sm font-medium ${stats.atRisk.length > 0 ? 'text-[#ff9419]' : 'text-[#7a7672]'}`}>
+                At risk
               </p>
             </div>
           </div>
@@ -462,11 +462,11 @@ function TraineeDashboard({
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="rounded-xl shadow-sm p-6 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border border-amber-100">
+      <div className="rounded-xl shadow-sm p-6 bg-[#fff4e8] border border-[#ffe1bf]">
         <h1 className="text-2xl font-bold text-[var(--sh-black)]" style={{ fontFamily: 'Barlow, sans-serif' }}>
           Welcome, {profile?.full_name || traineeData?.fullName || user?.email}!
         </h1>
-        <p className="mt-2 text-slate-600 leading-relaxed">
+        <p className="mt-2 text-[#55504a] leading-relaxed">
           Track your training progress and stay on top of your assessments.
         </p>
       </div>
@@ -475,11 +475,11 @@ function TraineeDashboard({
         <>
           {/* Progress Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl border border-slate-100 p-5">
+            <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-500">Training Day</p>
-                  <p className="text-3xl font-bold text-slate-900">Day {trainingDay}</p>
+                  <p className="text-sm text-[#7a7672]">Training Day</p>
+                  <p className="text-3xl font-bold text-[#2f2922]">Day {trainingDay}</p>
                 </div>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#fff4e8' }}>
                   <svg className="w-6 h-6" style={{ color: '#ff9419' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -488,11 +488,11 @@ function TraineeDashboard({
                 </div>
               </div>
             </div>
-            <div className="bg-white rounded-xl border border-slate-100 p-5">
+            <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-500">Completion</p>
-                  <p className="text-3xl font-bold text-slate-900">{completionPercentage}%</p>
+                  <p className="text-sm text-[#7a7672]">Completion</p>
+                  <p className="text-3xl font-bold text-[#2f2922]">{completionPercentage}%</p>
                 </div>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#e9f0fd' }}>
                   <svg className="w-6 h-6" style={{ color: '#2a6ee8' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -501,11 +501,11 @@ function TraineeDashboard({
                 </div>
               </div>
             </div>
-            <div className="bg-white rounded-xl border border-slate-100 p-5">
+            <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-500">Activities Done</p>
-                  <p className="text-3xl font-bold text-slate-900">{activityProgress.completedActivities}/{activityProgress.totalActivities}</p>
+                  <p className="text-sm text-[#7a7672]">Activities Done</p>
+                  <p className="text-3xl font-bold text-[#2f2922]">{activityProgress.completedActivities}/{activityProgress.totalActivities}</p>
                 </div>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#ffe1bf' }}>
                   <svg className="w-6 h-6" style={{ color: '#ff630f' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -514,10 +514,10 @@ function TraineeDashboard({
                 </div>
               </div>
             </div>
-            <div className="bg-white rounded-xl border border-slate-100 p-5">
+            <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-500 mb-1">Status</p>
+                  <p className="text-sm text-[#7a7672] mb-1">Status</p>
                   <StatusBadge status={derivedStatus} />
                 </div>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#e9f0fd' }}>
@@ -530,14 +530,14 @@ function TraineeDashboard({
           </div>
 
           {/* Progress Bar */}
-          <div className="bg-white rounded-xl border border-slate-100 p-6">
+          <div className="bg-white rounded-xl border border-[#c5c3c1] p-6">
             <h2 className="text-lg font-semibold mb-4" style={{ color: '#2f2922', fontFamily: 'Barlow, sans-serif' }}>Your Training Progress</h2>
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-slate-600 mb-2">
+              <div className="flex justify-between text-sm text-[#55504a] mb-2">
                 <span>Progress</span>
                 <span>{activityProgress.completedActivities} of {activityProgress.totalActivities} activities completed</span>
               </div>
-              <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+              <div className="w-full h-3 bg-[#eae9e8] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{
@@ -564,10 +564,10 @@ function TraineeDashboard({
           </div>
 
           {/* Training Timeline */}
-          <div className="bg-white rounded-xl border border-slate-100 p-6">
-            <h2 className="text-lg font-semibold text-slate-900 mb-4">Training Timeline</h2>
+          <div className="bg-white rounded-xl border border-[#c5c3c1] p-6">
+            <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Training Timeline</h2>
             <div className="relative">
-              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-slate-200" />
+              <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[#c5c3c1]" />
               <div className="space-y-6">
                 <TimelineItem
                   date={traineeData.trainingStartDate}
@@ -603,8 +603,8 @@ function TraineeDashboard({
 
           {/* Coach Info */}
           {traineeData.coachName && (
-            <div className="bg-white rounded-xl border border-slate-100 p-6">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">Your Coach</h2>
+            <div className="bg-white rounded-xl border border-[#c5c3c1] p-6">
+              <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Your Coach</h2>
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center">
                   <span className="text-orange-600 font-bold text-lg">
@@ -612,8 +612,8 @@ function TraineeDashboard({
                   </span>
                 </div>
                 <div>
-                  <p className="font-medium text-slate-900 text-lg">{traineeData.coachName}</p>
-                  <p className="text-slate-500">{traineeData.coachEmail}</p>
+                  <p className="font-medium text-[#2f2922] text-lg">{traineeData.coachName}</p>
+                  <p className="text-[#7a7672]">{traineeData.coachEmail}</p>
                 </div>
                 {traineeData.coachEmail && (
                   <a
@@ -629,24 +629,24 @@ function TraineeDashboard({
 
           {/* Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl border border-slate-100 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-3">Your Details</h3>
+            <div className="bg-white rounded-xl border border-[#c5c3c1] p-6">
+              <h3 className="text-lg font-semibold text-[#2f2922] mb-3">Your Details</h3>
               <dl className="space-y-3">
                 <div>
-                  <dt className="text-sm text-slate-500">Email</dt>
-                  <dd className="text-slate-900">{traineeData.email}</dd>
+                  <dt className="text-sm text-[#7a7672]">Email</dt>
+                  <dd className="text-[#2f2922]">{traineeData.email}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-slate-500">Department</dt>
-                  <dd className="text-slate-900">{traineeData.department || 'Not assigned'}</dd>
+                  <dt className="text-sm text-[#7a7672]">Department</dt>
+                  <dd className="text-[#2f2922]">{traineeData.department || 'Not assigned'}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-slate-500">Country</dt>
-                  <dd className="text-slate-900">{traineeData.country || 'Not specified'}</dd>
+                  <dt className="text-sm text-[#7a7672]">Country</dt>
+                  <dd className="text-[#2f2922]">{traineeData.country || 'Not specified'}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-slate-500">Training Start Date</dt>
-                  <dd className="text-slate-900">{traineeData.trainingStartDate || 'Not set'}</dd>
+                  <dt className="text-sm text-[#7a7672]">Training Start Date</dt>
+                  <dd className="text-[#2f2922]">{traineeData.trainingStartDate || 'Not set'}</dd>
                 </div>
               </dl>
             </div>
@@ -695,14 +695,14 @@ function TraineeDashboard({
 
             <div className="p-6">
               {/* Role Introduction */}
-              <div className="mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-                <h3 className="font-semibold text-slate-900 mb-2 flex items-center gap-2">
+              <div className="mb-6 p-4 bg-[#f5f5f4] rounded-lg border border-[#c5c3c1]">
+                <h3 className="font-semibold text-[#2f2922] mb-2 flex items-center gap-2">
                   <svg className="w-5 h-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   Your Role: Onboarding Coordinator (OC)
                 </h3>
-                <p className="text-slate-600 text-sm">
+                <p className="text-[#55504a] text-sm">
                   As an OC, you&apos;ll be the first point of contact for new merchants joining StoreHub.
                   You&apos;ll help them set up their accounts, configure menus, and ensure a smooth onboarding experience.
                   This training will equip you with product knowledge, technical skills, and best practices.
@@ -710,38 +710,38 @@ function TraineeDashboard({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="text-center p-4 bg-[#f5f5f4] rounded-xl border border-[#c5c3c1]">
                   <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-slate-900">4 Days</h3>
-                  <p className="text-sm text-slate-500">Training Duration</p>
+                  <h3 className="font-semibold text-[#2f2922]">4 Days</h3>
+                  <p className="text-sm text-[#7a7672]">Training Duration</p>
                 </div>
-                <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="text-center p-4 bg-[#f5f5f4] rounded-xl border border-[#c5c3c1]">
                   <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-slate-900">4 Assessments</h3>
-                  <p className="text-sm text-slate-500">To Complete</p>
+                  <h3 className="font-semibold text-[#2f2922]">4 Assessments</h3>
+                  <p className="text-sm text-[#7a7672]">To Complete</p>
                 </div>
-                <div className="text-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="text-center p-4 bg-[#f5f5f4] rounded-xl border border-[#c5c3c1]">
                   <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                     <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-slate-900">Buddy Session</h3>
-                  <p className="text-sm text-slate-500">Learn from Experts</p>
+                  <h3 className="font-semibold text-[#2f2922]">Buddy Session</h3>
+                  <p className="text-sm text-[#7a7672]">Learn from Experts</p>
                 </div>
               </div>
 
               {/* Performance Expectations */}
-              <div className="mb-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <h3 className="font-semibold text-amber-900 mb-3 flex items-center gap-2">
+              <div className="mb-6 p-4 bg-[#fff4e8] rounded-lg border border-amber-200">
+                <h3 className="font-semibold text-[#ff9419] mb-3 flex items-center gap-2">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -749,26 +749,26 @@ function TraineeDashboard({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-amber-700 font-bold">80%</span>
+                    <div className="w-10 h-10 bg-[#fff4e8] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-[#ff9419] font-bold">80%</span>
                     </div>
                     <div>
-                      <p className="font-medium text-amber-900">Learning Scores</p>
-                      <p className="text-sm text-amber-700">Weighted average of all quizzes and assessments throughout your training</p>
+                      <p className="font-medium text-[#ff9419]">Learning Scores</p>
+                      <p className="text-sm text-[#ff9419]">Weighted average of all quizzes and assessments throughout your training</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-amber-700 font-bold">20%</span>
+                    <div className="w-10 h-10 bg-[#fff4e8] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-[#ff9419] font-bold">20%</span>
                     </div>
                     <div>
-                      <p className="font-medium text-amber-900">Participation Score</p>
-                      <p className="text-sm text-amber-700">Attendance, engagement, and completion of training activities</p>
+                      <p className="font-medium text-[#ff9419]">Participation Score</p>
+                      <p className="text-sm text-[#ff9419]">Attendance, engagement, and completion of training activities</p>
                     </div>
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-amber-200">
-                  <p className="text-sm text-amber-800">
+                  <p className="text-sm text-[#ff9419]">
                     <strong>Tip:</strong> All quizzes are open-book. Use your training materials as reference!
                   </p>
                 </div>
@@ -787,7 +787,7 @@ function TraineeDashboard({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link
               href="/dashboard/my-training"
-              className="bg-white rounded-xl border border-slate-100 p-5 hover:border-orange-200 hover:shadow-lg transition-all flex items-center gap-4"
+              className="bg-white rounded-xl border border-[#c5c3c1] p-5 hover:border-orange-200 hover:shadow-lg transition-all flex items-center gap-4"
             >
               <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                 <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -795,13 +795,13 @@ function TraineeDashboard({
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900">My Schedule</h3>
-                <p className="text-sm text-slate-500">View daily activities and materials</p>
+                <h3 className="font-semibold text-[#2f2922]">My Schedule</h3>
+                <p className="text-sm text-[#7a7672]">View daily activities and materials</p>
               </div>
             </Link>
             <a
               href="mailto:training@storehub.com"
-              className="bg-white rounded-xl border border-slate-100 p-5 hover:border-orange-200 hover:shadow-lg transition-all flex items-center gap-4"
+              className="bg-white rounded-xl border border-[#c5c3c1] p-5 hover:border-orange-200 hover:shadow-lg transition-all flex items-center gap-4"
             >
               <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                 <svg className="w-6 h-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -809,8 +809,8 @@ function TraineeDashboard({
                 </svg>
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900">Need Help?</h3>
-                <p className="text-sm text-slate-500">Contact the training team</p>
+                <h3 className="font-semibold text-[#2f2922]">Need Help?</h3>
+                <p className="text-sm text-[#7a7672]">Contact the training team</p>
               </div>
             </a>
           </div>
@@ -882,19 +882,19 @@ function StatsCard({
 }) {
   const colorClasses = {
     orange: 'bg-orange-500',
-    amber: 'bg-amber-500',
-    blue: 'bg-blue-500',
-    slate: 'bg-slate-500',
+    amber: 'bg-[#fff4e8]',
+    blue: 'bg-[#2a6ee8]',
+    slate: 'bg-[#7a7672]',
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-100 p-6">
+    <div className="bg-white rounded-xl border border-[#c5c3c1] p-6">
       <div className="flex items-center">
         <div className={`w-2 h-12 ${colorClasses[color]} rounded-full mr-4`} />
         <div>
-          <p className="text-sm text-slate-500">{title}</p>
-          <p className="text-2xl font-bold text-slate-900">{value}</p>
-          <p className="text-xs text-slate-400">{description}</p>
+          <p className="text-sm text-[#7a7672]">{title}</p>
+          <p className="text-2xl font-bold text-[#2f2922]">{value}</p>
+          <p className="text-xs text-[#a09d9a]">{description}</p>
         </div>
       </div>
     </div>

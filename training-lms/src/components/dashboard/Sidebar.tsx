@@ -5,23 +5,25 @@ import { usePathname } from 'next/navigation'
 
 interface SidebarProps {
   userRole: 'admin' | 'coach' | 'trainee'
+  userName?: string
 }
 
-export default function Sidebar({ userRole }: SidebarProps) {
+export default function Sidebar({ userRole, userName }: SidebarProps) {
   const pathname = usePathname()
 
   const navigation = [
+    // Trainee nav — exactly 4 items per UX spec (section 0)
+    {
+      name: 'Home',
+      href: '/dashboard/home',
+      icon: HomeIcon,
+      roles: ['trainee']
+    },
     {
       name: 'Training Overview',
       href: '/dashboard/training-overview',
       icon: BookIcon,
       roles: ['trainee']
-    },
-    {
-      name: 'Dashboard',
-      href: '/dashboard',
-      icon: HomeIcon,
-      roles: ['admin', 'coach']
     },
     {
       name: 'My Training',
@@ -34,6 +36,13 @@ export default function Sidebar({ userRole }: SidebarProps) {
       href: '/dashboard/my-scores',
       icon: ChartBarIcon,
       roles: ['trainee']
+    },
+    // Admin / Coach nav
+    {
+      name: 'Dashboard',
+      href: '/dashboard',
+      icon: HomeIcon,
+      roles: ['admin', 'coach']
     },
     {
       name: 'Trainees',
@@ -96,11 +105,11 @@ export default function Sidebar({ userRole }: SidebarProps) {
                 href={item.href}
                 className={`group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-150 ${
                   isActive
-                    ? 'text-white border-l-2'
+                    ? 'border-l-4'
                     : 'hover:text-white'
                 }`}
                 style={{
-                  backgroundColor: isActive ? 'rgba(255, 148, 25, 0.2)' : 'transparent',
+                  backgroundColor: isActive ? 'rgba(255,148,25,0.12)' : 'transparent',
                   color: isActive ? '#ff9419' : '#c5c3c1',
                   borderColor: isActive ? '#ff9419' : 'transparent',
                 }}
@@ -114,18 +123,15 @@ export default function Sidebar({ userRole }: SidebarProps) {
           })}
         </nav>
 
-        {/* Role Badge */}
+        {/* User avatar — name only, no role label per UX spec */}
         <div className="flex-shrink-0 px-4 py-4" style={{ borderTop: '1px solid rgba(122, 118, 114, 0.3)' }}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#55604a' }}>
-              <span className="text-xs font-medium uppercase" style={{ color: '#c5c3c1' }}>
-                {userRole.charAt(0)}
+            <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#55504a' }}>
+              <span className="text-xs font-semibold" style={{ color: '#c5c3c1' }}>
+                {(userName || userRole).charAt(0).toUpperCase()}
               </span>
             </div>
-            <div>
-              <p className="text-xs" style={{ color: '#7a7672' }}>Logged in as</p>
-              <p className="text-sm font-medium text-white capitalize">{userRole}</p>
-            </div>
+            <p className="text-sm font-medium text-white truncate">{userName || userRole}</p>
           </div>
         </div>
       </div>

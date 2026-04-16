@@ -61,7 +61,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
         {/* Header */}
         <div className="px-6 py-5 text-white" style={{ background: '#2f2922' }}>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-widest px-2.5 py-0.5 rounded-full" style={{ background: '#ff9419', color: 'white' }}>
+            <span className="text-xs font-semibold tracking-widest px-2.5 py-0.5 rounded-full" style={{ background: '#ff9419', color: 'white' }}>
               Role-Specific Phase
             </span>
           </div>
@@ -75,13 +75,13 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
         </div>
 
         {/* Tab nav */}
-        <div className="flex border-b border-slate-200">
+        <div className="flex border-b border-[#c5c3c1]">
           <button
             onClick={() => setPage('overview')}
             className={`flex-1 py-3 text-sm font-medium transition-colors ${
               page === 'overview'
                 ? 'text-[var(--sh-orange)] border-b-2 border-[var(--sh-orange)]'
-                : 'text-slate-500 hover:text-slate-700'
+                : 'text-[#7a7672] hover:text-[#55504a]'
             }`}
           >
             Overview
@@ -91,12 +91,12 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
             className={`flex-1 py-3 text-sm font-medium transition-colors ${
               page === 'checklist'
                 ? 'text-[var(--sh-orange)] border-b-2 border-[var(--sh-orange)]'
-                : 'text-slate-500 hover:text-slate-700'
+                : 'text-[#7a7672] hover:text-[#55504a]'
             }`}
           >
             Pre-Start Checklist
             {requiredItems.length > 0 && (
-              <span className="ml-2 bg-red-100 text-red-600 text-xs px-1.5 py-0.5 rounded-full">
+              <span className="ml-2 bg-[#ffeef0] text-[#ff546f] text-xs px-1.5 py-0.5 rounded-full">
                 {requiredItems.length} required
               </span>
             )}
@@ -109,15 +109,15 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
             <div className="space-y-6">
               {/* Overview text */}
               <div>
-                <p className="text-slate-600 leading-relaxed whitespace-pre-line text-sm">
+                <p className="text-[#55504a] leading-relaxed whitespace-pre-line text-sm">
                   {data.overview}
                 </p>
               </div>
 
               {/* Pyramid diagram */}
               <div>
-                <h3 className="font-semibold text-slate-800 mb-4 text-sm uppercase tracking-wide">
-                  Your Learning Path
+                <h3 className="font-semibold text-[#2f2922] mb-4 text-sm tracking-wide">
+                  Your learning path
                 </h3>
                 <div className="flex flex-col items-center gap-0 select-none">
                   {/* Peak — Mock Test: brand black, authoritative */}
@@ -146,7 +146,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
 
                   {/* Base — Foundation: light warm stone */}
                   <div className="w-full rounded-2xl py-4 px-5 shadow-sm" style={{ background: '#f0ede9', border: '1px solid #e0d9d0' }}>
-                    <div className="text-xs font-semibold mb-2.5 text-center tracking-wider" style={{ color: '#8a8480' }}>DAYS 3–4 · FOUNDATION</div>
+                    <div className="text-xs font-semibold mb-2.5 text-center tracking-wider" style={{ color: '#8a8480' }}>Days 3–4 · Foundation</div>
                     <div className="flex items-center justify-center gap-3 flex-wrap">
                       <span className="rounded-xl px-3 py-1.5 text-sm font-bold" style={{ background: '#2f2922', color: 'white' }}>Pitching</span>
                       <span className="text-lg font-light" style={{ color: '#c5bfb8' }}>+</span>
@@ -160,7 +160,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
 
               {/* What to expect */}
               <div>
-                <h3 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide">
+                <h3 className="font-semibold text-[#2f2922] mb-3 text-sm tracking-wide">
                   What's coming up
                 </h3>
                 <div className="space-y-2">
@@ -185,7 +185,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
             </div>
           ) : (
             <div className="space-y-4">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-[#7a7672]">
                 Complete these before starting Day 3. Required items must be checked to proceed.
               </p>
               <div className="space-y-3">
@@ -194,10 +194,10 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                     key={idx}
                     className={`rounded-lg border transition-colors ${
                       checked[idx]
-                        ? 'bg-green-50 border-green-200'
+                        ? 'bg-[#e9f0fd] border-[#c4d7f9]'
                         : item.required
-                        ? 'bg-red-50 border-red-100'
-                        : 'bg-slate-50 border-slate-200'
+                        ? 'bg-[#ffeef0] border-[#ffcfd7]'
+                        : 'bg-[#f5f5f4] border-[#c5c3c1]'
                     }`}
                   >
                     {/* Main row */}
@@ -209,11 +209,11 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                         className="mt-0.5 w-4 h-4 accent-[var(--sh-orange)] cursor-pointer flex-shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <span className={`text-sm ${checked[idx] ? 'text-green-800 line-through' : 'text-slate-700'}`}>
+                        <span className={`text-sm ${checked[idx] ? 'text-[#2a6ee8] line-through' : 'text-[#55504a]'}`}>
                           {item.text}
                         </span>
                         {item.required && !checked[idx] && (
-                          <span className="ml-2 text-xs text-red-500 font-medium">Required</span>
+                          <span className="ml-2 text-xs text-[#ff546f] font-medium">Required</span>
                         )}
                       </div>
                       {item.steps && item.steps.length > 0 && (
@@ -237,13 +237,13 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                     {item.steps && expanded[idx] && (
                       <div className="px-4 pb-3 pt-0 border-t" style={{ borderColor: checked[idx] ? '#bbf7d0' : item.required ? '#fecaca' : '#e2e8f0' }}>
                         {item.gif && (
-                          <div className="mt-3 mb-2 rounded-lg overflow-hidden border border-slate-200">
+                          <div className="mt-3 mb-2 rounded-lg overflow-hidden border border-[#c5c3c1]">
                             <img src={item.gif} alt="How-to guide" className="w-full h-auto" />
                           </div>
                         )}
                         <ol className="mt-2 space-y-1.5">
                           {item.steps.map((step, si) => (
-                            <li key={si} className="flex items-start gap-2 text-xs text-slate-600">
+                            <li key={si} className="flex items-start gap-2 text-xs text-[#55504a]">
                               <span className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-white text-[10px] font-bold mt-0.5" style={{ background: '#ff9419' }}>
                                 {si + 1}
                               </span>
@@ -261,10 +261,10 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+        <div className="p-4 border-t border-[#eae9e8] bg-[#f5f5f4] flex items-center justify-between">
           {page === 'overview' ? (
             <>
-              <span className="text-xs text-slate-400">This will not show again</span>
+              <span className="text-xs text-[#a09d9a]">This will not show again</span>
               <button
                 onClick={() => setPage('checklist')}
                 className="bg-[var(--sh-orange)] text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
@@ -276,7 +276,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
             <>
               <button
                 onClick={() => setPage('overview')}
-                className="text-slate-500 text-sm hover:text-slate-700"
+                className="text-[#7a7672] text-sm hover:text-[#55504a]"
               >
                 ← Back
               </button>
@@ -285,8 +285,8 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
                 disabled={!allRequiredChecked}
                 className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
                   allRequiredChecked
-                    ? 'bg-green-600 text-white hover:bg-green-700'
-                    : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    ? 'bg-[#e9f0fd] text-white hover:bg-[#e9f0fd]'
+                    : 'bg-[#c5c3c1] text-[#a09d9a] cursor-not-allowed'
                 }`}
               >
                 {allRequiredChecked ? "I'm ready — Let's go! 🎯" : `Check ${requiredItems.filter((_, i) => !checked[data.checklist.indexOf(requiredItems[i])]).length} required items`}

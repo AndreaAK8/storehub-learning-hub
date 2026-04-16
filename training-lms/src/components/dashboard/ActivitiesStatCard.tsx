@@ -28,11 +28,11 @@ export default function ActivitiesStatCard({
         onClick={() => setIsModalOpen(true)}
         className="bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-green-200 rounded-xl p-4 text-left hover:shadow-md transition-all cursor-pointer w-full group"
       >
-        <p className="text-sm font-medium text-green-600 opacity-70 group-hover:opacity-100">Activities Done</p>
+        <p className="text-sm font-medium text-[#2a6ee8] opacity-70 group-hover:opacity-100">Activities Done</p>
         <div className="flex items-center justify-between mt-1">
-          <p className="text-2xl font-bold text-green-700">{completed}/{total}</p>
+          <p className="text-2xl font-bold text-[#2a6ee8]">{completed}/{total}</p>
           <svg
-            className="w-4 h-4 text-green-400 group-hover:text-green-600 transition-colors"
+            className="w-4 h-4 text-[#2a6ee8] group-hover:text-[#2a6ee8] transition-colors"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

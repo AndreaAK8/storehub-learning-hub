@@ -85,7 +85,7 @@ export default function OnboardingChecklist({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-10">
+      <div className="bg-white border-b border-[#c5c3c1] sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -94,19 +94,19 @@ export default function OnboardingChecklist({
               </div>
               <div>
                 <h1 className="font-semibold text-[var(--sh-black)]">Training Overview</h1>
-                <p className="text-sm text-slate-500">{completedCount} of {steps.length} completed</p>
+                <p className="text-sm text-[#7a7672]">{completedCount} of {steps.length} completed</p>
               </div>
             </div>
 
             {/* Progress bar */}
             <div className="flex items-center gap-4">
-              <div className="w-32 h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-32 h-2 bg-[#c5c3c1] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[var(--sh-orange)] to-[var(--sh-orange-dark)] transition-all duration-500"
                   style={{ width: `${(completedCount / steps.length) * 100}%` }}
                 />
               </div>
-              <span className="text-sm font-medium text-slate-600">{Math.round((completedCount / steps.length) * 100)}%</span>
+              <span className="text-sm font-medium text-[#55504a]">{Math.round((completedCount / steps.length) * 100)}%</span>
             </div>
           </div>
         </div>
@@ -125,16 +125,16 @@ export default function OnboardingChecklist({
                     currentStep === index
                       ? 'bg-[var(--orange-100)] border-2 border-[var(--sh-orange)]'
                       : step.completed
-                        ? 'bg-green-50 border border-green-200 hover:bg-green-100'
-                        : 'bg-white border border-slate-200 hover:border-slate-300'
+                        ? 'bg-[#e9f0fd] border border-[#c4d7f9] hover:bg-[#e9f0fd]'
+                        : 'bg-white border border-[#c5c3c1] hover:border-[#a09d9a]'
                   }`}
                 >
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                     step.completed
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-[#e9f0fd] text-white'
                       : currentStep === index
                         ? 'bg-[var(--sh-orange)] text-white'
-                        : 'bg-slate-100 text-slate-400'
+                        : 'bg-[#eae9e8] text-[#a09d9a]'
                   }`}>
                     {step.completed ? (
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -146,7 +146,7 @@ export default function OnboardingChecklist({
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-medium truncate ${
-                      currentStep === index ? 'text-[var(--sh-orange)]' : step.completed ? 'text-green-700' : 'text-slate-700'
+                      currentStep === index ? 'text-[var(--sh-orange)]' : step.completed ? 'text-[#2a6ee8]' : 'text-[#55504a]'
                     }`}>
                       {step.title}
                     </p>
@@ -158,7 +158,7 @@ export default function OnboardingChecklist({
               {completedCount >= 3 && (
                 <button
                   onClick={() => router.push('/dashboard/my-training')}
-                  className="w-full mt-4 p-3 text-sm text-slate-500 hover:text-[var(--sh-orange)] transition-colors flex items-center justify-center gap-2"
+                  className="w-full mt-4 p-3 text-sm text-[#7a7672] hover:text-[var(--sh-orange)] transition-colors flex items-center justify-center gap-2"
                 >
                   Skip to My Schedule
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,7 +172,7 @@ export default function OnboardingChecklist({
           {/* Main Content Area */}
           <div className="flex-1">
             {/* Step Content */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-[#c5c3c1] shadow-sm overflow-hidden">
               {currentStep === 0 && (
                 <WelcomeStep traineeName={traineeName} roleCode={roleCode} roleName={roleName} />
               )}
@@ -190,10 +190,10 @@ export default function OnboardingChecklist({
               )}
 
               {/* Navigation Footer */}
-              <div className="px-8 py-6 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+              <div className="px-8 py-6 bg-[#f5f5f4] border-t border-[#c5c3c1] flex items-center justify-between">
                 <button
                   onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                  className={`flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900 transition-colors ${
+                  className={`flex items-center gap-2 px-4 py-2 text-[#55504a] hover:text-[#2f2922] transition-colors ${
                     currentStep === 0 ? 'invisible' : ''
                   }`}
                 >
@@ -244,7 +244,7 @@ function WelcomeStep({ traineeName, roleCode, roleName }: { traineeName: string,
         <h2 className="text-3xl font-bold text-[var(--sh-black)] mb-4">
           Welcome to StoreHub Training, {traineeName}!
         </h2>
-        <p className="text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
+        <p className="text-lg text-[#55504a] max-w-xl mx-auto leading-relaxed">
           You're about to embark on an exciting learning journey that will equip you with everything you need to succeed as an <strong className="text-[var(--sh-orange)]">{roleName}</strong>.
         </p>
       </div>
@@ -264,7 +264,7 @@ function WelcomeStep({ traineeName, roleCode, roleName }: { traineeName: string,
               <div className="w-6 h-6 rounded-full bg-[var(--sh-orange)] text-white flex items-center justify-center text-sm font-semibold">
                 {i + 1}
               </div>
-              <span className="text-sm text-slate-700">{item}</span>
+              <span className="text-sm text-[#55504a]">{item}</span>
             </div>
           ))}
         </div>
@@ -291,21 +291,21 @@ function HowItWorksStep() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--sh-black)]">How This Training Works</h2>
-            <p className="text-slate-500">The Self-Study Philosophy</p>
+            <p className="text-[#7a7672]">The Self-Study Philosophy</p>
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
         {/* You're in Control */}
-        <div className="p-5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
+        <div className="p-5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-[#c4d7f9]">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#e9f0fd] flex items-center justify-center flex-shrink-0">
               <span className="text-2xl">🎯</span>
             </div>
             <div>
-              <h4 className="font-semibold text-green-800 mb-2">You're in Control</h4>
-              <p className="text-sm text-green-700 leading-relaxed">
+              <h4 className="font-semibold text-[#2a6ee8] mb-2">You're in Control</h4>
+              <p className="text-sm text-[#2a6ee8] leading-relaxed">
                 This is a self-paced journey, and you're in the driver's seat. Your proactivity and accountability will shape your success. There's no trainer watching over your shoulder—you own your learning pace and outcomes.
               </p>
             </div>
@@ -313,7 +313,7 @@ function HowItWorksStep() {
         </div>
 
         {/* We've Got Your Back */}
-        <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200">
+        <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-[#2f2922] border border-blue-200">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
               <span className="text-2xl">🤝</span>
@@ -330,12 +330,12 @@ function HowItWorksStep() {
         {/* Time Matters */}
         <div className="p-5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#fff4e8] flex items-center justify-center flex-shrink-0">
               <span className="text-2xl">⏰</span>
             </div>
             <div>
-              <h4 className="font-semibold text-amber-800 mb-2">Time Matters!</h4>
-              <p className="text-sm text-amber-700 leading-relaxed">
+              <h4 className="font-semibold text-[#ff9419] mb-2">Time Matters!</h4>
+              <p className="text-sm text-[#ff9419] leading-relaxed">
                 Every task has a set time limit, so managing your schedule is key. Check the training agenda to stay on track. If you fall behind, tasks can pile up—fast.
               </p>
             </div>
@@ -343,14 +343,14 @@ function HowItWorksStep() {
         </div>
 
         {/* Some Parts Might Get Tricky */}
-        <div className="p-5 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200">
+        <div className="p-5 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-50 border border-purple-200">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[#55504a] flex items-center justify-center flex-shrink-0">
               <span className="text-2xl">🧩</span>
             </div>
             <div>
-              <h4 className="font-semibold text-purple-800 mb-2">Some Parts Might Get Tricky</h4>
-              <p className="text-sm text-purple-700 leading-relaxed">
+              <h4 className="font-semibold text-[#55504a] mb-2">Some Parts Might Get Tricky</h4>
+              <p className="text-sm text-[#55504a] leading-relaxed">
                 Stay engaged, take notes, and don't hesitate to ask questions. Your trainer will go through them during check-ins—no question is too big or too small.
               </p>
             </div>
@@ -365,7 +365,7 @@ function HowItWorksStep() {
             </div>
             <div>
               <h4 className="font-semibold text-[var(--sh-black)] mb-2">Click Everything!</h4>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-[#55504a] leading-relaxed">
                 Throughout your training materials, there are hyperlinks hidden like Easter eggs. Instead of chocolate, they're packed with valuable insights. Don't miss out!
               </p>
             </div>
@@ -387,7 +387,7 @@ function ScoringStep() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--sh-black)]">Understanding Your Performance Score</h2>
-            <p className="text-slate-500">How you'll be evaluated</p>
+            <p className="text-[#7a7672]">How you'll be evaluated</p>
           </div>
         </div>
       </div>
@@ -404,8 +404,8 @@ function ScoringStep() {
             </div>
             <div className="flex-1 pt-2">
               <h4 className="font-bold text-[var(--sh-black)] text-lg mb-2">Learning Score</h4>
-              <p className="text-sm text-slate-600 mb-3">Your formal assessments:</p>
-              <ul className="space-y-2 text-sm text-slate-600">
+              <p className="text-sm text-[#55504a] mb-3">Your formal assessments:</p>
+              <ul className="space-y-2 text-sm text-[#55504a]">
                 <li className="flex items-start gap-2">
                   <span className="text-[var(--sh-orange)] mt-0.5">•</span>
                   <span><strong>All-in-One Quiz</strong> (Day 2)</span>
@@ -430,8 +430,8 @@ function ScoringStep() {
             </div>
             <div className="flex-1 pt-2">
               <h4 className="font-bold text-[var(--sh-black)] text-lg mb-2">Participation Score</h4>
-              <p className="text-sm text-slate-600 mb-3">Evaluated daily by trainer:</p>
-              <ul className="space-y-2 text-sm text-slate-600">
+              <p className="text-sm text-[#55504a] mb-3">Evaluated daily by trainer:</p>
+              <ul className="space-y-2 text-sm text-[#55504a]">
                 <li className="flex items-start gap-2">
                   <span className="text-[var(--sh-blue)] mt-0.5">•</span>
                   <span><strong>Task Completion</strong> (5%)</span>
@@ -451,28 +451,28 @@ function ScoringStep() {
       </div>
 
       {/* Participation Levels */}
-      <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 mb-6">
+      <div className="p-5 rounded-xl bg-[#f5f5f4] border border-[#c5c3c1] mb-6">
         <h4 className="font-semibold text-[var(--sh-black)] mb-4">Participation Levels</h4>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="p-3 rounded-lg bg-white border border-red-200 text-center">
+          <div className="p-3 rounded-lg bg-white border border-[#ffcfd7] text-center">
             <span className="text-2xl">🔴</span>
-            <p className="font-semibold text-red-700 mt-1">5%</p>
-            <p className="text-xs text-red-600">Passive</p>
+            <p className="font-semibold text-[#ff546f] mt-1">5%</p>
+            <p className="text-xs text-[#ff546f]">Passive</p>
           </div>
           <div className="p-3 rounded-lg bg-white border border-yellow-200 text-center">
             <span className="text-2xl">🟡</span>
-            <p className="font-semibold text-yellow-700 mt-1">10%</p>
-            <p className="text-xs text-yellow-600">Somewhat Active</p>
+            <p className="font-semibold text-[#ff9419] mt-1">10%</p>
+            <p className="text-xs text-[#ff9419]">Somewhat Active</p>
           </div>
           <div className="p-3 rounded-lg bg-white border border-blue-200 text-center">
             <span className="text-2xl">🔵</span>
             <p className="font-semibold text-blue-700 mt-1">15%</p>
             <p className="text-xs text-blue-600">Engaged</p>
           </div>
-          <div className="p-3 rounded-lg bg-white border border-green-200 text-center">
+          <div className="p-3 rounded-lg bg-white border border-[#c4d7f9] text-center">
             <span className="text-2xl">🟢</span>
-            <p className="font-semibold text-green-700 mt-1">20%</p>
-            <p className="text-xs text-green-600">Go-Getter</p>
+            <p className="font-semibold text-[#2a6ee8] mt-1">20%</p>
+            <p className="text-xs text-[#2a6ee8]">Go-Getter</p>
           </div>
         </div>
       </div>
@@ -485,7 +485,7 @@ function ScoringStep() {
           <span>+</span>
           <span className="bg-[var(--sh-blue)] px-3 py-1 rounded-full text-sm font-semibold">Participation (5-20%)</span>
         </div>
-        <p className="text-center text-sm mt-3 text-slate-300">
+        <p className="text-center text-sm mt-3 text-[#a09d9a]">
           💡 High participation can boost your score and provide insurance against weaker assessments!
         </p>
       </div>
@@ -499,18 +499,18 @@ function RoleMissionStep({ roleCode, roleName, content }: { roleCode: string, ro
     <div className="p-8">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-600 flex items-center justify-center">
             <span className="text-2xl">🎯</span>
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--sh-black)]">Your Role & Mission</h2>
-            <p className="text-slate-500">What it means to be an {roleCode}</p>
+            <p className="text-[#7a7672]">What it means to be an {roleCode}</p>
           </div>
         </div>
       </div>
 
-      <div className="mb-6 p-5 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100">
-        <p className="text-slate-700 leading-relaxed">{content.missionIntro}</p>
+      <div className="mb-6 p-5 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-50 border border-purple-100">
+        <p className="text-[#55504a] leading-relaxed">{content.missionIntro}</p>
       </div>
 
       {/* Core Pillars */}
@@ -519,12 +519,12 @@ function RoleMissionStep({ roleCode, roleName, content }: { roleCode: string, ro
         {content.pillars.map((pillar, index) => (
           <div
             key={index}
-            className="flex items-start gap-4 p-4 rounded-xl bg-white border border-slate-200 hover:border-[var(--sh-orange)] hover:shadow-sm transition-all"
+            className="flex items-start gap-4 p-4 rounded-xl bg-white border border-[#c5c3c1] hover:border-[var(--sh-orange)] hover:shadow-sm transition-all"
           >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--sh-orange)] to-[var(--sh-orange-dark)] text-white flex items-center justify-center text-lg font-bold flex-shrink-0">
               {index + 1}
             </div>
-            <p className="text-sm text-slate-700 leading-relaxed pt-2">{pillar}</p>
+            <p className="text-sm text-[#55504a] leading-relaxed pt-2">{pillar}</p>
           </div>
         ))}
       </div>
@@ -560,7 +560,7 @@ function JourneyStep({ roleCode, totalDays, content }: { roleCode: string, total
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--sh-black)]">Your {totalDays}-Day Journey</h2>
-            <p className="text-slate-500">From foundation to specialization</p>
+            <p className="text-[#7a7672]">From foundation to specialization</p>
           </div>
         </div>
       </div>
@@ -619,13 +619,13 @@ function JourneyStep({ roleCode, totalDays, content }: { roleCode: string, total
 
       {/* Note */}
       {content.note && (
-        <div className="flex items-start gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200 mt-4">
-          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+        <div className="flex items-start gap-4 p-4 rounded-xl bg-[#fff4e8] border border-amber-200 mt-4">
+          <div className="w-10 h-10 rounded-full bg-[#fff4e8] flex items-center justify-center flex-shrink-0">
             <span className="text-xl">💡</span>
           </div>
           <div>
-            <p className="text-sm font-medium text-amber-800 mb-1">Good to know</p>
-            <p className="text-sm text-amber-700">{content.note}</p>
+            <p className="text-sm font-medium text-[#ff9419] mb-1">Good to know</p>
+            <p className="text-sm text-[#ff9419]">{content.note}</p>
           </div>
         </div>
       )}
@@ -690,7 +690,7 @@ function getRoleContent(roleCode: string): RoleContent {
       ],
       note: "OC training is streamlined—no mock test required! Your final evaluation is the Menu Setup task, which demonstrates real-world capability.",
       phases: [
-        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
         { name: 'Specialization', days: 'Day 3-4', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
       ],
       dayDetails: [
@@ -722,9 +722,9 @@ function getRoleContent(roleCode: string): RoleContent {
         "Role Play Assessments",
       ],
       phases: [
-        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
         { name: 'Deep Dive', days: 'Day 3-5', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
-        { name: 'Practice', days: 'Day 6-8', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200' },
+        { name: 'Practice', days: 'Day 6-8', color: 'text-[#55504a]', bgColor: 'bg-[#55504a]', borderColor: 'border-purple-200' },
         { name: 'Validation', days: 'Day 9-10', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
       ],
       dayDetails: [
@@ -762,9 +762,9 @@ function getRoleContent(roleCode: string): RoleContent {
         "Graduation",
       ],
       phases: [
-        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
         { name: 'Advanced Topics', days: 'Day 3', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
-        { name: 'Training Prep', days: 'Day 4', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200' },
+        { name: 'Training Prep', days: 'Day 4', color: 'text-[#55504a]', bgColor: 'bg-[#55504a]', borderColor: 'border-purple-200' },
         { name: 'Mock Test', days: 'Day 5', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
       ],
       dayDetails: [
@@ -799,10 +799,10 @@ function getRoleContent(roleCode: string): RoleContent {
       ],
       note: "MOM training includes comprehensive assessments: Training Assessments for F&B and Retail, plus Mock Tests covering Welcome Calls, Go-Live Calls, and Training delivery.",
       phases: [
-        { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+        { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
         { name: 'Advanced System', days: 'Day 3', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
-        { name: 'Buddy & Practice', days: 'Day 4', color: 'text-purple-700', bgColor: 'bg-purple-100', borderColor: 'border-purple-200' },
-        { name: 'Training Assessments', days: 'Day 5', color: 'text-amber-700', bgColor: 'bg-amber-100', borderColor: 'border-amber-200' },
+        { name: 'Buddy & Practice', days: 'Day 4', color: 'text-[#55504a]', bgColor: 'bg-[#55504a]', borderColor: 'border-purple-200' },
+        { name: 'Training Assessments', days: 'Day 5', color: 'text-[#ff9419]', bgColor: 'bg-[#fff4e8]', borderColor: 'border-amber-200' },
         { name: 'Mock Tests', days: 'Day 6', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
       ],
       dayDetails: [
@@ -838,7 +838,7 @@ function getRoleContent(roleCode: string): RoleContent {
       "Final Assessment",
     ],
     phases: [
-      { name: 'Foundation', days: 'Day 1-2', color: 'text-green-700', bgColor: 'bg-green-100', borderColor: 'border-green-200' },
+      { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
       { name: 'Role Training', days: 'Day 3+', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
     ],
     dayDetails: [

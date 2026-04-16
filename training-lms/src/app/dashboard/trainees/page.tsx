@@ -271,39 +271,39 @@ export default async function TraineesPage() {
 
       {/* Demo Mode Banner */}
       {isDemo && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
-          <svg className="w-5 h-5 text-amber-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#fff4e8] border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-[#ff9419] mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-amber-800 font-medium">Demo Mode</p>
-            <p className="text-amber-700 text-sm">Showing sample data. Real trainee data will appear once connected to n8n.</p>
+            <p className="text-[#ff9419] font-medium">Demo Mode</p>
+            <p className="text-[#ff9419] text-sm">Showing sample data. Real trainee data will appear once connected to n8n.</p>
           </div>
         </div>
       )}
 
       {/* Error Banner */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <svg className="w-5 h-5 text-red-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#ffeef0] border border-[#ffcfd7] rounded-lg p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-[#ff546f] mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-red-800 font-medium">Connection Error</p>
-            <p className="text-red-700 text-sm">{error}</p>
+            <p className="text-[#ff546f] font-medium">Connection Error</p>
+            <p className="text-[#ff546f] text-sm">{error}</p>
           </div>
         </div>
       )}
 
       {/* Success Banner */}
       {!error && !isDemo && trainees.length > 0 && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-          <svg className="w-5 h-5 text-green-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#e9f0fd] border border-green-200 rounded-lg p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-[#2a6ee8] mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <div>
-            <p className="text-green-800 font-medium">Connected to n8n</p>
-            <p className="text-green-700 text-sm">Showing live data from your Google Sheets via n8n webhook.</p>
+            <p className="text-[#2a6ee8] font-medium">Connected to n8n</p>
+            <p className="text-[#2a6ee8] text-sm">Showing live data from your Google Sheets via n8n webhook.</p>
           </div>
         </div>
       )}
@@ -316,10 +316,10 @@ export default async function TraineesPage() {
 
 function StatCard({ label, value, color }: { label: string; value: string | number; color: string }) {
   const styles = {
-    blue: 'bg-gradient-to-br from-sky-50 to-blue-100 border-blue-200 text-blue-700',
+    blue: 'bg-gradient-to-br from-sky-50 to-blue-100 border-blue-200 text-[#2a6ee8]',
     yellow: 'bg-gradient-to-br from-amber-50 to-orange-100 border-orange-200 text-orange-600',
-    green: 'bg-gradient-to-br from-emerald-50 to-green-100 border-green-200 text-green-600',
-    purple: 'bg-gradient-to-br from-fuchsia-50 to-pink-100 border-pink-200 text-pink-600',
+    green: 'bg-gradient-to-br from-emerald-50 to-green-100 border-green-200 text-[#2a6ee8]',
+    purple: 'bg-gradient-to-br from-fuchsia-50 to-[#ff546f] border-pink-200 text-pink-600',
   }
 
   return (

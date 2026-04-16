@@ -69,7 +69,7 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                 <h3 className="text-2xl font-bold text-[var(--sh-black)] mb-4 tracking-wide">
                   Welcome to StoreHub Training!
                 </h3>
-                <p className="text-slate-600 text-base leading-7 tracking-wide">
+                <p className="text-[#55504a] text-base leading-7 tracking-wide">
                   You're about to embark on an exciting learning journey that will equip you with everything you need to succeed in your role. This overview covers your training program—the foundation that every StoreHub team member builds upon.
                 </p>
               </div>
@@ -106,14 +106,14 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* You're in Control */}
-              <div className="p-5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
+              <div className="p-5 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-[#c4d7f9]">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-[#e9f0fd] flex items-center justify-center flex-shrink-0">
                     <span className="text-2xl">🎯</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-green-800 mb-2">You're in Control</h4>
-                    <p className="text-sm text-green-700 leading-relaxed">
+                    <h4 className="font-semibold text-[#2a6ee8] mb-2">You're in Control</h4>
+                    <p className="text-sm text-[#2a6ee8] leading-relaxed">
                       This is a self-paced journey, and you're in the driver's seat. Your proactivity and accountability will shape your success. There's no trainer watching over your shoulder—you own your learning pace and outcomes.
                     </p>
                   </div>
@@ -121,7 +121,7 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
               </div>
 
               {/* We've Got Your Back */}
-              <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200">
+              <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-[#2f2922] border border-blue-200">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                     <span className="text-2xl">🤝</span>
@@ -138,12 +138,12 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
               {/* Time Matters */}
               <div className="p-5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-[#fff4e8] flex items-center justify-center flex-shrink-0">
                     <span className="text-2xl">⏰</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-amber-800 mb-2">Time Matters!</h4>
-                    <p className="text-sm text-amber-700 leading-relaxed">
+                    <h4 className="font-semibold text-[#ff9419] mb-2">Time Matters!</h4>
+                    <p className="text-sm text-[#ff9419] leading-relaxed">
                       Every task has a set time limit, so managing your schedule is key. Check the training agenda to stay on track. If you fall behind, tasks can pile up—fast.
                     </p>
                   </div>
@@ -151,14 +151,14 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
               </div>
 
               {/* Some Parts Might Get Tricky */}
-              <div className="p-5 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200">
+              <div className="p-5 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-50 border border-purple-200">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-[#55504a] flex items-center justify-center flex-shrink-0">
                     <span className="text-2xl">🧩</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-purple-800 mb-2">Some Parts Might Get Tricky</h4>
-                    <p className="text-sm text-purple-700 leading-relaxed">
+                    <h4 className="font-semibold text-[#55504a] mb-2">Some Parts Might Get Tricky</h4>
+                    <p className="text-sm text-[#55504a] leading-relaxed">
                       Stay engaged, take notes, and don't hesitate to ask questions. Your trainer will go through them during check-ins—no question is too big or too small.
                     </p>
                   </div>
@@ -174,7 +174,7 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                 </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-[var(--sh-black)] mb-1">Click Everything!</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  <p className="text-sm text-[#55504a] leading-relaxed">
                     Throughout your training materials, there are hyperlinks hidden like Easter eggs. Instead of chocolate, they're packed with valuable insights. Don't miss out!
                   </p>
                 </div>
@@ -208,8 +208,8 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   </div>
                   <div className="flex-1 pt-2">
                     <h4 className="font-bold text-[var(--sh-black)] text-lg mb-2">Learning Score</h4>
-                    <p className="text-sm text-slate-600 mb-3">Your formal assessments contribute to this score:</p>
-                    <ul className="space-y-2 text-sm text-slate-600">
+                    <p className="text-sm text-[#55504a] mb-3">Your formal assessments contribute to this score:</p>
+                    <ul className="space-y-2 text-sm text-[#55504a]">
                       <li className="flex items-start gap-2">
                         <span className="text-[var(--sh-orange)] mt-0.5">•</span>
                         <span><strong>All-in-One Quiz</strong> (Day 2) - Weighted based on your role</span>
@@ -234,8 +234,8 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   </div>
                   <div className="flex-1 pt-2">
                     <h4 className="font-bold text-[var(--sh-black)] text-lg mb-2">Participation Score</h4>
-                    <p className="text-sm text-slate-600 mb-3">Evaluated daily by your trainer across:</p>
-                    <ul className="space-y-2 text-sm text-slate-600">
+                    <p className="text-sm text-[#55504a] mb-3">Evaluated daily by your trainer across:</p>
+                    <ul className="space-y-2 text-sm text-[#55504a]">
                       <li className="flex items-start gap-2">
                         <span className="text-[var(--sh-blue)] mt-0.5">•</span>
                         <span><strong>Task Completion</strong> (5%) - Engagement & assignment completion</span>
@@ -255,22 +255,22 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
             </div>
 
             {/* Participation Levels */}
-            <div className="p-5 rounded-xl bg-slate-50 border border-slate-200">
+            <div className="p-5 rounded-xl bg-[#f5f5f4] border border-[#c5c3c1]">
               <h4 className="font-semibold text-[var(--sh-black)] mb-4">Participation Levels</h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                <div className="p-3 rounded-lg bg-white border border-red-200">
+                <div className="p-3 rounded-lg bg-white border border-[#ffcfd7]">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-red-500 text-lg">🔴</span>
-                    <span className="font-semibold text-red-700">5%</span>
+                    <span className="text-[#ff546f] text-lg">🔴</span>
+                    <span className="font-semibold text-[#ff546f]">5%</span>
                   </div>
-                  <p className="text-xs text-red-600">Passive & Non-Responsive</p>
+                  <p className="text-xs text-[#ff546f]">Passive & Non-Responsive</p>
                 </div>
                 <div className="p-3 rounded-lg bg-white border border-yellow-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-yellow-500 text-lg">🟡</span>
-                    <span className="font-semibold text-yellow-700">10%</span>
+                    <span className="text-[#ff9419] text-lg">🟡</span>
+                    <span className="font-semibold text-[#ff9419]">10%</span>
                   </div>
-                  <p className="text-xs text-yellow-600">Passive & Somewhat Responsive</p>
+                  <p className="text-xs text-[#ff9419]">Passive & Somewhat Responsive</p>
                 </div>
                 <div className="p-3 rounded-lg bg-white border border-blue-200">
                   <div className="flex items-center gap-2 mb-2">
@@ -279,12 +279,12 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   </div>
                   <p className="text-xs text-blue-600">Neutral - Regular participation</p>
                 </div>
-                <div className="p-3 rounded-lg bg-white border border-green-200">
+                <div className="p-3 rounded-lg bg-white border border-[#c4d7f9]">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-green-500 text-lg">🟢</span>
-                    <span className="font-semibold text-green-700">20%</span>
+                    <span className="text-[#2a6ee8] text-lg">🟢</span>
+                    <span className="font-semibold text-[#2a6ee8]">20%</span>
                   </div>
-                  <p className="text-xs text-green-600">Go-Getter - Fully engaged</p>
+                  <p className="text-xs text-[#2a6ee8]">Go-Getter - Fully engaged</p>
                 </div>
               </div>
             </div>
@@ -379,9 +379,9 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
               {/* Foundation Phase */}
               <div className="relative pl-16 pb-6">
                 <div className={`absolute left-3 top-2 w-7 h-7 rounded-full flex items-center justify-center shadow-md ${
-                  foundationStatus === 'completed' ? 'bg-green-500' :
+                  foundationStatus === 'completed' ? 'bg-[#e9f0fd]' :
                   foundationStatus === 'in_progress' ? 'bg-[var(--sh-orange)] animate-pulse' :
-                  'bg-gray-300'
+                  'bg-[#a09d9a]'
                 }`}>
                   {foundationStatus === 'completed' ? (
                     <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -396,15 +396,15 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   )}
                 </div>
                 <div className={`p-5 rounded-xl ${
-                  foundationStatus === 'completed' ? 'bg-green-50 border border-green-200' :
+                  foundationStatus === 'completed' ? 'bg-[#e9f0fd] border border-[#c4d7f9]' :
                   foundationStatus === 'in_progress' ? 'bg-[var(--orange-100)] border border-[var(--orange-200)]' :
-                  'bg-gray-50 border border-gray-200'
+                  'bg-[#f5f5f4] border border-[#c5c3c1]'
                 }`}>
                   <div className="flex items-center gap-2 mb-3">
                     <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                      foundationStatus === 'completed' ? 'text-green-700 bg-green-200' :
+                      foundationStatus === 'completed' ? 'text-[#2a6ee8] bg-[#e9f0fd]' :
                       foundationStatus === 'in_progress' ? 'text-[var(--sh-orange)] bg-[var(--orange-200)]' :
-                      'text-gray-600 bg-gray-200'
+                      'text-[#55504a] bg-[#c5c3c1]'
                     }`}>
                       {foundationStatus === 'completed' ? 'COMPLETED' :
                        foundationStatus === 'in_progress' ? 'IN PROGRESS' : 'UP NEXT'}
@@ -415,14 +415,14 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     {roleContent.foundationItems.map((item, index) => (
                       <div key={index} className={`flex items-center gap-2 p-2 bg-white rounded-lg ${
-                        foundationStatus === 'completed' ? 'border border-green-100' :
+                        foundationStatus === 'completed' ? 'border border-[#c4d7f9]' :
                         foundationStatus === 'in_progress' ? 'border border-[var(--orange-200)]' :
-                        'border border-gray-100'
+                        'border border-[#eae9e8]'
                       }`}>
                         <svg className={`w-4 h-4 flex-shrink-0 ${
-                          foundationStatus === 'completed' ? 'text-green-500' :
+                          foundationStatus === 'completed' ? 'text-[#2a6ee8]' :
                           foundationStatus === 'in_progress' ? 'text-[var(--sh-orange)]' :
-                          'text-gray-400'
+                          'text-[#a09d9a]'
                         }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           {foundationStatus === 'completed' ? (
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -431,9 +431,9 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                           )}
                         </svg>
                         <span className={`text-xs ${
-                          foundationStatus === 'completed' ? 'text-green-700' :
+                          foundationStatus === 'completed' ? 'text-[#2a6ee8]' :
                           foundationStatus === 'in_progress' ? 'text-[var(--orange-700)]' :
-                          'text-gray-600'
+                          'text-[#55504a]'
                         }`}>{item}</span>
                       </div>
                     ))}
@@ -444,9 +444,9 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
               {/* Specialization Phase */}
               <div className="relative pl-16">
                 <div className={`absolute left-3 top-2 w-7 h-7 rounded-full flex items-center justify-center shadow-md ${
-                  specializationStatus === 'completed' ? 'bg-green-500' :
+                  specializationStatus === 'completed' ? 'bg-[#e9f0fd]' :
                   specializationStatus === 'in_progress' ? 'bg-[var(--sh-blue)] animate-pulse' :
-                  'bg-gray-300'
+                  'bg-[#a09d9a]'
                 }`}>
                   {specializationStatus === 'completed' ? (
                     <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -461,15 +461,15 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   )}
                 </div>
                 <div className={`p-5 rounded-xl ${
-                  specializationStatus === 'completed' ? 'bg-green-50 border border-green-200' :
+                  specializationStatus === 'completed' ? 'bg-[#e9f0fd] border border-[#c4d7f9]' :
                   specializationStatus === 'in_progress' ? 'bg-[var(--blue-100)] border border-[var(--blue-200)]' :
-                  'bg-gray-50 border border-gray-200'
+                  'bg-[#f5f5f4] border border-[#c5c3c1]'
                 }`}>
                   <div className="flex items-center gap-2 mb-3">
                     <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                      specializationStatus === 'completed' ? 'text-green-700 bg-green-200' :
+                      specializationStatus === 'completed' ? 'text-[#2a6ee8] bg-[#e9f0fd]' :
                       specializationStatus === 'in_progress' ? 'text-[var(--blue-600)] bg-[var(--blue-200)]' :
-                      'text-gray-600 bg-gray-200'
+                      'text-[#55504a] bg-[#c5c3c1]'
                     }`}>
                       {specializationStatus === 'completed' ? 'COMPLETED' :
                        specializationStatus === 'in_progress' ? 'IN PROGRESS' : 'COMING UP'}
@@ -480,14 +480,14 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {roleContent.specializationItems.map((item, index) => (
                       <div key={index} className={`flex items-center gap-2 p-2 bg-white rounded-lg ${
-                        specializationStatus === 'completed' ? 'border border-green-100' :
+                        specializationStatus === 'completed' ? 'border border-[#c4d7f9]' :
                         specializationStatus === 'in_progress' ? 'border border-[var(--blue-200)]' :
-                        'border border-gray-100'
+                        'border border-[#eae9e8]'
                       }`}>
                         <svg className={`w-4 h-4 flex-shrink-0 ${
-                          specializationStatus === 'completed' ? 'text-green-500' :
+                          specializationStatus === 'completed' ? 'text-[#2a6ee8]' :
                           specializationStatus === 'in_progress' ? 'text-[var(--sh-blue)]' :
-                          'text-gray-400'
+                          'text-[#a09d9a]'
                         }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           {specializationStatus === 'completed' ? (
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -496,9 +496,9 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                           )}
                         </svg>
                         <span className={`text-xs ${
-                          specializationStatus === 'completed' ? 'text-green-700' :
+                          specializationStatus === 'completed' ? 'text-[#2a6ee8]' :
                           specializationStatus === 'in_progress' ? 'text-[var(--blue-600)]' :
-                          'text-gray-600'
+                          'text-[#55504a]'
                         }`}>{item}</span>
                       </div>
                     ))}
@@ -509,15 +509,15 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
 
             {/* Note */}
             {roleContent.note && (
-              <div className="flex items-start gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200">
-                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="flex items-start gap-4 p-4 rounded-xl bg-[#fff4e8] border border-amber-200">
+                <div className="w-10 h-10 rounded-full bg-[#fff4e8] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-[#ff9419]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-amber-800 mb-1">Good to know</p>
-                  <p className="text-sm text-amber-700">{roleContent.note}</p>
+                  <p className="text-sm font-medium text-[#ff9419] mb-1">Good to know</p>
+                  <p className="text-sm text-[#ff9419]">{roleContent.note}</p>
                 </div>
               </div>
             )}
@@ -569,23 +569,23 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                   </p>
 
                   <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-green-200 text-sm">
-                      <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-[#c4d7f9] text-sm">
+                      <svg className="w-4 h-4 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-green-700">Your own speed</span>
+                      <span className="text-[#2a6ee8]">Your own speed</span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-green-200 text-sm">
-                      <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-[#c4d7f9] text-sm">
+                      <svg className="w-4 h-4 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-green-700">Unlimited replays</span>
+                      <span className="text-[#2a6ee8]">Unlimited replays</span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-green-200 text-sm">
-                      <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-[#c4d7f9] text-sm">
+                      <svg className="w-4 h-4 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-green-700">Coach support</span>
+                      <span className="text-[#2a6ee8]">Coach support</span>
                     </div>
                   </div>
                 </div>

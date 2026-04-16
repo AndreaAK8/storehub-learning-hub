@@ -27,9 +27,11 @@ export default async function DashboardLayout({
   // Use role from database directly
   const userRole = (profile?.role || 'trainee') as 'admin' | 'coach' | 'trainee'
 
+  const userName = profile?.full_name || user.email?.split('@')[0] || ''
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Sidebar userRole={userRole} />
+    <div className="min-h-screen" style={{ background: '#f5f5f4' }}>
+      <Sidebar userRole={userRole} userName={userName} />
       <MobileNav userRole={userRole} />
       <div className="lg:pl-64">
         <Header user={user} profile={profile} />

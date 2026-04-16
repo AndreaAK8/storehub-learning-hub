@@ -84,24 +84,24 @@ export default function ScoreSubmission({ traineeEmail, traineeName }: ScoreSubm
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Submit Assessment Score</h2>
+      <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Submit Assessment Score</h2>
 
       {message && (
-        <div className={`mb-4 p-3 rounded-lg text-sm ${status === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : status === 'error' ? 'bg-red-50 text-red-800 border border-red-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}`}>
+        <div className={`mb-4 p-3 rounded-lg text-sm ${status === 'success' ? 'bg-[#e9f0fd] text-[#2a6ee8] border border-[#c4d7f9]' : status === 'error' ? 'bg-[#ffeef0] text-[#ff546f] border border-[#ffcfd7]' : 'bg-[#fff4e8] text-[#ff9419] border border-amber-200'}`}>
           {message}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="assessmentType" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="assessmentType" className="block text-sm font-medium text-[#55504a] mb-1">
             Assessment Type
           </label>
           <select
             id="assessmentType"
             value={assessmentType}
             onChange={(e) => setAssessmentType(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             disabled={status === 'loading'}
           >
             <option value="">Select assessment type...</option>
@@ -114,7 +114,7 @@ export default function ScoreSubmission({ traineeEmail, traineeName }: ScoreSubm
         </div>
 
         <div>
-          <label htmlFor="score" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="score" className="block text-sm font-medium text-[#55504a] mb-1">
             Score (0-100)
           </label>
           <input
@@ -125,13 +125,13 @@ export default function ScoreSubmission({ traineeEmail, traineeName }: ScoreSubm
             value={score}
             onChange={(e) => setScore(e.target.value)}
             placeholder="Enter score..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             disabled={status === 'loading'}
           />
         </div>
 
         <div>
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="notes" className="block text-sm font-medium text-[#55504a] mb-1">
             Notes (optional)
           </label>
           <textarea
@@ -140,7 +140,7 @@ export default function ScoreSubmission({ traineeEmail, traineeName }: ScoreSubm
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add any notes about this assessment..."
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             disabled={status === 'loading'}
           />
         </div>
@@ -169,7 +169,7 @@ export default function ScoreSubmission({ traineeEmail, traineeName }: ScoreSubm
         </button>
       </form>
 
-      <p className="text-xs text-gray-500 mt-4">
+      <p className="text-xs text-[#7a7672] mt-4">
         Scores are saved to Google Sheets via n8n workflow.
       </p>
     </div>

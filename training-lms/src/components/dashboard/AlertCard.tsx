@@ -87,17 +87,17 @@ export default function AlertCard({ trainee, onSendReminder, onUpdateStatus }: A
             <div className="flex items-center gap-2">
               <Link
                 href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-                className="font-medium text-gray-900 hover:text-blue-600 truncate"
+                className="font-medium text-[#7a7672] hover:text-blue-600 truncate"
               >
                 {trainee.fullName}
               </Link>
-              <span className="text-xs text-gray-500 flex-shrink-0">
+              <span className="text-xs text-[#7a7672] flex-shrink-0">
                 Day {trainee.currentTrainingDay || trainee.daysSinceTrainingStart}
               </span>
             </div>
 
             {/* Status message */}
-            <p className="text-sm text-gray-600 mt-0.5">
+            <p className="text-sm text-[#7a7672] mt-0.5">
               {riskLevel === 'critical' && assessmentsBehind > 0 && (
                 <span className="text-red-600 font-medium">
                   {assessmentsBehind} assessment{assessmentsBehind > 1 ? 's' : ''} overdue
@@ -109,7 +109,7 @@ export default function AlertCard({ trainee, onSendReminder, onUpdateStatus }: A
                 </span>
               )}
               {riskLevel === 'on-track' && (
-                <span className="text-green-700">
+                <span className="text-[#2a6ee8]">
                   On track - {remaining} remaining
                 </span>
               )}
@@ -117,7 +117,7 @@ export default function AlertCard({ trainee, onSendReminder, onUpdateStatus }: A
 
             {/* Delay Reason / Notes */}
             {trainee.delayReason && (
-              <div className="flex items-start gap-1.5 mt-2 text-sm text-gray-500">
+              <div className="flex items-start gap-1.5 mt-2 text-sm text-[#7a7672]">
                 <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                 </svg>
@@ -126,7 +126,7 @@ export default function AlertCard({ trainee, onSendReminder, onUpdateStatus }: A
             )}
 
             {trainee.notes && !trainee.delayReason && (
-              <div className="flex items-start gap-1.5 mt-2 text-sm text-gray-500">
+              <div className="flex items-start gap-1.5 mt-2 text-sm text-[#7a7672]">
                 <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                 </svg>
@@ -185,14 +185,14 @@ export default function AlertCard({ trainee, onSendReminder, onUpdateStatus }: A
         {onUpdateStatus && (
           <button
             onClick={() => onUpdateStatus(trainee)}
-            className="flex-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 py-1.5 px-3 rounded transition-colors"
+            className="flex-1 text-xs font-medium text-[#7a7672] hover:text-[#7a7672] hover:bg-[#f5f5f4] py-1.5 px-3 rounded transition-colors"
           >
             Update Status
           </button>
         )}
         <Link
           href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-          className="flex-1 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 py-1.5 px-3 rounded transition-colors text-center"
+          className="flex-1 text-xs font-medium text-[#7a7672] hover:text-[#7a7672] hover:bg-[#f5f5f4] py-1.5 px-3 rounded transition-colors text-center"
         >
           View Details
         </Link>
@@ -209,16 +209,16 @@ export function AlertCardCompact({ trainee }: { trainee: Trainee }) {
   return (
     <Link
       href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-      className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors"
+      className="flex items-center gap-3 p-3 hover:bg-[#f5f5f4] rounded-lg transition-colors"
     >
       <span className={`w-2 h-2 rounded-full flex-shrink-0 ${styles.dot}`} />
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-gray-900 text-sm truncate">{trainee.fullName}</p>
+        <p className="font-medium text-[#7a7672] text-sm truncate">{trainee.fullName}</p>
         {trainee.delayReason && (
-          <p className="text-xs text-gray-500 truncate">{trainee.delayReason}</p>
+          <p className="text-xs text-[#7a7672] truncate">{trainee.delayReason}</p>
         )}
       </div>
-      <span className="text-xs text-gray-400">
+      <span className="text-xs text-[#7a7672]">
         Day {trainee.currentTrainingDay || trainee.daysSinceTrainingStart}
       </span>
     </Link>

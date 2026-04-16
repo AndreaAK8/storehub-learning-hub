@@ -15,7 +15,7 @@ export default function CertificatePage() {
     <div className="flex items-center justify-center min-h-[60vh]">
       <div className="text-center">
         <div className="w-16 h-16 border-4 border-[var(--sh-orange)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-        <p className="text-slate-500">Redirecting to your training...</p>
+        <p className="text-[#7a7672]">Redirecting to your training...</p>
       </div>
     </div>
   )

@@ -134,21 +134,21 @@ export default function OnboardingTour({ onComplete, traineeEmail }: OnboardingT
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <span className="text-2xl">{step.icon}</span>
-              <span className="text-sm text-gray-500 font-semibold bg-gray-100 px-3 py-1 rounded-full">
+              <span className="text-sm text-[#7a7672] font-semibold bg-[#eae9e8] px-3 py-1 rounded-full">
                 {currentStep + 1} of {tourSteps.length}
               </span>
             </div>
             <button
               onClick={handleSkip}
-              className="text-gray-400 hover:text-gray-600 text-sm font-medium transition-colors"
+              className="text-[#a09d9a] hover:text-[#55504a] text-sm font-medium transition-colors"
             >
               Skip tour
             </button>
           </div>
 
           {/* Content */}
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">{step.title}</h3>
-          <p className="text-gray-600 leading-relaxed text-base mb-8">{step.description}</p>
+          <h3 className="text-2xl font-bold text-[#2f2922] mb-3">{step.title}</h3>
+          <p className="text-[#55504a] leading-relaxed text-base mb-8">{step.description}</p>
 
           {/* Progress dots */}
           <div className="flex items-center justify-center gap-2 mb-6">
@@ -160,8 +160,8 @@ export default function OnboardingTour({ onComplete, traineeEmail }: OnboardingT
                   index === currentStep
                     ? 'bg-orange-500 w-8'
                     : index < currentStep
-                    ? 'bg-green-500 w-2.5'
-                    : 'bg-gray-200 w-2.5'
+                    ? 'bg-[#e9f0fd] w-2.5'
+                    : 'bg-[#c5c3c1] w-2.5'
                 }`}
               />
             ))}
@@ -174,8 +174,8 @@ export default function OnboardingTour({ onComplete, traineeEmail }: OnboardingT
               disabled={isFirstStep}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold transition-all ${
                 isFirstStep
-                  ? 'text-gray-300 cursor-not-allowed'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'text-[#a09d9a] cursor-not-allowed'
+                  : 'text-[#55504a] hover:bg-[#eae9e8]'
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,7 +196,7 @@ export default function OnboardingTour({ onComplete, traineeEmail }: OnboardingT
           </div>
 
           {/* Keyboard hint */}
-          <p className="text-center text-xs text-gray-400 mt-5">
+          <p className="text-center text-xs text-[#a09d9a] mt-5">
             Use arrow keys ← → to navigate • Enter to continue • Esc to skip
           </p>
         </div>

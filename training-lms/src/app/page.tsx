@@ -12,7 +12,7 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#f5f5f4]">
       {/* Navigation */}
       <nav className="px-6 py-4 bg-white/80 backdrop-blur-sm border-b border-slate-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -22,7 +22,7 @@ export default async function HomePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
             </div>
-            <span className="text-lg font-semibold text-slate-900">Learning Hub</span>
+            <span className="text-lg font-semibold text-[#7a7672]">Learning Hub</span>
           </div>
           <Link
             href="/login"
@@ -41,13 +41,13 @@ export default async function HomePage() {
             Now live for StoreHub teams
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#7a7672] leading-tight">
             Your path to
             <span className="text-orange-600"> excellence</span>
             <br />starts here
           </h1>
 
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-[#7a7672] max-w-2xl mx-auto">
             A modern learning platform for StoreHub teams. Track progress, access materials, and grow your skills.
           </p>
 
@@ -60,7 +60,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="#features"
-              className="px-6 py-3 text-slate-600 hover:text-slate-900 transition-colors font-medium"
+              className="px-6 py-3 text-[#7a7672] hover:text-[#7a7672] transition-colors font-medium"
             >
               Learn more
             </Link>
@@ -90,25 +90,25 @@ export default async function HomePage() {
         <div className="mt-20 md:mt-32 grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="text-center p-6 bg-white rounded-2xl border border-slate-100">
             <p className="text-3xl font-bold text-orange-600">7+</p>
-            <p className="text-sm text-slate-600 mt-1">Training Roles</p>
+            <p className="text-sm text-[#7a7672] mt-1">Training Roles</p>
           </div>
           <div className="text-center p-6 bg-white rounded-2xl border border-slate-100">
             <p className="text-3xl font-bold text-orange-600">4-5</p>
-            <p className="text-sm text-slate-600 mt-1">Days per Program</p>
+            <p className="text-sm text-[#7a7672] mt-1">Days per Program</p>
           </div>
           <div className="text-center p-6 bg-white rounded-2xl border border-slate-100">
             <p className="text-3xl font-bold text-orange-600">100%</p>
-            <p className="text-sm text-slate-600 mt-1">Self-Paced</p>
+            <p className="text-sm text-[#7a7672] mt-1">Self-Paced</p>
           </div>
           <div className="text-center p-6 bg-white rounded-2xl border border-slate-100">
             <p className="text-3xl font-bold text-orange-600">24/7</p>
-            <p className="text-sm text-slate-600 mt-1">Access</p>
+            <p className="text-sm text-[#7a7672] mt-1">Access</p>
           </div>
         </div>
 
         {/* Footer */}
         <div className="mt-20 md:mt-32 text-center pb-8">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-[#7a7672]">
             Built with care for StoreHub teams
           </p>
         </div>
@@ -131,8 +131,8 @@ function FeatureCard({
       <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 mb-4">
         {icon}
       </div>
-      <h3 className="text-lg font-semibold text-slate-900 mb-2">{title}</h3>
-      <p className="text-slate-600 text-sm leading-relaxed">{description}</p>
+      <h3 className="text-lg font-semibold text-[#7a7672] mb-2">{title}</h3>
+      <p className="text-[#7a7672] text-sm leading-relaxed">{description}</p>
     </div>
   )
 }

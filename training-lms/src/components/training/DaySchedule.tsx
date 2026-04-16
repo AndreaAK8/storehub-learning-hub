@@ -74,7 +74,7 @@ export function DaySchedule({
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white rounded-xl shadow-sm border border-[#c5c3c1] overflow-hidden">
       {/* Day Header */}
       <div className="p-6 border-b" style={{ background: 'linear-gradient(135deg, #fff4e8 0%, #fff0df 100%)', borderColor: '#ffe1bf' }}>
         <div className="flex items-start justify-between">
@@ -84,14 +84,14 @@ export function DaySchedule({
                 Day {dayNumber}
               </span>
               {stats.percentage === 100 && (
-                <span className="px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 bg-green-500 text-white">
+                <span className="px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1" style={{ background: '#2a6ee8', color: 'white' }}>
                   ✓ Complete
                 </span>
               )}
             </div>
             <h2 className="text-2xl font-bold text-[var(--sh-black)] mb-2" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>{title}</h2>
             {description && (
-              <p className="text-sm text-slate-600 leading-relaxed">{description}</p>
+              <p className="text-sm text-[#55504a] leading-relaxed">{description}</p>
             )}
           </div>
 
@@ -122,7 +122,7 @@ export function DaySchedule({
                 <span className="text-lg font-bold text-[var(--sh-orange)]">{stats.percentage}%</span>
               </div>
             </div>
-            <span className="text-xs mt-1 text-slate-500">
+            <span className="text-xs mt-1 text-[#7a7672]">
               {stats.completed}/{stats.total} tasks
             </span>
           </div>
@@ -130,7 +130,7 @@ export function DaySchedule({
 
         {/* Due Date */}
         {dueDate && (
-          <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
+          <div className="mt-4 flex items-center gap-2 text-sm text-[#55504a]">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -148,13 +148,13 @@ export function DaySchedule({
 
         {isLocked ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-16 h-16 mx-auto mb-4 bg-[#eae9e8] rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-[#a09d9a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-slate-900 mb-1">Day Locked</h3>
-            <p className="text-slate-500 text-sm">
+            <h3 className="text-lg font-medium text-[#2f2922] mb-1">Day Locked</h3>
+            <p className="text-[#7a7672] text-sm">
               Complete all activities in the previous day to unlock this day.
             </p>
           </div>

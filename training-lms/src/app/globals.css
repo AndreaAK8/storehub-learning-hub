@@ -74,6 +74,35 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-open-sans), system-ui, -apple-system, sans-serif;
   --font-heading: var(--font-barlow), system-ui, -apple-system, sans-serif;
+
+  /* Brand primary */
+  --color-sh-orange:       #ff9419;
+  --color-sh-orange-dark:  #ff630f;
+  --color-sh-black:        #2f2922;
+  --color-sh-blue:         #2a6ee8;
+  --color-sh-pink:         #ff546f;
+
+  /* Orange tints */
+  --color-sh-orange-10:    #fff4e8;
+  --color-sh-orange-20:    #ffe1bf;
+  --color-sh-orange-40:    #ffce95;
+
+  /* Blue tints */
+  --color-sh-blue-10:      #e9f0fd;
+  --color-sh-blue-20:      #c4d7f9;
+  --color-sh-blue-40:      #9dbcf4;
+
+  /* Pink tints */
+  --color-sh-pink-10:      #ffeef0;
+  --color-sh-pink-20:      #ffcfd7;
+
+  /* Neutral scale (warm — derived from StoreHub Black) */
+  --color-sh-neutral-05:   #f5f5f4;
+  --color-sh-neutral-10:   #eae9e8;
+  --color-sh-neutral-20:   #c5c3c1;
+  --color-sh-neutral-40:   #a09d9a;
+  --color-sh-neutral-60:   #7a7672;
+  --color-sh-neutral-80:   #55504a;
 }
 
 body {
@@ -106,6 +135,19 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--orange-500);
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #eae9e8 25%, #f5f5f4 50%, #eae9e8 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: 6px;
 }
 
 /* Brand gradient backgrounds */

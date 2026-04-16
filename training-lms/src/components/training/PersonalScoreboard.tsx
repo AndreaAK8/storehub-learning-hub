@@ -62,8 +62,8 @@ function DailyCompletionRow({
   }, [expandedDay, performanceData])
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4">
-      <h3 className="text-sm font-semibold text-slate-900 mb-3">Daily Completion</h3>
+    <div className="bg-white rounded-xl border border-[#c5c3c1] p-4">
+      <h3 className="text-sm font-semibold text-[#2f2922] mb-3">Daily completion</h3>
 
       {/* Horizontal row - cards fill available space */}
       <div className="flex gap-2">
@@ -79,22 +79,22 @@ function DailyCompletionRow({
               onClick={() => setExpandedDay(isExpanded ? null : day.day)}
               disabled={isFuture || day.completed === 0}
               className={`flex-1 py-3 rounded-xl text-center transition-all ${
-                isCurrent ? 'ring-2 ring-orange-400' : ''
-              } ${isExpanded ? 'ring-2 ring-blue-500' : ''} ${
+                isCurrent ? 'ring-2 ring-[#ff9419]' : ''
+              } ${isExpanded ? 'ring-2 ring-[#2a6ee8]' : ''} ${
                 !isFuture && day.completed > 0 ? 'cursor-pointer hover:scale-[1.02]' : ''
               }`}
               style={{
-                backgroundColor: isFuture ? '#f8fafc' : isComplete ? '#e9f0fd' : '#fff7ed',
+                backgroundColor: isFuture ? '#f5f5f4' : isComplete ? '#e9f0fd' : '#fff4e8',
                 opacity: isFuture ? 0.5 : 1,
               }}
             >
-              <p className="text-xs text-slate-500">Day {day.day}</p>
+              <p className="text-xs text-[#7a7672]">Day {day.day}</p>
               <p className="text-2xl font-bold" style={{
-                color: isFuture ? '#94a3b8' : isComplete ? '#2a6ee8' : '#f59e0b'
+                color: isFuture ? '#a09d9a' : isComplete ? '#2a6ee8' : '#ff9419'
               }}>
                 {day.completed}
               </p>
-              <p className="text-[10px] text-slate-400">activities</p>
+              <p className="text-[10px] text-[#a09d9a]">activities</p>
             </button>
           )
         })}
@@ -102,12 +102,12 @@ function DailyCompletionRow({
 
       {/* Expanded details panel */}
       {expandedDay !== null && dayActivities.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-slate-100">
+        <div className="mt-3 pt-3 border-t border-[#eae9e8]">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-medium text-slate-700">Day {expandedDay} Activities</p>
+            <p className="text-xs font-medium text-[#55504a]">Day {expandedDay} activities</p>
             <button
               onClick={() => setExpandedDay(null)}
-              className="text-xs text-slate-400 hover:text-slate-600"
+              className="text-xs text-[#a09d9a] hover:text-[#55504a]"
             >
               Close
             </button>
@@ -116,7 +116,7 @@ function DailyCompletionRow({
             {dayActivities.map((activity, idx) => (
               <div
                 key={activity.activity_id + idx}
-                className="flex items-center justify-between py-1.5 px-2 rounded bg-slate-50 text-xs"
+                className="flex items-center justify-between py-1.5 px-2 rounded bg-[#f5f5f4] text-xs"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <span
@@ -132,9 +132,9 @@ function DailyCompletionRow({
                      activity.performance_flag === 'on_time' ? '✓' :
                      activity.performance_flag === 'slow' ? '🐢' : '⚠️'}
                   </span>
-                  <span className="truncate text-slate-700">{activity.activity_title}</span>
+                  <span className="truncate text-[#55504a]">{activity.activity_title}</span>
                 </div>
-                <span className="text-slate-500 flex-shrink-0 ml-2">
+                <span className="text-[#7a7672] flex-shrink-0 ml-2">
                   {activity.percentage_of_allocated}% time
                 </span>
               </div>
@@ -145,8 +145,8 @@ function DailyCompletionRow({
 
       {/* Empty state for expanded day with no activities */}
       {expandedDay !== null && dayActivities.length === 0 && (
-        <div className="mt-3 pt-3 border-t border-slate-100 text-center py-4">
-          <p className="text-xs text-slate-400">No activities completed on Day {expandedDay}</p>
+        <div className="mt-3 pt-3 border-t border-[#eae9e8] text-center py-4">
+          <p className="text-xs text-[#a09d9a]">No activities completed on Day {expandedDay}</p>
         </div>
       )}
     </div>
@@ -273,10 +273,10 @@ export function PersonalScoreboard({
       <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-slate-400 text-sm mb-1">Learning Score</p>
+            <p className="text-[#a09d9a] text-sm mb-1">Learning Score</p>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-bold">{learningScore}%</span>
-              <span className="text-slate-400 text-lg">/ 80% to pass</span>
+              <span className="text-[#a09d9a] text-lg">/ 80% to pass</span>
             </div>
             <p className="text-sm mt-2" style={{ color: grade.color }}>
               {grade.label}
@@ -291,25 +291,25 @@ export function PersonalScoreboard({
         </div>
 
         {/* Score breakdown mini */}
-        <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t border-slate-700">
+        <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t border-[#55504a]">
           <div className="text-center">
             <p className="text-2xl font-bold">{performanceData.length}/{totalActivities}</p>
-            <p className="text-xs text-slate-400">Activities Done</p>
+            <p className="text-xs text-[#a09d9a]">Activities Done</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold">{completedAssessments}/{totalExpectedAssessments}</p>
-            <p className="text-xs text-slate-400">Assessments Done</p>
+            <p className="text-xs text-[#a09d9a]">Assessments Done</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold">{learningScore}%</p>
-            <p className="text-xs text-slate-400">Current Score</p>
+            <p className="text-xs text-[#a09d9a]">Current Score</p>
           </div>
         </div>
 
         {/* Expandable: How to reach 80% */}
         <button
           onClick={() => setShowBreakdown(!showBreakdown)}
-          className="w-full mt-4 pt-3 border-t border-slate-700 flex items-center justify-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
+          className="w-full mt-4 pt-3 border-t border-[#55504a] flex items-center justify-center gap-2 text-sm text-[#a09d9a] hover:text-white transition-colors"
         >
           <span>How is my score calculated?</span>
           <svg
@@ -323,8 +323,8 @@ export function PersonalScoreboard({
         </button>
 
         {showBreakdown && (
-          <div className="mt-4 p-4 bg-slate-800/50 rounded-xl text-sm">
-            <p className="text-slate-300 mb-3">
+          <div className="mt-4 p-4 bg-[#2f2922]/50 rounded-xl text-sm">
+            <p className="text-[#a09d9a] mb-3">
               Your score = Sum of (Assessment Score × Weight)
             </p>
 
@@ -332,7 +332,7 @@ export function PersonalScoreboard({
             <div className="mb-4">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-slate-400 border-b border-slate-700">
+                  <tr className="text-[#a09d9a] border-b border-[#55504a]">
                     <th className="text-left py-2">Assessment</th>
                     <th className="text-center py-2 w-16">Weight</th>
                     <th className="text-center py-2 w-16">Score</th>
@@ -350,21 +350,21 @@ export function PersonalScoreboard({
                     const maxContribution = expected.weightage // If 100% score
 
                     return (
-                      <tr key={i} className="border-b border-slate-700/50">
-                        <td className="py-2 text-slate-300">{expected.name}</td>
-                        <td className="py-2 text-center text-slate-400">{expected.weightage}%</td>
+                      <tr key={i} className="border-b border-[#55504a]/50">
+                        <td className="py-2 text-[#a09d9a]">{expected.name}</td>
+                        <td className="py-2 text-center text-[#a09d9a]">{expected.weightage}%</td>
                         <td className="py-2 text-center">
                           {score !== null ? (
                             <span className="text-white">{score}%</span>
                           ) : (
-                            <span className="text-slate-500">—</span>
+                            <span className="text-[#7a7672]">—</span>
                           )}
                         </td>
                         <td className="py-2 text-right">
                           {score !== null ? (
-                            <span className="text-green-400">{contribution} / {maxContribution}</span>
+                            <span className="text-[#2a6ee8]">{contribution} / {maxContribution}</span>
                           ) : (
-                            <span className="text-slate-500">0 / {maxContribution}</span>
+                            <span className="text-[#7a7672]">0 / {maxContribution}</span>
                           )}
                         </td>
                       </tr>
@@ -373,8 +373,8 @@ export function PersonalScoreboard({
                 </tbody>
                 <tfoot>
                   <tr className="font-medium">
-                    <td className="py-2 text-slate-300">Total</td>
-                    <td className="py-2 text-center text-slate-400">100%</td>
+                    <td className="py-2 text-[#a09d9a]">Total</td>
+                    <td className="py-2 text-center text-[#a09d9a]">100%</td>
                     <td className="py-2"></td>
                     <td className="py-2 text-right text-white">{learningScore} / 100</td>
                   </tr>
@@ -383,25 +383,25 @@ export function PersonalScoreboard({
             </div>
 
             {/* Summary */}
-            <div className="pt-3 border-t border-slate-700">
+            <div className="pt-3 border-t border-[#55504a]">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-300">Current Total</span>
+                <span className="text-[#a09d9a]">Current Total</span>
                 <span className="text-white font-bold">{learningScore} / 100</span>
               </div>
               {!allAssessmentsComplete && (
                 <div className="flex justify-between text-sm mt-1">
-                  <span className="text-slate-300">Remaining Weight</span>
+                  <span className="text-[#a09d9a]">Remaining Weight</span>
                   <span className="text-blue-400">{remainingWeightage}%</span>
                 </div>
               )}
               {pointsNeeded > 0 && !allAssessmentsComplete && (
-                <p className="text-xs text-slate-400 mt-2">
+                <p className="text-xs text-[#a09d9a] mt-2">
                   You need <span className="text-orange-400">{pointsNeeded} more points</span> to reach 80%.
                   With {remainingWeightage}% remaining weight, aim for ~{Math.ceil(pointsNeeded / remainingWeightage * 100)}% average on remaining assessments.
                 </p>
               )}
               {learningScore >= 80 && (
-                <p className="text-xs text-green-400 mt-2">
+                <p className="text-xs text-[#2a6ee8] mt-2">
                   You&apos;ve already reached the passing threshold!
                 </p>
               )}
@@ -424,14 +424,14 @@ export function PersonalScoreboard({
       </div>
 
       {/* Progress Trajectory Chart */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <h3 className="text-lg font-bold text-slate-900 mb-4">Progress Trajectory</h3>
+      <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
+        <h3 className="text-lg font-bold text-[#2f2922] mb-4">Progress Trajectory</h3>
 
         {/* Simple bar chart */}
         <div className="flex items-end gap-3 h-32 mb-2">
           {trajectoryData.map((day) => (
             <div key={day.day} className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-xs text-slate-500">{day.percentage}%</span>
+              <span className="text-xs text-[#7a7672]">{day.percentage}%</span>
               <div
                 className="w-full rounded-t transition-all"
                 style={{
@@ -442,13 +442,13 @@ export function PersonalScoreboard({
                     : '#e2e8f0',
                 }}
               />
-              <span className="text-xs text-slate-400">Day {day.day}</span>
+              <span className="text-xs text-[#a09d9a]">Day {day.day}</span>
             </div>
           ))}
         </div>
 
         {/* Target line indicator */}
-        <div className="flex items-center gap-2 text-xs text-slate-500 mt-4">
+        <div className="flex items-center gap-2 text-xs text-[#7a7672] mt-4">
           <div className="w-3 h-3 rounded bg-blue-500" />
           <span>On/Ahead of target</span>
           <div className="w-3 h-3 rounded bg-orange-400 ml-4" />
@@ -458,8 +458,8 @@ export function PersonalScoreboard({
 
       {/* Assessment Scores - Show ALL expected assessments */}
       {expectedAssessments.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Assessment Scores</h3>
+        <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
+          <h3 className="text-lg font-bold text-[#2f2922] mb-4">Assessment Scores</h3>
 
           {/* Show all expected assessments */}
           <div className="space-y-3">
@@ -479,30 +479,30 @@ export function PersonalScoreboard({
                 <div key={i} className={`flex items-center gap-3 ${!isCompleted ? 'opacity-60' : ''}`}>
                   {/* Assessment name */}
                   <div className="w-56 flex-shrink-0">
-                    <p className={`text-sm font-medium ${isCompleted ? 'text-slate-700' : 'text-slate-400'}`}>
+                    <p className={`text-sm font-medium ${isCompleted ? 'text-[#55504a]' : 'text-[#a09d9a]'}`}>
                       {expected.name}
                     </p>
-                    <p className="text-xs text-slate-400">Weight: {expected.weightage}%</p>
+                    <p className="text-xs text-[#a09d9a]">Weight: {expected.weightage}%</p>
                   </div>
 
                   {/* Progress bar */}
                   <div className="flex-1 relative">
-                    <div className="h-8 bg-slate-100 rounded-lg overflow-hidden">
+                    <div className="h-8 bg-[#eae9e8] rounded-lg overflow-hidden">
                       {isCompleted ? (
                         <div
                           className={`h-full rounded-lg transition-all ${
-                            passed ? 'bg-green-500' : 'bg-red-400'
+                            passed ? 'bg-[#e9f0fd]' : 'bg-[#ffeef0]'
                           }`}
                           style={{ width: `${percentage}%` }}
                         />
                       ) : (
-                        <div className="h-full flex items-center justify-center text-xs text-slate-400">
+                        <div className="h-full flex items-center justify-center text-xs text-[#a09d9a]">
                           Not yet completed
                         </div>
                       )}
                       {/* 80% threshold marker */}
                       <div
-                        className="absolute top-0 bottom-0 w-0.5 bg-green-600"
+                        className="absolute top-0 bottom-0 w-0.5 bg-[#e9f0fd]"
                         style={{ left: '80%' }}
                       />
                     </div>
@@ -511,11 +511,11 @@ export function PersonalScoreboard({
                   {/* Score */}
                   <div className="w-16 text-right">
                     {isCompleted ? (
-                      <span className={`text-lg font-bold ${passed ? 'text-green-600' : 'text-red-500'}`}>
+                      <span className={`text-lg font-bold ${passed ? 'text-[#2a6ee8]' : 'text-[#ff546f]'}`}>
                         {percentage}%
                       </span>
                     ) : (
-                      <span className="text-sm text-slate-400">—</span>
+                      <span className="text-sm text-[#a09d9a]">—</span>
                     )}
                   </div>
 
@@ -523,12 +523,12 @@ export function PersonalScoreboard({
                   <div className="w-6">
                     {isCompleted ? (
                       passed ? (
-                        <span className="text-green-500">✓</span>
+                        <span className="text-[#2a6ee8]">✓</span>
                       ) : (
-                        <span className="text-red-500">✗</span>
+                        <span className="text-[#ff546f]">✗</span>
                       )
                     ) : (
-                      <span className="text-slate-300">○</span>
+                      <span className="text-[#a09d9a]">○</span>
                     )}
                   </div>
                 </div>
@@ -537,21 +537,21 @@ export function PersonalScoreboard({
           </div>
 
           {/* Legend */}
-          <div className="flex items-center gap-4 text-xs text-slate-500 mt-4 pt-4 border-t">
+          <div className="flex items-center gap-4 text-xs text-[#7a7672] mt-4 pt-4 border-t">
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="w-3 h-3 rounded-full bg-[#e9f0fd]" />
               <span>Passed (≥80%)</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-3 h-3 rounded-full bg-red-400" />
+              <div className="w-3 h-3 rounded-full bg-[#ffeef0]" />
               <span>Failed (&lt;80%)</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-slate-300">○</span>
+              <span className="text-[#a09d9a]">○</span>
               <span>Pending</span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="w-0.5 h-3 bg-green-600" />
+              <div className="w-0.5 h-3 bg-[#e9f0fd]" />
               <span>Passing threshold</span>
             </div>
           </div>
@@ -570,14 +570,14 @@ export function PersonalScoreboard({
 
       {/* Recent Activity Feed */}
       {performanceData.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Recent Completions</h3>
+        <div className="bg-white rounded-xl border border-[#c5c3c1] p-5">
+          <h3 className="text-lg font-bold text-[#2f2922] mb-4">Recent Completions</h3>
 
           <div className="space-y-3 max-h-64 overflow-y-auto">
             {performanceData.slice(0, 10).map((record, index) => (
               <div
                 key={record.activity_id + index}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50"
+                className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#f5f5f4]"
               >
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
@@ -597,10 +597,10 @@ export function PersonalScoreboard({
                    record.performance_flag === 'slow' ? '🐢' : '⚠️'}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900 truncate">
+                  <p className="text-sm font-medium text-[#2f2922] truncate">
                     {record.activity_title}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#7a7672]">
                     Day {record.day_number} • {record.percentage_of_allocated}% of time
                   </p>
                 </div>
@@ -612,12 +612,12 @@ export function PersonalScoreboard({
 
       {/* Empty state */}
       {performanceData.length === 0 && (
-        <div className="bg-slate-50 rounded-xl border border-slate-200 p-8 text-center">
-          <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="bg-[#f5f5f4] rounded-xl border border-[#c5c3c1] p-8 text-center">
+          <div className="w-16 h-16 bg-[#eae9e8] rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl">📊</span>
           </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">No Activity Data Yet</h3>
-          <p className="text-slate-500 text-sm mb-4">
+          <h3 className="text-lg font-semibold text-[#2f2922] mb-2">No Activity Data Yet</h3>
+          <p className="text-[#7a7672] text-sm mb-4">
             Start completing activities in your training schedule to see your scores here!
           </p>
           <a

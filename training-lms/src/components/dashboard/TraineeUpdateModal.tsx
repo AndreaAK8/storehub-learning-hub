@@ -20,9 +20,9 @@ export interface TraineeUpdate {
 }
 
 const PERFORMANCE_FLAGS = [
-  { value: 'On Track', label: 'On Track', color: 'text-green-600' },
-  { value: 'At Risk', label: 'At Risk', color: 'text-yellow-600' },
-  { value: 'Critical', label: 'Critical', color: 'text-red-600' },
+  { value: 'On Track', label: 'On Track', color: 'text-[#2a6ee8]' },
+  { value: 'At Risk', label: 'At Risk', color: 'text-[#ff9419]' },
+  { value: 'Critical', label: 'Critical', color: 'text-[#ff546f]' },
 ]
 
 const DELAY_REASONS = [
@@ -121,12 +121,12 @@ export default function TraineeUpdateModal({
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Update Trainee Status</h3>
-              <p className="text-sm text-gray-500">{trainee.fullName}</p>
+              <h3 className="text-lg font-semibold text-[#2f2922]">Update Trainee Status</h3>
+              <p className="text-sm text-[#7a7672]">{trainee.fullName}</p>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+              className="p-2 text-[#a09d9a] hover:text-[#55504a] rounded-full hover:bg-[#eae9e8]"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -138,7 +138,7 @@ export default function TraineeUpdateModal({
           <form onSubmit={handleSubmit} className="p-4 space-y-4">
             {/* Performance Flag */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#55504a] mb-2">
                 Performance Flag
               </label>
               <div className="flex gap-2">
@@ -150,11 +150,11 @@ export default function TraineeUpdateModal({
                     className={`flex-1 py-2 px-3 rounded-lg border text-sm font-medium transition-colors ${
                       performanceFlag === flag.value
                         ? flag.value === 'On Track'
-                          ? 'bg-green-100 border-green-500 text-green-700'
+                          ? 'bg-[#e9f0fd] border-[#c4d7f9] text-[#2a6ee8]'
                           : flag.value === 'At Risk'
-                            ? 'bg-yellow-100 border-yellow-500 text-yellow-700'
-                            : 'bg-red-100 border-red-500 text-red-700'
-                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                            ? 'bg-[#fff4e8] border-yellow-500 text-[#ff9419]'
+                            : 'bg-[#ffeef0] border-[#ffcfd7] text-[#ff546f]'
+                        : 'bg-white border-[#a09d9a] text-[#55504a] hover:bg-[#f5f5f4]'
                     }`}
                   >
                     {flag.label}
@@ -166,13 +166,13 @@ export default function TraineeUpdateModal({
             {/* Delay Reason - only show if At Risk or Critical */}
             {performanceFlag !== 'On Track' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[#55504a] mb-2">
                   Delay Reason
                 </label>
                 <select
                   value={delayReason}
                   onChange={(e) => setDelayReason(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="">Select a reason...</option>
                   {DELAY_REASONS.map((reason) => (
@@ -187,7 +187,7 @@ export default function TraineeUpdateModal({
             {/* Days Extended */}
             {performanceFlag !== 'On Track' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-[#55504a] mb-2">
                   Extend Training By (days)
                 </label>
                 <input
@@ -196,18 +196,18 @@ export default function TraineeUpdateModal({
                   max="30"
                   value={daysExtended}
                   onChange={(e) => setDaysExtended(parseInt(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="0"
                 />
                 {/* Show calculated adjusted end date */}
                 {daysExtended > 0 && (
-                  <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                    <p className="text-xs text-gray-600">
+                  <div className="mt-2 p-2 bg-[#f5f5f4] rounded-lg">
+                    <p className="text-xs text-[#55504a]">
                       <span className="font-medium">New End Date:</span>{' '}
-                      <span className="text-gray-900">
+                      <span className="text-[#2f2922]">
                         {formatDateDisplay(calculateAdjustedEndDate(daysExtended))}
                       </span>
-                      <span className="text-gray-500 ml-1">(today + {daysExtended} days)</span>
+                      <span className="text-[#7a7672] ml-1">(today + {daysExtended} days)</span>
                     </p>
                   </div>
                 )}
@@ -216,21 +216,21 @@ export default function TraineeUpdateModal({
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#55504a] mb-2">
                 Notes
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                 placeholder="Add any additional context..."
               />
             </div>
 
             {/* Error message */}
             {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              <div className="p-3 bg-[#ffeef0] border border-[#ffcfd7] rounded-lg text-[#ff546f] text-sm">
                 {error}
               </div>
             )}
@@ -255,7 +255,7 @@ export default function TraineeUpdateModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 py-2 px-4 border border-[#a09d9a] rounded-lg text-[#55504a] font-medium hover:bg-[#f5f5f4] transition-colors"
               >
                 Cancel
               </button>

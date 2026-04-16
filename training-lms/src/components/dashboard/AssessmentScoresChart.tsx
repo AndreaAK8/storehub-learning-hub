@@ -66,7 +66,7 @@ export default function AssessmentScoresChart({ traineeEmail, traineeRole }: Ass
       <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-xl shadow-sm border border-orange-200 p-6">
         <h2 className="text-lg font-semibold text-orange-900 mb-4">Assessment Scores</h2>
         <div className="flex items-center justify-center py-12">
-          <div className="w-8 h-8 border-3 border-orange-300 border-t-orange-600 rounded-full animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin" />
         </div>
       </div>
     )
@@ -135,11 +135,11 @@ export default function AssessmentScoresChart({ traineeEmail, traineeRole }: Ass
         {/* 80% marker */}
         <div className="relative h-0">
           <div
-            className="absolute -top-4 w-0.5 h-4 bg-green-600"
+            className="absolute -top-4 w-0.5 h-4 bg-[#e9f0fd]"
             style={{ left: '80%' }}
           />
           <span
-            className="absolute -top-6 text-xs text-green-700 font-medium"
+            className="absolute -top-6 text-xs text-[#2a6ee8] font-medium"
             style={{ left: '80%', transform: 'translateX(-50%)' }}
           >
             80%
@@ -168,13 +168,13 @@ export default function AssessmentScoresChart({ traineeEmail, traineeRole }: Ass
                   <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
                     isCompleted
                       ? passed
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-red-100 text-red-600'
-                      : 'bg-gray-100 text-gray-400'
+                        ? 'bg-[#e9f0fd] text-[#2a6ee8]'
+                        : 'bg-[#ffeef0] text-[#ff546f]'
+                      : 'bg-[#eae9e8] text-[#a09d9a]'
                   }`}>
                     {isCompleted ? (passed ? '✓' : '✗') : '○'}
                   </span>
-                  <span className={`text-sm font-medium ${isCompleted ? 'text-gray-800' : 'text-gray-500'}`}>
+                  <span className={`text-sm font-medium ${isCompleted ? 'text-[#2f2922]' : 'text-[#7a7672]'}`}>
                     {expected.name}
                   </span>
                 </div>
@@ -183,7 +183,7 @@ export default function AssessmentScoresChart({ traineeEmail, traineeRole }: Ass
                     {expected.weightage}% weight
                   </span>
                   {isCompleted && (
-                    <span className={`text-sm font-bold ${passed ? 'text-green-600' : 'text-red-500'}`}>
+                    <span className={`text-sm font-bold ${passed ? 'text-[#2a6ee8]' : 'text-[#ff546f]'}`}>
                       {percentage}%
                     </span>
                   )}
@@ -206,20 +206,20 @@ export default function AssessmentScoresChart({ traineeEmail, traineeRole }: Ass
                     )}
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center text-xs text-gray-400">
+                  <div className="h-full flex items-center justify-center text-xs text-[#a09d9a]">
                     Pending
                   </div>
                 )}
                 {/* 80% threshold marker */}
                 <div
-                  className="absolute top-0 bottom-0 w-0.5 bg-green-600/50"
+                  className="absolute top-0 bottom-0 w-0.5 bg-[#e9f0fd]/50"
                   style={{ left: '80%' }}
                 />
               </div>
 
               {/* Date if available */}
               {completedScore?.date && (
-                <p className="text-xs text-gray-400 ml-8 mt-1">
+                <p className="text-xs text-[#a09d9a] ml-8 mt-1">
                   Completed: {new Date(completedScore.date).toLocaleDateString()}
                 </p>
               )}
@@ -229,21 +229,21 @@ export default function AssessmentScoresChart({ traineeEmail, traineeRole }: Ass
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 text-xs text-gray-600 mt-6 pt-4 border-t border-orange-200">
+      <div className="flex items-center gap-4 text-xs text-[#55504a] mt-6 pt-4 border-t border-orange-200">
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded-full bg-green-400" />
+          <div className="w-3 h-3 rounded-full bg-[#e9f0fd]" />
           <span>Passed (≥80%)</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded-full bg-red-400" />
+          <div className="w-3 h-3 rounded-full bg-[#ffeef0]" />
           <span>Failed (&lt;80%)</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="text-gray-400">○</span>
+          <span className="text-[#a09d9a]">○</span>
           <span>Pending</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-0.5 h-3 bg-green-600" />
+          <div className="w-0.5 h-3 bg-[#e9f0fd]" />
           <span>Pass threshold</span>
         </div>
       </div>

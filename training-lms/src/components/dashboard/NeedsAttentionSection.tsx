@@ -122,14 +122,14 @@ export default function NeedsAttentionSection({ critical, atRisk, allTrainees = 
 
   if (needsAttention.length === 0) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-[#e9f0fd] border border-[#c4d7f9] rounded-lg p-6 text-center">
+        <div className="w-12 h-12 bg-[#e9f0fd] rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg className="w-6 h-6 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-lg font-semibold text-green-800">All trainees on track!</h3>
-        <p className="text-green-700 mt-1">No urgent attention needed right now.</p>
+        <h3 className="text-lg font-semibold text-[#2a6ee8]">All trainees on track!</h3>
+        <p className="text-[#2a6ee8] mt-1">No urgent attention needed right now.</p>
       </div>
     )
   }
@@ -138,14 +138,14 @@ export default function NeedsAttentionSection({ critical, atRisk, allTrainees = 
     <>
       <div className="bg-white rounded-lg shadow">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-[#c5c3c1]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-[#ff546f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
-              <h2 className="text-lg font-semibold text-gray-900">Needs Attention</h2>
-              <span className="text-sm text-gray-500">
+              <h2 className="text-lg font-semibold text-[#2f2922]">Needs Attention</h2>
+              <span className="text-sm text-[#7a7672]">
                 ({critical.length + atRisk.length} trainee{critical.length + atRisk.length !== 1 ? 's' : ''})
               </span>
             </div>
@@ -182,13 +182,13 @@ export default function NeedsAttentionSection({ critical, atRisk, allTrainees = 
 
         {/* Legend / Help */}
         <div className="px-4 pb-4">
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-4 text-xs text-[#7a7672]">
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-red-500" />
+              <span className="w-2 h-2 rounded-full bg-[#ffeef0]" />
               <span>Overdue (behind 20%+)</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-yellow-500" />
+              <span className="w-2 h-2 rounded-full bg-[#fff4e8]" />
               <span>At Risk (behind 5-20%)</span>
             </div>
           </div>
@@ -198,15 +198,15 @@ export default function NeedsAttentionSection({ critical, atRisk, allTrainees = 
       {/* Review Extensions Section */}
       {extensionsToReview.length > 0 && (
         <div className="bg-white rounded-lg shadow mt-6">
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-[#c5c3c1]">
             <div className="flex items-center gap-2">
               <span className="text-lg">🔔</span>
-              <h2 className="text-lg font-semibold text-gray-900">Review Extensions</h2>
-              <span className="text-sm text-gray-500">
+              <h2 className="text-lg font-semibold text-[#2f2922]">Review Extensions</h2>
+              <span className="text-sm text-[#7a7672]">
                 ({extensionsToReview.length} trainee{extensionsToReview.length !== 1 ? 's' : ''})
               </span>
             </div>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-[#55504a] mt-1">
               These trainees have extensions that need review. Update their status if they&apos;ve caught up.
             </p>
           </div>
@@ -217,16 +217,16 @@ export default function NeedsAttentionSection({ critical, atRisk, allTrainees = 
               if (!status) return null
 
               const statusColors = {
-                'expired': 'bg-red-50 border-red-200',
+                'expired': 'bg-[#ffeef0] border-[#ffcfd7]',
                 'ends-today': 'bg-orange-50 border-orange-200',
-                'ending-soon': 'bg-yellow-50 border-yellow-200',
+                'ending-soon': 'bg-[#fff4e8] border-yellow-200',
                 'active': 'bg-blue-50 border-blue-200'
               }
 
               const statusTextColors = {
-                'expired': 'text-red-700',
+                'expired': 'text-[#ff546f]',
                 'ends-today': 'text-orange-700',
-                'ending-soon': 'text-yellow-700',
+                'ending-soon': 'text-[#ff9419]',
                 'active': 'text-blue-700'
               }
 
@@ -234,12 +234,12 @@ export default function NeedsAttentionSection({ critical, atRisk, allTrainees = 
                 <div key={trainee.email} className={`p-4 ${statusColors[status.status]} border-l-4`}>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-900">{trainee.fullName}</p>
+                      <p className="font-medium text-[#2f2922]">{trainee.fullName}</p>
                       <p className={`text-sm font-medium ${statusTextColors[status.status]}`}>
                         {status.status === 'expired' ? '⚠️' : status.status === 'ends-today' ? '🔔' : '⏰'} {status.message}
                       </p>
                       {trainee.delayReason && (
-                        <p className="text-sm text-gray-500 mt-1">Reason: {trainee.delayReason}</p>
+                        <p className="text-sm text-[#7a7672] mt-1">Reason: {trainee.delayReason}</p>
                       )}
                     </div>
                     <button

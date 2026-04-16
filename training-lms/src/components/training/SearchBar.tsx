@@ -154,13 +154,13 @@ export function SearchBar({ modules, resources, onResultClick }: SearchBarProps)
       <button
         onClick={() => setIsOpen(true)}
         data-tour="search"
-        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-sm text-[#7a7672] bg-[#eae9e8] hover:bg-[#c5c3c1] rounded-lg transition-colors"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <span className="hidden sm:inline">Search...</span>
-        <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-gray-400 bg-white rounded border border-gray-200">
+        <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-medium text-[#a09d9a] bg-white rounded border border-[#c5c3c1]">
           <span className="text-xs">⌘</span>K
         </kbd>
       </button>
@@ -181,7 +181,7 @@ export function SearchBar({ modules, resources, onResultClick }: SearchBarProps)
           <div className="relative w-full max-w-xl mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {/* Search Input */}
             <div className="flex items-center gap-3 px-4 py-4 border-b">
-              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-[#a09d9a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               <input
@@ -191,16 +191,16 @@ export function SearchBar({ modules, resources, onResultClick }: SearchBarProps)
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Search training content, resources..."
-                className="flex-1 text-lg outline-none placeholder:text-gray-400"
+                className="flex-1 text-lg outline-none placeholder:text-[#a09d9a]"
               />
-              <kbd className="px-2 py-1 text-xs text-gray-400 bg-gray-100 rounded">ESC</kbd>
+              <kbd className="px-2 py-1 text-xs text-[#a09d9a] bg-[#eae9e8] rounded">ESC</kbd>
             </div>
 
             {/* Results */}
             <div className="max-h-96 overflow-y-auto">
               {query && results.length === 0 && (
-                <div className="px-4 py-8 text-center text-gray-500">
-                  <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="px-4 py-8 text-center text-[#7a7672]">
+                  <svg className="w-12 h-12 mx-auto mb-3 text-[#a09d9a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p>No results found for &quot;{query}&quot;</p>
@@ -216,25 +216,25 @@ export function SearchBar({ modules, resources, onResultClick }: SearchBarProps)
                       onClick={() => handleResultClick(result)}
                       className={`
                         w-full flex items-center gap-3 px-4 py-3 text-left transition-colors
-                        ${index === selectedIndex ? 'bg-blue-50' : 'hover:bg-gray-50'}
+                        ${index === selectedIndex ? 'bg-blue-50' : 'hover:bg-[#f5f5f4]'}
                       `}
                     >
                       <div
                         className={`
                           w-8 h-8 rounded-lg flex items-center justify-center
                           ${result.type === 'module' ? 'bg-blue-100 text-blue-600' : ''}
-                          ${result.type === 'resource' ? 'bg-green-100 text-green-600' : ''}
-                          ${result.type === 'faq' ? 'bg-purple-100 text-purple-600' : ''}
+                          ${result.type === 'resource' ? 'bg-[#e9f0fd] text-[#2a6ee8]' : ''}
+                          ${result.type === 'faq' ? 'bg-[#55504a] text-[#55504a]' : ''}
                         `}
                       >
                         {getTypeIcon(result.type)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900 truncate">{result.title}</div>
-                        <div className="text-sm text-gray-500 truncate">{result.description}</div>
+                        <div className="font-medium text-[#2f2922] truncate">{result.title}</div>
+                        <div className="text-sm text-[#7a7672] truncate">{result.description}</div>
                       </div>
                       {result.dayNumber && (
-                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                        <span className="text-xs text-[#a09d9a] bg-[#eae9e8] px-2 py-1 rounded">
                           Day {result.dayNumber}
                         </span>
                       )}
@@ -244,20 +244,20 @@ export function SearchBar({ modules, resources, onResultClick }: SearchBarProps)
               )}
 
               {!query && (
-                <div className="px-4 py-6 text-center text-gray-500">
+                <div className="px-4 py-6 text-center text-[#7a7672]">
                   <p className="text-sm">Start typing to search...</p>
-                  <div className="flex items-center justify-center gap-4 mt-4 text-xs text-gray-400">
+                  <div className="flex items-center justify-center gap-4 mt-4 text-xs text-[#a09d9a]">
                     <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↑</kbd>
-                      <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↓</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-[#eae9e8] rounded">↑</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-[#eae9e8] rounded">↓</kbd>
                       Navigate
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">↵</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-[#eae9e8] rounded">↵</kbd>
                       Select
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 bg-gray-100 rounded">ESC</kbd>
+                      <kbd className="px-1.5 py-0.5 bg-[#eae9e8] rounded">ESC</kbd>
                       Close
                     </span>
                   </div>

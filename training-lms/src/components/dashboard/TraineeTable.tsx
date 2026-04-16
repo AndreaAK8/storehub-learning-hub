@@ -79,7 +79,7 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
           className={`px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--sh-orange)] ${
             riskFilter === 'critical' ? 'border-[var(--pink-300)] bg-[var(--pink-100)]' :
             riskFilter === 'at-risk' ? 'border-[var(--orange-300)] bg-[var(--orange-100)]' :
-            riskFilter === 'on-track' ? 'border-green-300 bg-green-50' :
+            riskFilter === 'on-track' ? 'border-[#c4d7f9] bg-[#e9f0fd]' :
             'border-[var(--neutral-200)]'
           }`}
         >
@@ -118,22 +118,22 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
         <table className="w-full">
           <thead>
             <tr className="bg-gradient-to-r from-slate-700 to-slate-600">
-              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white tracking-wider">
                 Trainee
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white tracking-wider">
                 Risk
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white tracking-wider">
                 Progress
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white tracking-wider">
                 Day
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white tracking-wider">
                 Coach
               </th>
-              <th className="px-6 py-4 text-center text-sm font-bold text-white uppercase tracking-wider">
+              <th className="px-6 py-4 text-center text-sm font-bold text-white tracking-wider">
                 Actions
               </th>
             </tr>
@@ -174,7 +174,7 @@ export default function TraineeTable({ trainees }: TraineeTableProps) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-center">
                   {['Training Complete', 'Report Sent'].includes(trainee.status) ? (
-                    <span className="text-sm text-green-600 font-medium">{trainee.daysSinceTrainingStart} days</span>
+                    <span className="text-sm text-[#2a6ee8] font-medium">{trainee.daysSinceTrainingStart} days</span>
                   ) : (
                     <span className="text-sm text-[var(--sh-black)]">Day {trainee.currentTrainingDay || trainee.daysSinceTrainingStart}</span>
                   )}
@@ -217,7 +217,7 @@ function ProgressBar({ completed, total }: { completed: number; total: number })
     <div className="flex items-center gap-2">
       <div className="w-24 h-2 progress-bar-track rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full ${percentage === 100 ? 'bg-green-500' : 'progress-bar-brand'}`}
+          className={`h-full rounded-full ${percentage === 100 ? 'bg-[#e9f0fd]' : 'progress-bar-brand'}`}
           style={{ width: `${percentage}%` }}
         />
       </div>

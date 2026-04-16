@@ -88,7 +88,7 @@ export default function Header({ user, profile }: HeaderProps) {
   }
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="bg-white shadow-sm border-b border-[#c5c3c1]">
       <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* Mobile spacer for hamburger menu */}
@@ -106,10 +106,10 @@ export default function Header({ user, profile }: HeaderProps) {
                 }}
                 onFocus={() => setShowResults(true)}
                 placeholder="Search trainees, assessments..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-[#c5c3c1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2a6ee8] focus:border-transparent"
               />
               <svg
-                className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+                className="absolute left-3 top-2.5 h-5 w-5 text-[#a09d9a]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -124,13 +124,10 @@ export default function Header({ user, profile }: HeaderProps) {
 
               {/* Search Results Dropdown */}
               {showResults && searchQuery.length >= 2 && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#c5c3c1] rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
                   {isSearching ? (
-                    <div className="p-4 text-center text-gray-500">
-                      <svg className="animate-spin h-5 w-5 mx-auto mb-2" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
+                    <div className="p-4 text-center text-[#7a7672]">
+                      <div className="w-5 h-5 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin mx-auto mb-2" />
                       Searching...
                     </div>
                   ) : searchResults.length > 0 ? (
@@ -139,21 +136,21 @@ export default function Header({ user, profile }: HeaderProps) {
                         <button
                           key={result.email}
                           onClick={() => handleResultClick(result.email)}
-                          className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-0"
+                          className="w-full text-left px-4 py-3 hover:bg-[#f5f5f4] border-b border-[#eae9e8] last:border-0"
                         >
-                          <p className="font-medium text-gray-900">{result.fullName}</p>
-                          <p className="text-sm text-gray-500">{result.email}</p>
+                          <p className="font-medium text-[#2f2922]">{result.fullName}</p>
+                          <p className="text-sm text-[#7a7672]">{result.email}</p>
                         </button>
                       ))}
                       <button
                         onClick={handleSearchSubmit}
-                        className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50"
+                        className="w-full text-left px-4 py-2 text-sm text-[#2a6ee8] hover:bg-[#e9f0fd]"
                       >
                         View all results for &quot;{searchQuery}&quot;
                       </button>
                     </>
                   ) : (
-                    <div className="p-4 text-center text-gray-500">
+                    <div className="p-4 text-center text-[#7a7672]">
                       No trainees found
                     </div>
                   )}
@@ -166,32 +163,33 @@ export default function Header({ user, profile }: HeaderProps) {
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-3 hover:bg-gray-50 rounded-lg p-2 transition-colors"
+              className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-[#f5f5f4]"
             >
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium" style={{ color: '#2f2922' }}>
                   {profile?.full_name || user.email}
                 </p>
-                <p className="text-xs text-gray-500 capitalize">
+                <p className="text-xs capitalize" style={{ color: '#7a7672' }}>
                   {profile?.role || 'trainee'}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold" style={{ background: '#ff9419' }}>
                 {(profile?.full_name || user.email || 'U').charAt(0).toUpperCase()}
               </div>
             </button>
 
             {/* Dropdown menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-900 truncate">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1 z-50" style={{ borderColor: '#c5c3c1' }}>
+                <div className="px-4 py-2 border-b" style={{ borderColor: '#eae9e8' }}>
+                  <p className="text-sm font-medium truncate" style={{ color: '#2f2922' }}>
                     {user.email}
                   </p>
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  className="w-full text-left px-4 py-2 text-sm transition-colors hover:bg-[#ffeef0]"
+                  style={{ color: '#ff546f' }}
                 >
                   Sign out
                 </button>

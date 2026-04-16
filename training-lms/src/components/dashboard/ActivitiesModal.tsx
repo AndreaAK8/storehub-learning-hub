@@ -307,7 +307,7 @@ export default function ActivitiesModal({
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     filter === f
                       ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-lg shadow-orange-200'
-                      : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 hover:border-gray-300'
+                      : 'bg-white text-[#55504a] hover:bg-[#eae9e8] border border-[#c5c3c1] hover:border-[#a09d9a]'
                   }`}
                 >
                   {f === 'all' ? '📋 All' : f === 'completed' ? '✅ Completed' : '⏳ Pending'}
@@ -316,18 +316,18 @@ export default function ActivitiesModal({
             </div>
 
             {/* Content */}
-            <div className="overflow-y-auto p-6 bg-gray-50" style={{ maxHeight: 'calc(85vh - 200px)' }}>
+            <div className="overflow-y-auto p-6 bg-[#f5f5f4]" style={{ maxHeight: 'calc(85vh - 200px)' }}>
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-16">
-                  <div className="w-16 h-16 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin" />
-                  <p className="mt-4 text-gray-500 font-medium">Loading activities...</p>
+                  <div className="w-16 h-16 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin" />
+                  <p className="mt-4 text-[#7a7672] font-medium">Loading activities...</p>
                 </div>
               ) : filteredDayGroups.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-                  <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <div className="flex flex-col items-center justify-center py-16 text-[#7a7672]">
+                  <div className="w-24 h-24 bg-[#eae9e8] rounded-full flex items-center justify-center mb-4">
                     <span className="text-4xl">📭</span>
                   </div>
-                  <p className="text-lg font-semibold text-gray-700">No activities found</p>
+                  <p className="text-lg font-semibold text-[#55504a]">No activities found</p>
                   <p className="text-sm mt-1">Training schedule may not be configured yet.</p>
                 </div>
               ) : (
@@ -342,10 +342,10 @@ export default function ActivitiesModal({
                         key={group.dayNumber}
                         className={`rounded-xl overflow-hidden transition-all ${
                           isComplete
-                            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200'
+                            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-[#c4d7f9]'
                             : isActive
                             ? 'bg-white border-2 border-orange-200 shadow-lg shadow-orange-100'
-                            : 'bg-white border border-gray-200'
+                            : 'bg-white border border-[#c5c3c1]'
                         }`}
                       >
                         {/* Day Header */}
@@ -359,34 +359,34 @@ export default function ActivitiesModal({
                                 ? 'bg-gradient-to-br from-green-400 to-emerald-500'
                                 : isActive
                                 ? 'bg-gradient-to-br from-orange-400 to-pink-500'
-                                : 'bg-gray-200'
+                                : 'bg-[#c5c3c1]'
                             }`}>
                               {isComplete ? '✓' : getDayEmoji(group.dayNumber)}
                             </div>
                             <div className="text-left">
-                              <h3 className="font-bold text-gray-900 text-lg">Day {group.dayNumber}</h3>
-                              <p className="text-sm text-gray-500">{group.totalCount} activities</p>
+                              <h3 className="font-bold text-[#2f2922] text-lg">Day {group.dayNumber}</h3>
+                              <p className="text-sm text-[#7a7672]">{group.totalCount} activities</p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-4">
                             {/* Mini Progress Bar */}
                             <div className="hidden sm:flex items-center gap-3">
-                              <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div className="w-32 h-2 bg-[#c5c3c1] rounded-full overflow-hidden">
                                 <div
                                   className={`h-full rounded-full transition-all ${
-                                    isComplete ? 'bg-green-500' : 'bg-orange-500'
+                                    isComplete ? 'bg-[#e9f0fd]' : 'bg-orange-500'
                                   }`}
                                   style={{ width: `${dayProgress}%` }}
                                 />
                               </div>
-                              <span className={`text-sm font-semibold ${isComplete ? 'text-green-600' : 'text-gray-600'}`}>
+                              <span className={`text-sm font-semibold ${isComplete ? 'text-[#2a6ee8]' : 'text-[#55504a]'}`}>
                                 {group.completedCount}/{group.totalCount}
                               </span>
                             </div>
 
                             <svg
-                              className={`w-5 h-5 text-gray-400 transition-transform ${expandedDay === group.dayNumber ? 'rotate-180' : ''}`}
+                              className={`w-5 h-5 text-[#a09d9a] transition-transform ${expandedDay === group.dayNumber ? 'rotate-180' : ''}`}
                               fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             >
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -402,10 +402,10 @@ export default function ActivitiesModal({
                                 key={activity.id}
                                 className={`p-4 rounded-xl transition-all ${
                                   activity.status === 'completed'
-                                    ? 'bg-white border border-green-200'
+                                    ? 'bg-white border border-[#c4d7f9]'
                                     : activity.status === 'in_progress'
                                     ? 'bg-orange-50 border border-orange-200'
-                                    : 'bg-gray-50 border border-gray-200'
+                                    : 'bg-[#f5f5f4] border border-[#c5c3c1]'
                                 }`}
                               >
                                 <div className="flex items-start justify-between gap-3">
@@ -418,7 +418,7 @@ export default function ActivitiesModal({
                                       ) : (
                                         <span className="text-lg opacity-50">⭕</span>
                                       )}
-                                      <h4 className="font-semibold text-gray-900">{activity.title}</h4>
+                                      <h4 className="font-semibold text-[#2f2922]">{activity.title}</h4>
                                       {activity.performanceFlag && (
                                         <span className="text-lg" title={activity.performanceFlag}>
                                           {getPerformanceEmoji(activity.performanceFlag)}
@@ -428,18 +428,18 @@ export default function ActivitiesModal({
 
                                     <div className="flex flex-wrap items-center gap-2 ml-7">
                                       <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                                        activity.type === 'assessment' ? 'bg-purple-100 text-purple-700' :
+                                        activity.type === 'assessment' ? 'bg-[#55504a] text-[#55504a]' :
                                         activity.type === 'trainer_led' ? 'bg-blue-100 text-blue-700' :
-                                        activity.type === 'self_study' ? 'bg-amber-100 text-amber-700' :
-                                        'bg-gray-100 text-gray-700'
+                                        activity.type === 'self_study' ? 'bg-[#fff4e8] text-[#ff9419]' :
+                                        'bg-[#eae9e8] text-[#55504a]'
                                       }`}>
                                         {activity.type.replace('_', ' ')}
                                       </span>
-                                      <span className="text-xs text-gray-500">
+                                      <span className="text-xs text-[#7a7672]">
                                         ⏱️ {formatDuration(activity.allocatedMinutes)}
                                       </span>
                                       {activity.actualMinutes !== undefined && activity.actualMinutes > 0 && (
-                                        <span className="text-xs text-gray-500">
+                                        <span className="text-xs text-[#7a7672]">
                                           → Took {formatDuration(activity.actualMinutes)}
                                         </span>
                                       )}
@@ -450,12 +450,12 @@ export default function ActivitiesModal({
                                       <div className="mt-3 ml-7 p-3 bg-blue-50 rounded-lg">
                                         <p className="text-xs font-medium text-blue-700 mb-1">💭 Self Reflection</p>
                                         {activity.reflection.confusingTopic && (
-                                          <p className="text-sm text-gray-700">
-                                            <span className="text-gray-500">Struggled with:</span> {activity.reflection.confusingTopic}
+                                          <p className="text-sm text-[#55504a]">
+                                            <span className="text-[#7a7672]">Struggled with:</span> {activity.reflection.confusingTopic}
                                           </p>
                                         )}
                                         <div className="flex items-center gap-1 mt-2">
-                                          <span className="text-xs text-gray-500">Confidence:</span>
+                                          <span className="text-xs text-[#7a7672]">Confidence:</span>
                                           {[1, 2, 3, 4, 5].map(level => (
                                             <span
                                               key={level}
@@ -476,7 +476,7 @@ export default function ActivitiesModal({
                                         setSelectedActivity(activity)
                                         setShowRemarkModal(true)
                                       }}
-                                      className="p-2 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                      className="p-2 text-[#a09d9a] hover:text-[#ff9419] hover:bg-[#fff4e8] rounded-lg transition-colors"
                                       title="Add Remark"
                                     >
                                       💬
@@ -487,7 +487,7 @@ export default function ActivitiesModal({
                                           setSelectedActivity(activity)
                                           setShowExtendModal(true)
                                         }}
-                                        className="p-2 text-gray-400 hover:text-cyan-600 hover:bg-cyan-50 rounded-lg transition-colors"
+                                        className="p-2 text-[#a09d9a] hover:text-[#2a6ee8] hover:bg-[#e9f0fd] rounded-lg transition-colors"
                                         title="Extend Deadline"
                                       >
                                         ⏰
@@ -514,13 +514,13 @@ export default function ActivitiesModal({
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50" onClick={() => setShowRemarkModal(false)} />
           <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">💬 Add Remark</h3>
-            <p className="text-sm text-gray-500 mb-4">{selectedActivity.title}</p>
+            <h3 className="text-lg font-bold text-[#2f2922] mb-1">💬 Add Remark</h3>
+            <p className="text-sm text-[#7a7672] mb-4">{selectedActivity.title}</p>
             <textarea
               value={remark}
               onChange={(e) => setRemark(e.target.value)}
               placeholder="Enter your feedback or coaching notes..."
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 resize-none"
+              className="w-full px-4 py-3 border border-[#c5c3c1] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 resize-none"
               rows={4}
               autoFocus
             />
@@ -531,7 +531,7 @@ export default function ActivitiesModal({
                   setRemark('')
                   setSelectedActivity(null)
                 }}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl text-sm font-medium"
+                className="px-4 py-2 text-[#55504a] hover:bg-[#eae9e8] rounded-xl text-sm font-medium"
               >
                 Cancel
               </button>
@@ -552,27 +552,27 @@ export default function ActivitiesModal({
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50" onClick={() => setShowExtendModal(false)} />
           <div className="relative bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-1">⏰ Extend Deadline</h3>
-            <p className="text-sm text-gray-500 mb-4">{selectedActivity.title}</p>
+            <h3 className="text-lg font-bold text-[#2f2922] mb-1">⏰ Extend Deadline</h3>
+            <p className="text-sm text-[#7a7672] mb-4">{selectedActivity.title}</p>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Extension (days)</label>
+                <label className="block text-sm font-medium text-[#55504a] mb-2">Extension (days)</label>
                 <input
                   type="number"
                   min={1}
                   max={7}
                   value={extensionDays}
                   onChange={(e) => setExtensionDays(parseInt(e.target.value) || 1)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                  className="w-full px-4 py-3 border border-[#c5c3c1] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Reason</label>
+                <label className="block text-sm font-medium text-[#55504a] mb-2">Reason</label>
                 <select
                   value={extensionReason}
                   onChange={(e) => setExtensionReason(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
+                  className="w-full px-4 py-3 border border-[#c5c3c1] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-300"
                 >
                   <option value="">Select reason...</option>
                   <option value="needs_more_time">Needs more time to learn</option>
@@ -593,7 +593,7 @@ export default function ActivitiesModal({
                   setExtensionReason('')
                   setSelectedActivity(null)
                 }}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-xl text-sm font-medium"
+                className="px-4 py-2 text-[#55504a] hover:bg-[#eae9e8] rounded-xl text-sm font-medium"
               >
                 Cancel
               </button>

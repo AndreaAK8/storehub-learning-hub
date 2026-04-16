@@ -202,8 +202,8 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
     return (
       <div className="p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/3" />
-          <div className="h-64 bg-gray-200 rounded" />
+          <div className="h-8 bg-[#c5c3c1] rounded w-1/3" />
+          <div className="h-64 bg-[#c5c3c1] rounded" />
         </div>
       </div>
     )
@@ -213,8 +213,8 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
     return (
       <div className="p-6">
         <div className="text-center py-12">
-          <p className="text-gray-500">Trainee not found</p>
-          <Link href="/dashboard/trainees" className="text-teal-600 hover:underline mt-2 inline-block">
+          <p className="text-[#7a7672]">Trainee not found</p>
+          <Link href="/dashboard/trainees" className="text-[#2a6ee8] hover:underline mt-2 inline-block">
             Back to trainees
           </Link>
         </div>
@@ -226,19 +226,19 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
     return (
       <div className="p-6">
         <div className="max-w-2xl mx-auto text-center py-12">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-16 h-16 bg-[#e9f0fd] rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Report Sent!</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-bold text-[#2f2922] mb-2">Report Sent!</h2>
+          <p className="text-[#55504a] mb-6">
             Final report for {trainee.fullName} has been sent to {trainee.coachEmail}
           </p>
           <div className="flex justify-center gap-4">
             <Link
               href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+              className="px-4 py-2 bg-[#eae9e8] text-[#55504a] rounded-lg hover:bg-[#c5c3c1]"
             >
               View Trainee
             </Link>
@@ -258,11 +258,11 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
     <div className="p-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <Link href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`} className="text-teal-600 hover:underline text-sm mb-2 inline-block">
+        <Link href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`} className="text-[#2a6ee8] hover:underline text-sm mb-2 inline-block">
           ← Back to {trainee.fullName}
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Generate Final Report</h1>
-        <p className="text-gray-600">Review scores and generate the final training report</p>
+        <h1 className="text-2xl font-bold text-[#2f2922]">Generate Final Report</h1>
+        <p className="text-[#55504a]">Review scores and generate the final training report</p>
       </div>
 
       {/* Trainee Info */}
@@ -272,9 +272,9 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
             {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">{trainee.fullName}</h2>
-            <p className="text-gray-600">{trainee.department} • {trainee.country}</p>
-            <p className="text-sm text-gray-500">
+            <h2 className="text-xl font-semibold text-[#2f2922]">{trainee.fullName}</h2>
+            <p className="text-[#55504a]">{trainee.department} • {trainee.country}</p>
+            <p className="text-sm text-[#7a7672]">
               Training: {trainee.trainingStartDate} ({trainee.daysSinceTrainingStart} days)
             </p>
           </div>
@@ -283,45 +283,45 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
 
       {/* Score Calculation */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Score Calculation</h3>
+        <h3 className="text-lg font-semibold text-[#2f2922] mb-4">Score Calculation</h3>
 
         {/* Assessment Breakdown */}
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Assessment Breakdown</h4>
+          <h4 className="text-sm font-medium text-[#55504a] mb-3">Assessment Breakdown</h4>
           <div className="space-y-2">
             {breakdown.map((item, i) => (
-              <div key={i} className="flex items-center justify-between py-2 border-b border-gray-100">
+              <div key={i} className="flex items-center justify-between py-2 border-b border-[#c5c3c1]">
                 <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${item.passed ? 'bg-green-500' : item.score > 0 ? 'bg-red-500' : 'bg-gray-300'}`} />
-                  <span className="text-sm text-gray-700">{item.name}</span>
+                  <span className={`w-2 h-2 rounded-full ${item.passed ? 'bg-[#e9f0fd]' : item.score > 0 ? 'bg-[#ffeef0]' : 'bg-[#a09d9a]'}`} />
+                  <span className="text-sm text-[#55504a]">{item.name}</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm">
-                  <span className={item.passed ? 'text-green-600' : item.score > 0 ? 'text-red-600' : 'text-gray-400'}>
+                  <span className={item.passed ? 'text-[#2a6ee8]' : item.score > 0 ? 'text-[#ff546f]' : 'text-[#a09d9a]'}>
                     {item.score > 0 ? `${item.score}%` : '-'}
                   </span>
-                  <span className="text-gray-400">×</span>
-                  <span className="text-gray-500">{item.weight}%</span>
-                  <span className="text-gray-400">=</span>
-                  <span className="font-medium text-gray-900 w-12 text-right">{item.weighted}%</span>
+                  <span className="text-[#a09d9a]">×</span>
+                  <span className="text-[#7a7672]">{item.weight}%</span>
+                  <span className="text-[#a09d9a]">=</span>
+                  <span className="font-medium text-[#2f2922] w-12 text-right">{item.weighted}%</span>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between">
-            <span className="font-medium text-gray-900">Raw Learning Score</span>
-            <span className="font-bold text-lg text-gray-900">{rawLearningScore}%</span>
+          <div className="mt-4 pt-4 border-t border-[#c5c3c1] flex justify-between">
+            <span className="font-medium text-[#2f2922]">Raw Learning Score</span>
+            <span className="font-bold text-lg text-[#2f2922]">{rawLearningScore}%</span>
           </div>
         </div>
 
         {/* Final Score Calculation */}
-        <div className="bg-gray-50 rounded-lg p-4">
+        <div className="bg-[#f5f5f4] rounded-lg p-4">
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <p className="text-sm text-gray-500">Learning Score (80% weight)</p>
-              <p className="text-xl font-bold text-gray-900">{Math.round(learningContribution)}%</p>
+              <p className="text-sm text-[#7a7672]">Learning Score (80% weight)</p>
+              <p className="text-xl font-bold text-[#2f2922]">{Math.round(learningContribution)}%</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Participation Score (20% weight)</p>
+              <p className="text-sm text-[#7a7672]">Participation Score (20% weight)</p>
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -331,23 +331,23 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
                   onChange={(e) => setParticipationScore(parseInt(e.target.value))}
                   className="flex-1"
                 />
-                <span className="text-xl font-bold text-gray-900 w-20 text-right">
+                <span className="text-xl font-bold text-[#2f2922] w-20 text-right">
                   {participationScore}/20
                 </span>
               </div>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[#a09d9a] mt-1">
                 = {Math.round(participationContribution)}% contribution
               </p>
             </div>
           </div>
-          <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
-            <span className="text-lg font-semibold text-gray-900">Final Score</span>
+          <div className="border-t border-[#c5c3c1] pt-4 flex items-center justify-between">
+            <span className="text-lg font-semibold text-[#2f2922]">Final Score</span>
             <div className="flex items-center gap-3">
-              <span className={`text-3xl font-bold ${finalScore >= 80 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`text-3xl font-bold ${finalScore >= 80 ? 'text-[#2a6ee8]' : 'text-[#ff546f]'}`}>
                 {finalScore}%
               </span>
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                finalScore >= 80 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                finalScore >= 80 ? 'bg-[#e9f0fd] text-[#2a6ee8]' : 'bg-[#ffeef0] text-[#ff546f]'
               }`}>
                 {overallStatus}
               </span>
@@ -358,31 +358,31 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
 
       {/* Trainer Input */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Trainer Feedback</h3>
+        <h3 className="text-lg font-semibold text-[#2f2922] mb-4">Trainer Feedback</h3>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Highlights <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-[#55504a] mb-2">
+              Highlights <span className="text-[#ff546f]">*</span>
             </label>
             <textarea
               value={highlights}
               onChange={(e) => setHighlights(e.target.value)}
               placeholder="What did the trainee do well? Key strengths observed..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border border-[#c5c3c1] rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               rows={4}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Areas for Development <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-[#55504a] mb-2">
+              Areas for Development <span className="text-[#ff546f]">*</span>
             </label>
             <textarea
               value={lowlights}
               onChange={(e) => setLowlights(e.target.value)}
               placeholder="Areas that need improvement, coaching points..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+              className="w-full px-4 py-3 border border-[#c5c3c1] rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               rows={4}
             />
           </div>
@@ -393,7 +393,7 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
       <div className="flex justify-end gap-4">
         <Link
           href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+          className="px-6 py-3 border border-[#c5c3c1] text-[#55504a] rounded-lg hover:bg-[#f5f5f4]"
         >
           Cancel
         </Link>
@@ -402,7 +402,7 @@ export default function FinalReportPage({ params }: { params: Promise<{ email: s
           disabled={sending || !highlights || !lowlights}
           className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 ${
             sending || !highlights || !lowlights
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? 'bg-[#a09d9a] text-[#7a7672] cursor-not-allowed'
               : 'bg-teal-600 text-white hover:bg-teal-700'
           }`}
         >

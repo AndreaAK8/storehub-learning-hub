@@ -577,15 +577,15 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
     <div className="space-y-6">
       {/* Demo Mode Banner */}
       {!hasRealData && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
-          <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-            <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#fff4e8] border border-amber-200 rounded-xl p-4 flex items-center gap-3">
+          <div className="w-8 h-8 bg-[#fff4e8] rounded-full flex items-center justify-center">
+            <svg className="w-5 h-5 text-[#ff9419]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div>
-            <p className="font-medium text-amber-800">Demo Mode</p>
-            <p className="text-sm text-amber-600">Showing sample data. Real trainee data will appear once connected to n8n.</p>
+            <p className="font-medium text-[#ff9419]">Demo Mode</p>
+            <p className="text-sm text-[#ff9419]">Showing sample data. Real trainee data will appear once connected to n8n.</p>
           </div>
         </div>
       )}
@@ -595,17 +595,17 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-[var(--sh-black)]" style={{ fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>Good morning, {userName}!</h1>
-            <p className="mt-2 text-slate-600 leading-relaxed">Here&apos;s your training overview for today</p>
+            <p className="mt-2 text-[#55504a] leading-relaxed">Here&apos;s your training overview for today</p>
           </div>
           <div className="text-right">
             <p className="text-3xl font-bold text-[var(--sh-orange)]">{activeTrainees.length}</p>
-            <p className="text-sm text-slate-500">Active Trainees</p>
+            <p className="text-sm text-[#7a7672]">Active Trainees</p>
           </div>
         </div>
 
         {/* Action Status Toast */}
         {actionStatus && (
-          <div className="mt-4 p-3 bg-white/70 border border-amber-200 rounded-lg text-slate-700 text-sm">
+          <div className="mt-4 p-3 bg-white/70 border border-amber-200 rounded-lg text-[#55504a] text-sm">
             {actionStatus}
           </div>
         )}
@@ -613,7 +613,7 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-100 p-4">
+        <div className="bg-white rounded-xl border border-[#eae9e8] p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#e9f0fd' }}>
               <svg className="w-5 h-5" style={{ color: '#2a6ee8' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -627,7 +627,7 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-4">
+        <div className="bg-white rounded-xl border border-[#eae9e8] p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -635,13 +635,13 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
               </svg>
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{day3PlusCount}</p>
-              <p className="text-sm text-slate-500">Day 3+ (Role-Specific)</p>
+              <p className="text-2xl font-bold text-[#2f2922]">{day3PlusCount}</p>
+              <p className="text-sm text-[#7a7672]">Day 3+ (Role-Specific)</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-4">
+        <div className="bg-white rounded-xl border border-[#eae9e8] p-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -649,32 +649,32 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
               </svg>
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{newTraineesCount}</p>
-              <p className="text-sm text-slate-500">New (Pending Setup)</p>
+              <p className="text-2xl font-bold text-[#2f2922]">{newTraineesCount}</p>
+              <p className="text-sm text-[#7a7672]">New (Pending Setup)</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-100 p-4">
+        <div className="bg-white rounded-xl border border-[#eae9e8] p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-              <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-10 h-10 bg-[#fff4e8] rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 text-[#ff9419]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
             <div>
-              <p className="text-2xl font-bold text-slate-900">{pendingAssessments}</p>
-              <p className="text-sm text-slate-500">Pending Assessments</p>
+              <p className="text-2xl font-bold text-[#2f2922]">{pendingAssessments}</p>
+              <p className="text-sm text-[#7a7672]">Pending Assessments</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Active Training Batches */}
-      <div className="bg-white rounded-xl border border-slate-100">
-        <div className="p-4 border-b border-slate-100">
+      <div className="bg-white rounded-xl border border-[#eae9e8]">
+        <div className="p-4 border-b border-[#eae9e8]">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Active Training Batches</h2>
+            <h2 className="text-lg font-semibold text-[#2f2922]">Active Training Batches</h2>
             <Link href="/dashboard/trainees" className="text-sm text-blue-600 hover:text-orange-800">
               View all trainees
             </Link>
@@ -687,15 +687,15 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
               <div key={day} className="p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <span className={`inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold ${
-                    day <= 2 ? 'bg-blue-100 text-orange-700' : 'bg-slate-100 text-slate-700'
+                    day <= 2 ? 'bg-blue-100 text-orange-700' : 'bg-[#eae9e8] text-[#55504a]'
                   }`}>
                     {day}
                   </span>
                   <div>
-                    <h3 className="font-medium text-slate-900">
+                    <h3 className="font-medium text-[#2f2922]">
                       Day {day}: {day <= 2 ? 'Product Fundamentals' : 'Role-Specific Training'}
                     </h3>
-                    <p className="text-sm text-slate-500">{groupedByDay[day].length} trainee{groupedByDay[day].length !== 1 ? 's' : ''}</p>
+                    <p className="text-sm text-[#7a7672]">{groupedByDay[day].length} trainee{groupedByDay[day].length !== 1 ? 's' : ''}</p>
                   </div>
                 </div>
 
@@ -703,24 +703,24 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                   {groupedByDay[day].map(trainee => {
                     const activities = getTodayActivities(day, trainee.department)
                     return (
-                      <div key={trainee.email} className="flex items-center justify-between py-2 px-3 bg-slate-50 rounded-lg">
+                      <div key={trainee.email} className="flex items-center justify-between py-2 px-3 bg-[#f5f5f4] rounded-lg">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-sm font-medium text-slate-600">
+                          <div className="w-8 h-8 bg-[#c5c3c1] rounded-full flex items-center justify-center text-sm font-medium text-[#55504a]">
                             {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                           </div>
                           <div>
-                            <p className="font-medium text-slate-900 text-sm">{trainee.fullName}</p>
-                            <p className="text-xs text-slate-500">{trainee.department} - {trainee.country}</p>
+                            <p className="font-medium text-[#2f2922] text-sm">{trainee.fullName}</p>
+                            <p className="text-xs text-[#7a7672]">{trainee.department} - {trainee.country}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="text-right">
-                            <p className="text-xs text-slate-500">Today&apos;s focus:</p>
-                            <p className="text-xs font-medium text-slate-700">{activities[0] || 'Training'}</p>
+                            <p className="text-xs text-[#7a7672]">Today&apos;s focus:</p>
+                            <p className="text-xs font-medium text-[#55504a]">{activities[0] || 'Training'}</p>
                           </div>
                           <Link
                             href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-orange-50 rounded transition-colors"
+                            className="p-1.5 text-[#a09d9a] hover:text-blue-600 hover:bg-orange-50 rounded transition-colors"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -735,66 +735,66 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center text-slate-500">
+          <div className="p-8 text-center text-[#7a7672]">
             <p>No active training batches right now</p>
           </div>
         )}
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-xl border border-slate-100">
-        <div className="p-4 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-900">Quick Actions</h2>
-          <p className="text-sm text-slate-500 mt-1">One-click workflow triggers</p>
+      <div className="bg-white rounded-xl border border-[#eae9e8]">
+        <div className="p-4 border-b border-[#eae9e8]">
+          <h2 className="text-lg font-semibold text-[#2f2922]">Quick Actions</h2>
+          <p className="text-sm text-[#7a7672] mt-1">One-click workflow triggers</p>
         </div>
 
         <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
           <button
             onClick={() => triggerWorkflow('reminder', 'Send incomplete assessment reminders')}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-orange-300 hover:bg-orange-50 transition-colors"
+            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#c5c3c1] hover:border-orange-300 hover:bg-orange-50 transition-colors"
           >
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-slate-700">Send Reminders</span>
+            <span className="text-sm font-medium text-[#55504a]">Send Reminders</span>
           </button>
 
           <button
             onClick={() => triggerWorkflow('report', 'Generate performance reports')}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-orange-300 hover:bg-orange-50 transition-colors"
+            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#c5c3c1] hover:border-orange-300 hover:bg-orange-50 transition-colors"
           >
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-slate-700">Generate Reports</span>
+            <span className="text-sm font-medium text-[#55504a]">Generate Reports</span>
           </button>
 
           <button
             onClick={() => triggerWorkflow('feedback', 'Send feedback surveys')}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-orange-300 hover:bg-orange-50 transition-colors"
+            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#c5c3c1] hover:border-orange-300 hover:bg-orange-50 transition-colors"
           >
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
               <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-slate-700">Send Surveys</span>
+            <span className="text-sm font-medium text-[#55504a]">Send Surveys</span>
           </button>
 
           <Link
             href="/dashboard/assessments"
-            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 hover:border-orange-300 hover:bg-orange-50 transition-colors"
+            className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#c5c3c1] hover:border-orange-300 hover:bg-orange-50 transition-colors"
           >
-            <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-              <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-10 h-10 bg-[#fff4e8] rounded-full flex items-center justify-center">
+              <svg className="w-5 h-5 text-[#ff9419]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-slate-700">View Assessments</span>
+            <span className="text-sm font-medium text-[#55504a]">View Assessments</span>
           </Link>
         </div>
       </div>
@@ -811,8 +811,8 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-900">New Trainees - Pending Welcome Email</h2>
-                  <p className="text-sm text-slate-500">{newTrainees.length} trainee{newTrainees.length !== 1 ? 's' : ''} need welcome emails</p>
+                  <h2 className="text-lg font-semibold text-[#2f2922]">New Trainees - Pending Welcome Email</h2>
+                  <p className="text-sm text-[#7a7672]">{newTrainees.length} trainee{newTrainees.length !== 1 ? 's' : ''} need welcome emails</p>
                 </div>
               </div>
             </div>
@@ -820,20 +820,20 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
 
           <div className="p-4 space-y-3">
             {newTrainees.map((trainee) => (
-              <div key={trainee.email} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-100">
+              <div key={trainee.email} className="flex items-center justify-between p-4 bg-[#f5f5f4] rounded-lg border border-[#eae9e8]">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-medium">
                     {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900">{trainee.fullName}</p>
-                    <p className="text-sm text-slate-500">{trainee.email}</p>
+                    <p className="font-medium text-[#2f2922]">{trainee.fullName}</p>
+                    <p className="text-sm text-[#7a7672]">{trainee.email}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-sm font-medium text-slate-700">{trainee.department}</p>
-                    <p className="text-xs text-slate-500">Start: {trainee.trainingStartDate}</p>
+                    <p className="text-sm font-medium text-[#55504a]">{trainee.department}</p>
+                    <p className="text-xs text-[#7a7672]">Start: {trainee.trainingStartDate}</p>
                   </div>
                   <button
                     onClick={() => sendWelcomeEmail(trainee)}
@@ -854,9 +854,9 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
       {/* Today's Sessions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Your Sessions Today */}
-        <div className="bg-white rounded-xl border border-slate-100">
-          <div className="p-4 border-b border-slate-100">
-            <h2 className="text-lg font-semibold text-slate-900">Your Sessions Today</h2>
+        <div className="bg-white rounded-xl border border-[#eae9e8]">
+          <div className="p-4 border-b border-[#eae9e8]">
+            <h2 className="text-lg font-semibold text-[#2f2922]">Your Sessions Today</h2>
           </div>
           <div className="p-4 space-y-3">
             {activeTrainees.some(t => t.daysSinceTrainingStart <= 2) ? (
@@ -868,8 +868,8 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                       <span className="text-sm font-bold">9:30</span>
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">Kick-off Briefing</p>
-                      <p className="text-sm text-slate-500">Day 1 trainees - 1 hour</p>
+                      <p className="font-medium text-[#2f2922]">Kick-off Briefing</p>
+                      <p className="text-sm text-[#7a7672]">Day 1 trainees - 1 hour</p>
                     </div>
                   </div>
                 )}
@@ -880,26 +880,26 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                       <span className="text-sm font-bold">2:00</span>
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">Product Demo Session</p>
-                      <p className="text-sm text-slate-500">Day 1-2 trainees - 2.5 hours</p>
+                      <p className="font-medium text-[#2f2922]">Product Demo Session</p>
+                      <p className="text-sm text-[#7a7672]">Day 1-2 trainees - 2.5 hours</p>
                     </div>
                   </div>
                 )}
                 {activeTrainees.some(t => t.daysSinceTrainingStart === 2) && (
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                    <div className="w-12 h-12 bg-slate-600 rounded-lg flex flex-col items-center justify-center text-white">
+                  <div className="flex items-center gap-3 p-3 bg-[#f5f5f4] rounded-lg border border-[#c5c3c1]">
+                    <div className="w-12 h-12 bg-[#55504a] rounded-lg flex flex-col items-center justify-center text-white">
                       <span className="text-xs">PM</span>
                       <span className="text-sm font-bold">5:00</span>
                     </div>
                     <div>
-                      <p className="font-medium text-slate-900">Day 3 Briefing</p>
-                      <p className="text-sm text-slate-500">Day 2 trainees - 30 mins</p>
+                      <p className="font-medium text-[#2f2922]">Day 3 Briefing</p>
+                      <p className="text-sm text-[#7a7672]">Day 2 trainees - 30 mins</p>
                     </div>
                   </div>
                 )}
               </>
             ) : (
-              <div className="text-center py-6 text-slate-500">
+              <div className="text-center py-6 text-[#7a7672]">
                 <p>No trainer-led sessions today</p>
                 <p className="text-sm mt-1">Day 1-2 trainees have live sessions</p>
               </div>
@@ -908,9 +908,9 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
         </div>
 
         {/* Upcoming Handovers */}
-        <div className="bg-white rounded-xl border border-slate-100">
-          <div className="p-4 border-b border-slate-100">
-            <h2 className="text-lg font-semibold text-slate-900">Upcoming Handovers</h2>
+        <div className="bg-white rounded-xl border border-[#eae9e8]">
+          <div className="p-4 border-b border-[#eae9e8]">
+            <h2 className="text-lg font-semibold text-[#2f2922]">Upcoming Handovers</h2>
           </div>
           <div className="p-4">
             {activeTrainees.filter(t => {
@@ -923,27 +923,27 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                   const handoverDay = t.department === 'Merchant Care' ? 4 : 5
                   return t.daysSinceTrainingStart >= handoverDay - 1 && t.daysSinceTrainingStart <= handoverDay
                 }).map(trainee => (
-                  <div key={trainee.email} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                  <div key={trainee.email} className="flex items-center justify-between p-3 bg-[#f5f5f4] rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                        <svg className="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-8 h-8 bg-[#fff4e8] rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#ff9419]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                       </div>
                       <div>
-                        <p className="font-medium text-slate-900 text-sm">{trainee.fullName}</p>
-                        <p className="text-xs text-slate-500">{trainee.department}</p>
+                        <p className="font-medium text-[#2f2922] text-sm">{trainee.fullName}</p>
+                        <p className="text-xs text-[#7a7672]">{trainee.department}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-slate-500">Handover to:</p>
-                      <p className="text-sm font-medium text-slate-700">{trainee.coachName || 'TL'}</p>
+                      <p className="text-xs text-[#7a7672]">Handover to:</p>
+                      <p className="text-sm font-medium text-[#55504a]">{trainee.coachName || 'TL'}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-6 text-slate-500">
+              <div className="text-center py-6 text-[#7a7672]">
                 <p>No handovers scheduled soon</p>
               </div>
             )}
@@ -952,39 +952,39 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
       </div>
 
       {/* Recent Trainee Reflections */}
-      <div className="bg-white rounded-xl border border-slate-100">
-        <div className="p-4 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-900">Recent Trainee Reflections</h2>
-          <p className="text-sm text-slate-500 mt-1">End-of-day feedback from trainees</p>
+      <div className="bg-white rounded-xl border border-[#eae9e8]">
+        <div className="p-4 border-b border-[#eae9e8]">
+          <h2 className="text-lg font-semibold text-[#2f2922]">Recent Trainee Reflections</h2>
+          <p className="text-sm text-[#7a7672] mt-1">End-of-day feedback from trainees</p>
         </div>
         <div className="p-4">
           {loadingReflections ? (
-            <div className="text-center py-6 text-slate-500">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600 mx-auto mb-2"></div>
+            <div className="text-center py-6 text-[#7a7672]">
+              <div className="w-6 h-6 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin mx-auto mb-2"></div>
               <p className="text-sm">Loading reflections...</p>
             </div>
           ) : reflections.length > 0 ? (
             <div className="space-y-4">
               {reflections.map((reflection) => (
-                <div key={reflection.id} className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <div key={reflection.id} className="p-4 bg-[#f5f5f4] rounded-lg border border-[#eae9e8]">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-sm font-medium">
                         {reflection.trainee_name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
                       </div>
                       <div>
-                        <p className="font-medium text-slate-900 text-sm">{reflection.trainee_name || reflection.trainee_email}</p>
-                        <p className="text-xs text-slate-500">Day {reflection.day_number} • {reflection.role_code}</p>
+                        <p className="font-medium text-[#2f2922] text-sm">{reflection.trainee_name || reflection.trainee_email}</p>
+                        <p className="text-xs text-[#7a7672]">Day {reflection.day_number} • {reflection.role_code}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-xs text-slate-500">Confidence:</span>
+                      <span className="text-xs text-[#7a7672]">Confidence:</span>
                       <div className="flex gap-0.5">
                         {[1, 2, 3, 4, 5].map((level) => (
                           <div
                             key={level}
                             className={`w-2 h-2 rounded-full ${
-                              level <= reflection.confidence_level ? 'bg-blue-500' : 'bg-slate-200'
+                              level <= reflection.confidence_level ? 'bg-blue-500' : 'bg-[#c5c3c1]'
                             }`}
                           />
                         ))}
@@ -993,17 +993,17 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                   </div>
                   {reflection.confusing_topic && (
                     <div className="mb-2">
-                      <p className="text-xs font-medium text-slate-500 mb-1">Confusing Topic:</p>
-                      <p className="text-sm text-slate-700">{reflection.confusing_topic}</p>
+                      <p className="text-xs font-medium text-[#7a7672] mb-1">Confusing Topic:</p>
+                      <p className="text-sm text-[#55504a]">{reflection.confusing_topic}</p>
                     </div>
                   )}
                   {reflection.improvement_notes && (
                     <div>
-                      <p className="text-xs font-medium text-slate-500 mb-1">Would do differently:</p>
-                      <p className="text-sm text-slate-700">{reflection.improvement_notes}</p>
+                      <p className="text-xs font-medium text-[#7a7672] mb-1">Would do differently:</p>
+                      <p className="text-sm text-[#55504a]">{reflection.improvement_notes}</p>
                     </div>
                   )}
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-[#a09d9a] mt-2">
                     {new Date(reflection.created_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -1015,8 +1015,8 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
               ))}
             </div>
           ) : (
-            <div className="text-center py-6 text-slate-500">
-              <svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="text-center py-6 text-[#7a7672]">
+              <svg className="w-12 h-12 mx-auto mb-3 text-[#a09d9a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
               <p>No reflections submitted yet</p>
@@ -1027,18 +1027,18 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
       </div>
 
       {/* Performance Tracking - Who's Struggling vs Fast Learners */}
-      <div className="bg-white rounded-xl border border-slate-100">
-        <div className="p-4 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-slate-900">Activity Performance Tracking</h2>
-          <p className="text-sm text-slate-500 mt-1">Monitor trainee learning speed and identify who needs help</p>
+      <div className="bg-white rounded-xl border border-[#eae9e8]">
+        <div className="p-4 border-b border-[#eae9e8]">
+          <h2 className="text-lg font-semibold text-[#2f2922]">Activity Performance Tracking</h2>
+          <p className="text-sm text-[#7a7672] mt-1">Monitor trainee learning speed and identify who needs help</p>
         </div>
 
         {/* Performance Summary Stats */}
         {performanceSummary && performanceSummary.total > 0 && (
-          <div className="grid grid-cols-5 gap-4 p-4 bg-slate-50 border-b border-slate-100">
+          <div className="grid grid-cols-5 gap-4 p-4 bg-[#f5f5f4] border-b border-[#eae9e8]">
             <div className="text-center">
-              <p className="text-2xl font-bold text-slate-900">{performanceSummary.total}</p>
-              <p className="text-xs text-slate-500">Total Activities</p>
+              <p className="text-2xl font-bold text-[#2f2922]">{performanceSummary.total}</p>
+              <p className="text-xs text-[#7a7672]">Total Activities</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-blue-600">{performanceSummary.fast}</p>
@@ -1049,20 +1049,20 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
               <p className="text-xs text-blue-600">On Time</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-amber-600">{performanceSummary.slow}</p>
-              <p className="text-xs text-amber-600">Slow</p>
+              <p className="text-2xl font-bold text-[#ff9419]">{performanceSummary.slow}</p>
+              <p className="text-xs text-[#ff9419]">Slow</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-red-600">{performanceSummary.struggling}</p>
-              <p className="text-xs text-red-600">Struggling</p>
+              <p className="text-2xl font-bold text-[#ff546f]">{performanceSummary.struggling}</p>
+              <p className="text-xs text-[#ff546f]">Struggling</p>
             </div>
           </div>
         )}
 
         <div className="p-4">
           {loadingPerformance ? (
-            <div className="text-center py-6 text-slate-500">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600 mx-auto mb-2"></div>
+            <div className="text-center py-6 text-[#7a7672]">
+              <div className="w-6 h-6 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin mx-auto mb-2"></div>
               <p className="text-sm">Loading performance data...</p>
             </div>
           ) : performanceRecords.length > 0 ? (
@@ -1071,8 +1071,8 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                 const flagConfig = {
                   fast: { label: 'Fast Learner', color: 'bg-blue-100 text-blue-700 border-blue-200', icon: '🚀' },
                   on_time: { label: 'On Time', color: 'bg-blue-100 text-orange-700 border-orange-200', icon: '✓' },
-                  slow: { label: 'Slow', color: 'bg-amber-100 text-amber-700 border-amber-200', icon: '⏱️' },
-                  struggling: { label: 'Needs Help', color: 'bg-red-100 text-red-700 border-red-200', icon: '⚠️' },
+                  slow: { label: 'Slow', color: 'bg-[#fff4e8] text-[#ff9419] border-amber-200', icon: '⏱️' },
+                  struggling: { label: 'Needs Help', color: 'bg-[#ffeef0] text-[#ff546f] border-[#ffcfd7]', icon: '⚠️' },
                 }
                 const config = flagConfig[record.performance_flag]
                 const allocatedMinutes = Math.round(record.allocated_seconds / 60)
@@ -1082,38 +1082,38 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                   <div
                     key={record.id}
                     className={`p-3 rounded-lg border ${
-                      record.performance_flag === 'struggling' ? 'bg-red-50 border-red-200' :
-                      record.performance_flag === 'slow' ? 'bg-amber-50 border-amber-200' :
-                      'bg-slate-50 border-slate-100'
+                      record.performance_flag === 'struggling' ? 'bg-[#ffeef0] border-[#ffcfd7]' :
+                      record.performance_flag === 'slow' ? 'bg-[#fff4e8] border-amber-200' :
+                      'bg-[#f5f5f4] border-[#eae9e8]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                          record.performance_flag === 'struggling' ? 'bg-red-100 text-red-600' :
-                          record.performance_flag === 'slow' ? 'bg-amber-100 text-amber-600' :
+                          record.performance_flag === 'struggling' ? 'bg-[#ffeef0] text-[#ff546f]' :
+                          record.performance_flag === 'slow' ? 'bg-[#fff4e8] text-[#ff9419]' :
                           record.performance_flag === 'fast' ? 'bg-blue-100 text-blue-600' :
                           'bg-blue-100 text-blue-600'
                         }`}>
                           {record.trainee_name?.split(' ').map(n => n[0]).join('').slice(0, 2) || '?'}
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900 text-sm">
+                          <p className="font-medium text-[#2f2922] text-sm">
                             {record.trainee_name || record.trainee_email?.split('@')[0]}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-[#7a7672]">
                             {record.activity_title} • Day {record.day_number}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="text-right">
-                          <p className="text-xs text-slate-500">Time</p>
+                          <p className="text-xs text-[#7a7672]">Time</p>
                           <p className={`text-sm font-medium ${
-                            record.performance_flag === 'struggling' ? 'text-red-600' :
-                            record.performance_flag === 'slow' ? 'text-amber-600' :
+                            record.performance_flag === 'struggling' ? 'text-[#ff546f]' :
+                            record.performance_flag === 'slow' ? 'text-[#ff9419]' :
                             record.performance_flag === 'fast' ? 'text-blue-600' :
-                            'text-slate-900'
+                            'text-[#2f2922]'
                           }`}>
                             {actualMinutes}m / {allocatedMinutes}m
                           </p>
@@ -1124,7 +1124,7 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
                       </div>
                     </div>
                     {record.performance_flag === 'struggling' && (
-                      <p className="text-xs text-red-600 mt-2 pl-11">
+                      <p className="text-xs text-[#ff546f] mt-2 pl-11">
                         Took {record.percentage_of_allocated}% of allocated time - may need additional support
                       </p>
                     )}
@@ -1133,8 +1133,8 @@ export default function TrainerDashboard({ trainees, userName }: TrainerDashboar
               })}
             </div>
           ) : (
-            <div className="text-center py-6 text-slate-500">
-              <svg className="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="text-center py-6 text-[#7a7672]">
+              <svg className="w-12 h-12 mx-auto mb-3 text-[#a09d9a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p>No performance data yet</p>

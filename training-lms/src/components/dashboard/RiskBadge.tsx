@@ -60,17 +60,17 @@ export function getRiskStyles(level: RiskLevel): { bg: string; text: string; rin
       }
     case 'on-track':
       return {
-        bg: 'bg-green-100',
-        text: 'text-green-800',
+        bg: 'bg-[#e9f0fd]',
+        text: 'text-[#2a6ee8]',
         ring: 'ring-green-600/20',
-        dot: 'bg-green-500'
+        dot: 'bg-[#e9f0fd]'
       }
     default:
       return {
-        bg: 'bg-gray-100',
-        text: 'text-gray-800',
+        bg: 'bg-[#f5f5f4]',
+        text: 'text-[#7a7672]',
         ring: 'ring-gray-600/20',
-        dot: 'bg-gray-400'
+        dot: 'bg-[#f5f5f4]'
       }
   }
 }

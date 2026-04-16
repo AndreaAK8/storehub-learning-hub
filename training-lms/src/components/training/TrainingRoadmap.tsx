@@ -80,26 +80,26 @@ export function TrainingRoadmap({
   return (
     <div className="mb-6">
       {/* Your Training Plan - Collapsible Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-[#c5c3c1] overflow-hidden">
         <button
           onClick={() => setShowPlan(!showPlan)}
-          className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-all"
+          className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#f5f5f4] transition-all"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#fff4e8' }}>
               <span className="text-xl">📅</span>
             </div>
             <div className="text-left">
-              <h3 className="font-bold text-lg text-slate-800">Your Training Plan</h3>
-              <p className="text-slate-500 text-sm">{roleName} • {totalDays} Days</p>
+              <h3 className="font-bold text-lg text-[#2f2922]">Your Training Plan</h3>
+              <p className="text-[#7a7672] text-sm">{roleName} • {totalDays} Days</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+            <span className="text-sm font-medium text-[#7a7672] bg-[#eae9e8] px-3 py-1 rounded-full">
               {showPlan ? 'Hide' : 'Expand'}
             </span>
             <svg
-              className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${showPlan ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 text-[#a09d9a] transition-transform duration-300 ${showPlan ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

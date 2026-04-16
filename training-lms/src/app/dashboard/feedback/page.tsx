@@ -165,12 +165,12 @@ export default function FeedbackPage() {
           <h1 className="text-2xl font-bold text-[var(--sh-black)]">Feedback Analysis</h1>
           <p className="text-[var(--neutral-400)] mt-1">AI-powered feedback insights</p>
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <svg className="w-12 h-12 mx-auto text-red-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#ffeef0] border border-[#ffcfd7] rounded-lg p-6 text-center">
+          <svg className="w-12 h-12 mx-auto text-[#ff546f] mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 20c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <p className="text-red-800 font-medium">Access Denied</p>
-          <p className="text-red-600 text-sm mt-1">Only administrators can view feedback analysis</p>
+          <p className="text-[#ff546f] font-medium">Access Denied</p>
+          <p className="text-[#ff546f] text-sm mt-1">Only administrators can view feedback analysis</p>
         </div>
       </div>
     )
@@ -181,9 +181,9 @@ export default function FeedbackPage() {
 
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment) {
-      case 'positive': return 'bg-green-100 text-green-800'
-      case 'negative': return 'bg-red-100 text-red-800'
-      default: return 'bg-yellow-100 text-yellow-800'
+      case 'positive': return 'bg-[#e9f0fd] text-[#2a6ee8]'
+      case 'negative': return 'bg-[#ffeef0] text-[#ff546f]'
+      default: return 'bg-[#fff4e8] text-[#ff9419]'
     }
   }
 
@@ -226,63 +226,63 @@ export default function FeedbackPage() {
 
       {/* Demo Mode Banner */}
       {analysis?.isDemo && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
-          <svg className="w-5 h-5 text-amber-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#fff4e8] border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-[#ff9419] mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-amber-800 font-medium">Demo Mode</p>
-            <p className="text-amber-700 text-sm">Showing sample AI feedback analysis. Real data will appear once trainees submit survey responses.</p>
+            <p className="text-[#ff9419] font-medium">Demo Mode</p>
+            <p className="text-[#ff9419] text-sm">Showing sample AI feedback analysis. Real data will appear once trainees submit survey responses.</p>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{error}</p>
+        <div className="bg-[#ffeef0] border border-[#ffcfd7] rounded-lg p-4">
+          <p className="text-[#ff546f]">{error}</p>
         </div>
       )}
 
       {/* Sentiment Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#e9f0fd] border border-green-200 rounded-lg p-6 text-center">
+          <div className="w-12 h-12 rounded-full bg-[#e9f0fd] flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-3xl font-bold text-green-700">{sentimentCounts.positive}</p>
-          <p className="text-sm text-green-600">Positive Feedback</p>
+          <p className="text-3xl font-bold text-[#2a6ee8]">{sentimentCounts.positive}</p>
+          <p className="text-sm text-[#2a6ee8]">Positive Feedback</p>
           {totalFeedback > 0 && (
-            <p className="text-xs text-green-500 mt-1">
+            <p className="text-xs text-[#2a6ee8] mt-1">
               {Math.round((sentimentCounts.positive / totalFeedback) * 100)}%
             </p>
           )}
         </div>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-          <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#fff4e8] border border-yellow-200 rounded-lg p-6 text-center">
+          <div className="w-12 h-12 rounded-full bg-[#fff4e8] flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-[#ff9419]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14s1.5 2 4 2 4-2 4-2m-4-4h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-3xl font-bold text-yellow-700">{sentimentCounts.neutral}</p>
-          <p className="text-sm text-yellow-600">Neutral Feedback</p>
+          <p className="text-3xl font-bold text-[#ff9419]">{sentimentCounts.neutral}</p>
+          <p className="text-sm text-[#ff9419]">Neutral Feedback</p>
           {totalFeedback > 0 && (
-            <p className="text-xs text-yellow-500 mt-1">
+            <p className="text-xs text-[#ff9419] mt-1">
               {Math.round((sentimentCounts.neutral / totalFeedback) * 100)}%
             </p>
           )}
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#ffeef0] border border-[#ffcfd7] rounded-lg p-6 text-center">
+          <div className="w-12 h-12 rounded-full bg-[#ffeef0] flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-[#ff546f]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-3xl font-bold text-red-700">{sentimentCounts.negative}</p>
-          <p className="text-sm text-red-600">Negative Feedback</p>
+          <p className="text-3xl font-bold text-[#ff546f]">{sentimentCounts.negative}</p>
+          <p className="text-sm text-[#ff546f]">Negative Feedback</p>
           {totalFeedback > 0 && (
-            <p className="text-xs text-red-500 mt-1">
+            <p className="text-xs text-[#ff546f] mt-1">
               {Math.round((sentimentCounts.negative / totalFeedback) * 100)}%
             </p>
           )}

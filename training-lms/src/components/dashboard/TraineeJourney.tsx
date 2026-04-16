@@ -144,33 +144,33 @@ export default function TraineeJourney({
 
   const getPerformanceColor = (flag: string) => {
     switch (flag) {
-      case 'fast': return 'bg-green-100 border-green-300 text-green-700'
-      case 'on_time': return 'bg-blue-100 border-blue-300 text-blue-700'
-      case 'slow': return 'bg-yellow-100 border-yellow-300 text-yellow-700'
-      case 'struggling': return 'bg-red-100 border-red-300 text-red-700'
-      default: return 'bg-gray-100 border-gray-300 text-gray-700'
+      case 'fast': return 'bg-[#e9f0fd] border-[#9dbcf4] text-[#2a6ee8]'
+      case 'on_time': return 'bg-[#e9f0fd] border-[#9dbcf4] text-[#2a6ee8]'
+      case 'slow': return 'bg-[#fff4e8] border-[#ffce95] text-[#ff9419]'
+      case 'struggling': return 'bg-[#ffeef0] border-[#ffcfd7] text-[#ff546f]'
+      default: return 'bg-[#eae9e8] border-[#a09d9a] text-[#7a7672]'
     }
   }
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Training Journey</h2>
+      <div className="bg-[#f5f5f4] rounded-xl shadow-sm border border-[#eae9e8] p-6">
+        <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Training journey</h2>
         <div className="flex items-center justify-center py-12">
-          <div className="w-8 h-8 border-3 border-slate-300 border-t-slate-600 rounded-full animate-spin" />
+          <div className="w-5 h-5 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin" />
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl shadow-sm border border-slate-200 p-6">
+    <div className="bg-[#f5f5f4] rounded-xl shadow-sm border border-[#eae9e8] p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Training Journey</h2>
-        <div className="flex items-center gap-4 text-xs text-gray-500">
-          <span className="flex items-center gap-1"><span className="text-green-500">●</span> Completed</span>
-          <span className="flex items-center gap-1"><span className="text-amber-500">●</span> In Progress</span>
-          <span className="flex items-center gap-1"><span className="text-gray-300">●</span> Upcoming</span>
+        <h2 className="text-lg font-semibold text-[#2f2922]">Training journey</h2>
+        <div className="flex items-center gap-4 text-xs text-[#7a7672]">
+          <span className="flex items-center gap-1"><span className="text-[#2a6ee8]">●</span> Completed</span>
+          <span className="flex items-center gap-1"><span className="text-[#ff9419]">●</span> In progress</span>
+          <span className="flex items-center gap-1"><span className="text-[#c5c3c1]">●</span> Upcoming</span>
         </div>
       </div>
 
@@ -191,19 +191,19 @@ export default function TraineeJourney({
               onClick={() => setExpandedDay(expandedDay === day ? null : day)}
               className={`flex-shrink-0 px-4 py-2 rounded-lg border-2 transition-all ${
                 expandedDay === day
-                  ? 'border-orange-400 bg-orange-50'
+                  ? 'border-[#ff9419] bg-[#fff4e8]'
                   : isComplete
-                    ? 'border-green-300 bg-green-50'
+                    ? 'border-[#9dbcf4] bg-[#e9f0fd]'
                     : isCurrentDay
-                      ? 'border-amber-300 bg-amber-50'
+                      ? 'border-[#ffce95] bg-[#fff4e8]'
                       : isFuture
-                        ? 'border-gray-200 bg-gray-50 opacity-50'
-                        : 'border-gray-200 bg-white hover:border-gray-300'
+                        ? 'border-[#eae9e8] bg-[#f5f5f4] opacity-50'
+                        : 'border-[#eae9e8] bg-white hover:border-[#a09d9a]'
               }`}
             >
-              <p className="text-xs font-medium text-gray-500">Day {day}</p>
+              <p className="text-xs font-medium text-[#7a7672]">Day {day}</p>
               <p className={`text-sm font-bold ${
-                isComplete ? 'text-green-600' : isCurrentDay ? 'text-amber-600' : 'text-gray-600'
+                isComplete ? 'text-[#2a6ee8]' : isCurrentDay ? 'text-[#ff9419]' : 'text-[#55504a]'
               }`}>
                 {completedCount}/{totalCount}
               </p>
@@ -214,12 +214,12 @@ export default function TraineeJourney({
 
       {/* Expanded Day Details */}
       {expandedDay && (
-        <div className="border-t border-gray-200 pt-4">
+        <div className="border-t border-[#c5c3c1] pt-4">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Day {expandedDay} Activities</h3>
+            <h3 className="font-semibold text-[#2f2922]">Day {expandedDay} Activities</h3>
             <button
               onClick={() => setExpandedDay(null)}
-              className="text-xs text-gray-400 hover:text-gray-600"
+              className="text-xs text-[#a09d9a] hover:text-[#55504a]"
             >
               Close
             </button>
@@ -240,7 +240,7 @@ export default function TraineeJourney({
                   className={`p-3 rounded-lg border ${
                     completed
                       ? getPerformanceColor(completed.performance_flag)
-                      : 'bg-white border-gray-200'
+                      : 'bg-white border-[#c5c3c1]'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -250,16 +250,16 @@ export default function TraineeJourney({
                       </span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className={`font-medium text-sm ${completed ? '' : 'text-gray-500'}`}>
+                          <p className={`font-medium text-sm ${completed ? '' : 'text-[#7a7672]'}`}>
                             {module.activity_title}
                           </p>
                           {isCoachLed && (
-                            <span className="px-1.5 py-0.5 bg-purple-100 text-purple-700 text-[10px] font-medium rounded">
+                            <span className="px-1.5 py-0.5 bg-[#55504a] text-[#55504a] text-[10px] font-medium rounded">
                               Coach-led
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-[#7a7672] mt-0.5">
                           {module.activity_type} • {module.estimated_duration_minutes} min
                         </p>
 
@@ -272,12 +272,12 @@ export default function TraineeJourney({
                                   type="datetime-local"
                                   value={editDateTime}
                                   onChange={(e) => setEditDateTime(e.target.value)}
-                                  className="px-2 py-1 text-xs border border-gray-300 rounded"
+                                  className="px-2 py-1 text-xs border border-[#a09d9a] rounded"
                                 />
                                 <button
                                   onClick={() => handleEditDateTime(completed.id)}
                                   disabled={saving}
-                                  className="px-2 py-1 bg-purple-500 text-white text-xs rounded hover:bg-purple-600 disabled:opacity-50"
+                                  className="px-2 py-1 bg-[#55504a] text-white text-xs rounded hover:bg-[#55504a] disabled:opacity-50"
                                 >
                                   {saving ? '...' : 'Save'}
                                 </button>
@@ -286,14 +286,14 @@ export default function TraineeJourney({
                                     setEditingActivity(null)
                                     setEditDateTime('')
                                   }}
-                                  className="px-2 py-1 text-gray-500 text-xs hover:text-gray-700"
+                                  className="px-2 py-1 text-[#7a7672] text-xs hover:text-[#55504a]"
                                 >
                                   Cancel
                                 </button>
                               </div>
                             ) : (
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500">
+                                <span className="text-xs text-[#7a7672]">
                                   Completed: {new Date(completed.created_at).toLocaleString()}
                                 </span>
                                 {isCoach && isCoachLed && (
@@ -304,7 +304,7 @@ export default function TraineeJourney({
                                         new Date(completed.created_at).toISOString().slice(0, 16)
                                       )
                                     }}
-                                    className="text-xs text-purple-600 hover:text-purple-800 underline"
+                                    className="text-xs text-[#55504a] hover:text-[#55504a] underline"
                                   >
                                     Edit time
                                   </button>
@@ -329,17 +329,17 @@ export default function TraineeJourney({
                     <div className="flex-shrink-0">
                       {completed ? (
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          completed.performance_flag === 'fast' ? 'bg-green-200 text-green-800' :
+                          completed.performance_flag === 'fast' ? 'bg-[#e9f0fd] text-[#2a6ee8]' :
                           completed.performance_flag === 'on_time' ? 'bg-blue-200 text-blue-800' :
-                          completed.performance_flag === 'slow' ? 'bg-yellow-200 text-yellow-800' :
-                          'bg-red-200 text-red-800'
+                          completed.performance_flag === 'slow' ? 'bg-[#fff4e8] text-[#ff9419]' :
+                          'bg-[#ffeef0] text-[#ff546f]'
                         }`}>
                           {completed.performance_flag === 'fast' ? 'Early' :
                            completed.performance_flag === 'on_time' ? 'On Time' :
                            completed.performance_flag === 'slow' ? 'Slow' : 'Struggling'}
                         </span>
                       ) : (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs">
+                        <span className="px-2 py-1 bg-[#eae9e8] text-[#7a7672] rounded-full text-xs">
                           Pending
                         </span>
                       )}
@@ -350,38 +350,38 @@ export default function TraineeJourney({
             })}
 
             {(modulesByDay[expandedDay] || []).length === 0 && (
-              <p className="text-center text-gray-500 py-4">No activities scheduled for Day {expandedDay}</p>
+              <p className="text-center text-[#7a7672] py-4">No activities scheduled for Day {expandedDay}</p>
             )}
           </div>
         </div>
       )}
 
       {/* Overall Journey Stats */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
+      <div className="mt-6 pt-4 border-t border-[#c5c3c1]">
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-2xl font-bold text-[#2a6ee8]">
               {activities.filter(a => a.performance_flag === 'fast').length}
             </p>
-            <p className="text-xs text-gray-500">Early 🚀</p>
+            <p className="text-xs text-[#7a7672]">Early 🚀</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-blue-600">
               {activities.filter(a => a.performance_flag === 'on_time').length}
             </p>
-            <p className="text-xs text-gray-500">On Time ✅</p>
+            <p className="text-xs text-[#7a7672]">On Time ✅</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-yellow-600">
+            <p className="text-2xl font-bold text-[#ff9419]">
               {activities.filter(a => a.performance_flag === 'slow').length}
             </p>
-            <p className="text-xs text-gray-500">Slow 🐢</p>
+            <p className="text-xs text-[#7a7672]">Slow 🐢</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-2xl font-bold text-[#ff546f]">
               {activities.filter(a => a.performance_flag === 'struggling').length}
             </p>
-            <p className="text-xs text-gray-500">Struggling ⚠️</p>
+            <p className="text-xs text-[#7a7672]">Struggling ⚠️</p>
           </div>
         </div>
       </div>

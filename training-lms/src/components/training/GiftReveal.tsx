@@ -49,7 +49,7 @@ export default function GiftReveal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-[#2f2922] via-[#7a7672] to-pink-900">
       {/* Confetti */}
       {showConfetti && <Confetti duration={6000} />}
 
@@ -77,7 +77,7 @@ export default function GiftReveal({
           <h1 className="text-4xl font-bold text-white mb-2">
             Congratulations, {traineeName.split(' ')[0]}!
           </h1>
-          <p className="text-xl text-purple-200">
+          <p className="text-xl text-[#55504a]">
             You've completed all your training activities!
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function GiftReveal({
       {/* Stage: Gift Box */}
       {stage === 'gift' && (
         <div className="text-center animate-scale-in">
-          <p className="text-xl text-purple-200 mb-8 animate-pulse">
+          <p className="text-xl text-[#55504a] mb-8 animate-pulse">
             Tap the gift to reveal your reward!
           </p>
 
@@ -130,7 +130,7 @@ export default function GiftReveal({
             </div>
           </button>
 
-          <p className="mt-8 text-purple-300 text-sm animate-bounce">
+          <p className="mt-8 text-[#55504a] text-sm animate-bounce">
             👆 Click me!
           </p>
         </div>
@@ -175,17 +175,17 @@ export default function GiftReveal({
             <div className="relative w-48 h-48 mx-auto">
               {/* Outer ring */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 p-2 animate-spin-slow">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-900 to-purple-900" />
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-[#2f2922] to-[#55504a]" />
               </div>
 
               {/* Inner badge */}
               <div className="absolute inset-4 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 flex items-center justify-center shadow-2xl">
                 <div className="text-center">
                   <div className="text-5xl mb-1">🏆</div>
-                  <div className="text-xs font-bold text-amber-900 uppercase tracking-wider">
+                  <div className="text-xs font-bold text-[#ff9419] tracking-wider">
                     {roleCode}
                   </div>
-                  <div className="text-xs text-amber-800">Certified</div>
+                  <div className="text-xs text-[#ff9419]">Certified</div>
                 </div>
               </div>
 
@@ -208,7 +208,7 @@ export default function GiftReveal({
 
           {/* Achievement Text */}
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full text-amber-900 font-bold text-lg shadow-lg">
+            <div className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full text-[#ff9419] font-bold text-lg shadow-lg">
               <span>⭐</span>
               <span>{totalXP.toLocaleString()} XP Earned!</span>
               <span>⭐</span>
@@ -218,7 +218,7 @@ export default function GiftReveal({
               {roleName} Certified!
             </h2>
 
-            <p className="text-purple-100">
+            <p className="text-[#55504a]">
               You've mastered all the skills required for the {roleName} role.
               <br />
               Your certificate is ready!

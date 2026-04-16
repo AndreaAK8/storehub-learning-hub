@@ -110,7 +110,7 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
+      <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Actions</h2>
 
       {/* Automated Welcome Email Notice */}
       {traineeStatus === 'New' && (
@@ -126,12 +126,12 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
       )}
 
       {traineeStatus === 'Email Sent' && (
-        <div className="mb-4 p-3 rounded-lg bg-green-50 border border-green-200">
+        <div className="mb-4 p-3 rounded-lg bg-[#e9f0fd] border border-[#c4d7f9]">
           <div className="flex items-center gap-2">
             <CheckCircleIcon />
             <div>
-              <p className="text-sm font-medium text-green-800">Welcome Email Sent</p>
-              <p className="text-xs text-green-600">Trainee has received LMS login credentials</p>
+              <p className="text-sm font-medium text-[#2a6ee8]">Welcome Email Sent</p>
+              <p className="text-xs text-[#2a6ee8]">Trainee has received LMS login credentials</p>
             </div>
           </div>
         </div>
@@ -141,10 +141,10 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
       {message && (
         <div className={`mb-4 p-3 rounded-lg text-sm ${
           reminderStatus === 'success' || reportStatus === 'success'
-            ? 'bg-green-50 text-green-800 border border-green-200'
+            ? 'bg-[#e9f0fd] text-[#2a6ee8] border border-[#c4d7f9]'
             : reminderStatus === 'error' || reportStatus === 'error'
-              ? 'bg-red-50 text-red-800 border border-red-200'
-              : 'bg-amber-50 text-amber-800 border border-amber-200'
+              ? 'bg-[#ffeef0] text-[#ff546f] border border-[#ffcfd7]'
+              : 'bg-[#fff4e8] text-[#ff9419] border border-amber-200'
         }`}>
           {message}
         </div>
@@ -157,8 +157,8 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
           disabled={reminderStatus === 'loading' || !WEBHOOK_STATUS.reminder}
           className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:cursor-not-allowed ${
             WEBHOOK_STATUS.reminder
-              ? 'bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50'
-              : 'bg-yellow-100 text-yellow-500 cursor-not-allowed'
+              ? 'bg-[#fff4e8] text-white hover:bg-[#fff4e8] disabled:opacity-50'
+              : 'bg-[#fff4e8] text-[#ff9419] cursor-not-allowed'
           }`}
         >
           {reminderStatus === 'loading' ? (
@@ -178,8 +178,8 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
           disabled={reportStatus === 'loading' || !WEBHOOK_STATUS.report}
           className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:cursor-not-allowed ${
             WEBHOOK_STATUS.report
-              ? 'bg-green-600 text-white hover:bg-green-700 disabled:opacity-50'
-              : 'bg-green-100 text-green-500 cursor-not-allowed'
+              ? 'bg-[#e9f0fd] text-white hover:bg-[#e9f0fd] disabled:opacity-50'
+              : 'bg-[#e9f0fd] text-[#2a6ee8] cursor-not-allowed'
           }`}
         >
           {reportStatus === 'loading' ? (
@@ -196,14 +196,14 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
         {/* View in Google Sheets - always enabled */}
         <button
           onClick={handleViewInSheets}
-          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          className="px-4 py-2 border border-[#a09d9a] text-[#55504a] rounded-lg hover:bg-[#f5f5f4] transition-colors flex items-center gap-2"
         >
           <ExternalLinkIcon />
           View in Google Sheets
         </button>
       </div>
 
-      <p className="text-xs text-gray-500 mt-4">
+      <p className="text-xs text-[#7a7672] mt-4">
         Welcome emails are sent automatically via n8n. Greyed out buttons require webhook configuration.
       </p>
     </div>
@@ -213,7 +213,7 @@ export default function TraineeActions({ traineeEmail, traineeName, traineeStatu
 // Coming Soon Badge
 function ComingSoonBadge() {
   return (
-    <span className="ml-1 px-1.5 py-0.5 text-[10px] font-medium bg-gray-200 text-gray-600 rounded">
+    <span className="ml-1 px-1.5 py-0.5 text-[10px] font-medium bg-[#c5c3c1] text-[#55504a] rounded">
       Soon
     </span>
   )
@@ -230,7 +230,7 @@ function AutomationIcon() {
 
 function CheckCircleIcon() {
   return (
-    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg className="w-5 h-5 text-[#2a6ee8] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   )

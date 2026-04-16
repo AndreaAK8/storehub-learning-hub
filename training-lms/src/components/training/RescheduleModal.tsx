@@ -111,32 +111,32 @@ export function RescheduleModal({
               </svg>
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Reschedule Activity</h2>
-              <p className="text-sm text-gray-500">Move to a different day</p>
+              <h2 className="text-lg font-bold text-[#2f2922]">Reschedule Activity</h2>
+              <p className="text-sm text-[#7a7672]">Move to a different day</p>
             </div>
           </div>
         </div>
 
         {/* Activity Info */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <div className="text-sm text-gray-500 mb-1">Activity</div>
-          <div className="font-medium text-gray-900 mb-2">{activityName}</div>
-          <div className="text-sm text-gray-500 mb-1">Trainee</div>
-          <div className="font-medium text-gray-900">{traineeName}</div>
-          <div className="text-xs text-gray-400 mt-1">Currently: Day {currentDay}</div>
+        <div className="bg-[#f5f5f4] rounded-lg p-4 mb-6">
+          <div className="text-sm text-[#7a7672] mb-1">Activity</div>
+          <div className="font-medium text-[#2f2922] mb-2">{activityName}</div>
+          <div className="text-sm text-[#7a7672] mb-1">Trainee</div>
+          <div className="font-medium text-[#2f2922]">{traineeName}</div>
+          <div className="text-xs text-[#a09d9a] mt-1">Currently: Day {currentDay}</div>
         </div>
 
         {/* Form */}
         <div className="space-y-4">
           {/* New Day */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[#55504a] mb-2">
               Move to Day
             </label>
             <select
               value={newDay}
               onChange={(e) => setNewDay(parseInt(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
             >
               {dayOptions.map((day) => (
                 <option key={day} value={day}>
@@ -148,7 +148,7 @@ export function RescheduleModal({
 
           {/* Reason */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[#55504a] mb-2">
               Reason for Rescheduling
             </label>
             <div className="space-y-2">
@@ -158,7 +158,7 @@ export function RescheduleModal({
                   className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                     reason === option.value
                       ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-[#c5c3c1] hover:border-[#a09d9a]'
                   }`}
                 >
                   <input
@@ -170,8 +170,8 @@ export function RescheduleModal({
                     className="mt-0.5"
                   />
                   <div>
-                    <div className="font-medium text-gray-900 text-sm">{option.label}</div>
-                    <div className="text-xs text-gray-500">{option.description}</div>
+                    <div className="font-medium text-[#2f2922] text-sm">{option.label}</div>
+                    <div className="text-xs text-[#7a7672]">{option.description}</div>
                   </div>
                 </label>
               ))}
@@ -180,21 +180,21 @@ export function RescheduleModal({
 
           {/* Notes */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Notes {reason === 'other' && <span className="text-red-500">*</span>}
+            <label className="block text-sm font-medium text-[#55504a] mb-2">
+              Notes {reason === 'other' && <span className="text-[#ff546f]">*</span>}
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Additional details about the reschedule..."
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none text-sm"
+              className="w-full px-3 py-2 border border-[#a09d9a] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none text-sm"
             />
           </div>
 
           {/* Error */}
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+            <div className="text-sm text-[#ff546f] bg-[#ffeef0] p-3 rounded-lg">
               {error}
             </div>
           )}
@@ -204,7 +204,7 @@ export function RescheduleModal({
         <div className="mt-6 flex gap-3">
           <button
             onClick={handleClose}
-            className="flex-1 py-2.5 px-4 text-gray-600 hover:text-gray-800 font-medium rounded-lg border border-gray-300 hover:border-gray-400 transition-colors"
+            className="flex-1 py-2.5 px-4 text-[#55504a] hover:text-[#2f2922] font-medium rounded-lg border border-[#a09d9a] hover:border-[#a09d9a] transition-colors"
           >
             Cancel
           </button>
@@ -213,7 +213,7 @@ export function RescheduleModal({
             disabled={isSubmitting}
             className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors ${
               isSubmitting
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                ? 'bg-[#a09d9a] text-[#7a7672] cursor-not-allowed'
                 : 'bg-blue-600 text-white hover:bg-blue-700'
             }`}
           >
@@ -222,7 +222,7 @@ export function RescheduleModal({
         </div>
 
         {/* Info note */}
-        <p className="text-center text-xs text-gray-400 mt-4">
+        <p className="text-center text-xs text-[#a09d9a] mt-4">
           This will update the trainee&apos;s schedule. They will see the activity on the new day.
         </p>
       </div>

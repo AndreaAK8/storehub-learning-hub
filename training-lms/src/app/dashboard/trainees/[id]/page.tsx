@@ -148,7 +148,7 @@ export default async function TraineeDetailPage({
       {/* Back Button */}
       <Link
         href="/dashboard/trainees"
-        className="inline-flex items-center text-gray-600 hover:text-gray-900"
+        className="inline-flex items-center text-[#55504a] hover:text-[#2f2922]"
       >
         <svg className="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -158,25 +158,25 @@ export default async function TraineeDetailPage({
 
       {/* Error Banner */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{error}</p>
+        <div className="bg-[#ffeef0] border border-[#ffcfd7] rounded-lg p-4">
+          <p className="text-[#ff546f]">{error}</p>
         </div>
       )}
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 rounded-xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 rounded-xl shadow-sm border border-[#c5c3c1] p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-white text-xl font-bold shadow-lg">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-[#ff546f] flex items-center justify-center text-white text-xl font-bold shadow-lg">
               {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{trainee.fullName}</h1>
-              <p className="text-gray-600">{trainee.email}</p>
+              <h1 className="text-2xl font-bold text-[#2f2922]">{trainee.fullName}</h1>
+              <p className="text-[#55504a]">{trainee.email}</p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-sm text-gray-500">{trainee.department || 'No department'}</span>
-                <span className="text-gray-300">•</span>
-                <span className="text-sm text-gray-500">{trainee.country || 'No country'}</span>
+                <span className="text-sm text-[#7a7672]">{trainee.department || 'No department'}</span>
+                <span className="text-[#a09d9a]">•</span>
+                <span className="text-sm text-[#7a7672]">{trainee.country || 'No country'}</span>
               </div>
             </div>
           </div>
@@ -200,44 +200,44 @@ export default async function TraineeDetailPage({
       </div>
 
       {/* Progress Section */}
-      <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-xl shadow-sm border border-purple-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Training Progress</h2>
+      <div className="bg-gradient-to-br from-[#2f2922] via-[#55504a] to-[#ff546f] rounded-xl shadow-sm border border-purple-100 p-6">
+        <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Training Progress</h2>
         <div className="flex items-center gap-4 mb-4">
           <div className="flex-1 h-4 bg-white/60 rounded-full overflow-hidden shadow-inner">
             <div
               className={`h-full rounded-full transition-all ${
-                completionPercentage >= 100 ? 'bg-gradient-to-r from-green-400 to-emerald-500' :
+                completionPercentage >= 100 ? 'bg-gradient-to-r from-[#2a6ee8] to-[#2a6ee8]' :
                 completionPercentage >= 50 ? 'bg-gradient-to-r from-blue-400 to-indigo-500' : 'bg-gradient-to-r from-amber-400 to-orange-500'
               }`}
               style={{ width: `${Math.min(completionPercentage, 100)}%` }}
             />
           </div>
-          <span className="text-lg font-bold text-gray-900">
+          <span className="text-lg font-bold text-[#2f2922]">
             {activityProgress.completed} / {activityProgress.total}
           </span>
         </div>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-gradient-to-br from-emerald-100 to-green-200 rounded-xl p-4 border border-green-200">
-            <p className="text-3xl font-bold text-green-700">{activityProgress.completed}</p>
-            <p className="text-sm font-medium text-green-600">Completed</p>
+            <p className="text-3xl font-bold text-[#2a6ee8]">{activityProgress.completed}</p>
+            <p className="text-sm font-medium text-[#2a6ee8]">Completed</p>
           </div>
           <div className="bg-gradient-to-br from-amber-100 to-yellow-200 rounded-xl p-4 border border-yellow-200">
-            <p className="text-3xl font-bold text-amber-700">{activityProgress.total - activityProgress.completed}</p>
-            <p className="text-sm font-medium text-amber-600">Remaining</p>
+            <p className="text-3xl font-bold text-[#ff9419]">{activityProgress.total - activityProgress.completed}</p>
+            <p className="text-sm font-medium text-[#ff9419]">Remaining</p>
           </div>
           <div className="bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl p-4 border border-indigo-200">
-            <p className="text-3xl font-bold text-indigo-700">{activityProgress.total}</p>
-            <p className="text-sm font-medium text-indigo-600">Total Required</p>
+            <p className="text-3xl font-bold text-[#2f2922]">{activityProgress.total}</p>
+            <p className="text-sm font-medium text-[#2f2922]">Total Required</p>
           </div>
         </div>
       </div>
 
       {/* Training Timeline */}
-      <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl shadow-sm border border-slate-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Training Timeline</h2>
+      <div className="bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl shadow-sm border border-[#c5c3c1] p-6">
+        <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Training Timeline</h2>
 
         <div className="relative">
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-300 via-blue-300 to-gray-200" />
+          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#2a6ee8] via-blue-300 to-gray-200" />
 
           <div className="space-y-6">
             {/* Training Start */}
@@ -302,15 +302,15 @@ export default async function TraineeDetailPage({
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    'New': 'bg-gray-100 text-gray-800',
-    'Email Sent': 'bg-blue-100 text-blue-800',
-    'In Progress': 'bg-yellow-100 text-yellow-800',
-    'Training Complete': 'bg-green-100 text-green-800',
-    'Report Sent': 'bg-purple-100 text-purple-800',
+    'New': 'bg-[#eae9e8] text-[#2f2922]',
+    'Email Sent': 'bg-[#2a6ee8] text-[#2a6ee8]',
+    'In Progress': 'bg-[#fff4e8] text-[#ff9419]',
+    'Training Complete': 'bg-[#e9f0fd] text-[#2a6ee8]',
+    'Report Sent': 'bg-[#55504a] text-[#55504a]',
   }
 
   return (
-    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${styles[status] || 'bg-gray-100 text-gray-800'}`}>
+    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${styles[status] || 'bg-[#eae9e8] text-[#2f2922]'}`}>
       {status}
     </span>
   )
@@ -318,12 +318,12 @@ function StatusBadge({ status }: { status: string }) {
 
 function StatCard({ label, value, color = 'gray' }: { label: string; value: string; color?: string }) {
   const styles: Record<string, string> = {
-    blue: 'bg-gradient-to-br from-sky-50 to-blue-100 border-blue-200 text-blue-700',
-    purple: 'bg-gradient-to-br from-violet-50 to-purple-100 border-purple-200 text-purple-700',
-    green: 'bg-gradient-to-br from-emerald-50 to-green-100 border-green-200 text-green-700',
-    teal: 'bg-gradient-to-br from-teal-50 to-cyan-100 border-cyan-200 text-cyan-700',
+    blue: 'bg-gradient-to-br from-sky-50 to-blue-100 border-blue-200 text-[#2a6ee8]',
+    purple: 'bg-gradient-to-br from-violet-50 to-purple-100 border-purple-200 text-[#55504a]',
+    green: 'bg-gradient-to-br from-emerald-50 to-green-100 border-green-200 text-[#2a6ee8]',
+    teal: 'bg-gradient-to-br from-teal-50 to-cyan-100 border-cyan-200 text-[#2a6ee8]',
     orange: 'bg-gradient-to-br from-amber-50 to-orange-100 border-orange-200 text-orange-700',
-    gray: 'bg-white border-gray-200 text-gray-700',
+    gray: 'bg-white border-[#c5c3c1] text-[#55504a]',
   }
 
   return (
@@ -373,45 +373,45 @@ function TraineeDetailsCard({ trainee }: { trainee: Trainee }) {
       <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
         {/* Details */}
         <div className="md:col-span-4">
-          <h2 className="text-lg font-semibold text-blue-900 mb-4">Details</h2>
+          <h2 className="text-lg font-semibold text-[#2a6ee8] mb-4">Details</h2>
           <dl className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div>
-              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Email</dt>
-              <dd className="text-gray-900 text-sm mt-1">{trainee.email}</dd>
+              <dt className="text-xs text-[#2a6ee8] font-medium tracking-wide">Email</dt>
+              <dd className="text-[#2f2922] text-sm mt-1">{trainee.email}</dd>
             </div>
             <div>
-              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Department</dt>
-              <dd className="text-gray-900 text-sm mt-1">{trainee.department || 'Not specified'}</dd>
+              <dt className="text-xs text-[#2a6ee8] font-medium tracking-wide">Department</dt>
+              <dd className="text-[#2f2922] text-sm mt-1">{trainee.department || 'Not specified'}</dd>
             </div>
             <div>
-              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Country</dt>
-              <dd className="text-gray-900 text-sm mt-1">{trainee.country || 'Not specified'}</dd>
+              <dt className="text-xs text-[#2a6ee8] font-medium tracking-wide">Country</dt>
+              <dd className="text-[#2f2922] text-sm mt-1">{trainee.country || 'Not specified'}</dd>
             </div>
             <div>
-              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Start Date</dt>
-              <dd className="text-gray-900 text-sm mt-1">{trainee.trainingStartDate || 'Not set'}</dd>
+              <dt className="text-xs text-[#2a6ee8] font-medium tracking-wide">Start Date</dt>
+              <dd className="text-[#2f2922] text-sm mt-1">{trainee.trainingStartDate || 'Not set'}</dd>
             </div>
             <div>
-              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Expected End Date</dt>
-              <dd className={`text-sm mt-1 ${isOverdue ? 'text-red-600 font-semibold' : 'text-gray-900'}`}>
+              <dt className="text-xs text-[#2a6ee8] font-medium tracking-wide">Expected End Date</dt>
+              <dd className={`text-sm mt-1 ${isOverdue ? 'text-[#ff546f] font-semibold' : 'text-[#2f2922]'}`}>
                 {expectedEndDate ? expectedEndDate.toISOString().split('T')[0] : 'Not set'}
                 {isOverdue && (
-                  <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-700 rounded-full text-xs font-bold">
+                  <span className="ml-2 px-2 py-0.5 bg-[#ffeef0] text-[#ff546f] rounded-full text-xs font-bold">
                     {daysOverdue} days overdue
                   </span>
                 )}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-blue-600 font-medium uppercase tracking-wide">Days in Training</dt>
-              <dd className="text-gray-900 text-sm mt-1">{trainee.daysSinceTrainingStart} days</dd>
+              <dt className="text-xs text-[#2a6ee8] font-medium tracking-wide">Days in Training</dt>
+              <dd className="text-[#2f2922] text-sm mt-1">{trainee.daysSinceTrainingStart} days</dd>
             </div>
           </dl>
         </div>
 
         {/* Coach */}
         <div className="md:col-span-2 md:border-l md:border-blue-200 md:pl-6">
-          <h2 className="text-lg font-semibold text-purple-900 mb-4">Coach</h2>
+          <h2 className="text-lg font-semibold text-[#55504a] mb-4">Coach</h2>
           {trainee.coachName ? (
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-violet-500 rounded-full flex items-center justify-center shadow-lg">
@@ -420,12 +420,12 @@ function TraineeDetailsCard({ trainee }: { trainee: Trainee }) {
                 </span>
               </div>
               <div>
-                <p className="font-semibold text-gray-900">{trainee.coachName}</p>
-                <p className="text-xs text-purple-600">{trainee.coachEmail}</p>
+                <p className="font-semibold text-[#2f2922]">{trainee.coachName}</p>
+                <p className="text-xs text-[#55504a]">{trainee.coachEmail}</p>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500 text-sm">No coach assigned</p>
+            <p className="text-[#7a7672] text-sm">No coach assigned</p>
           )}
         </div>
       </div>
@@ -448,10 +448,10 @@ function TimelineItem({
     <div className="relative pl-10">
       <div className={`absolute left-2 w-4 h-4 rounded-full border-2 ${
         status === 'completed'
-          ? 'bg-green-500 border-green-500'
+          ? 'bg-[#e9f0fd] border-green-500'
           : status === 'current'
-            ? 'bg-blue-500 border-blue-500 ring-4 ring-blue-100'
-            : 'bg-white border-gray-300'
+            ? 'bg-[#2a6ee8] border-blue-500 ring-4 ring-blue-100'
+            : 'bg-white border-[#c5c3c1]'
       }`}>
         {status === 'completed' && (
           <svg className="w-3 h-3 text-white absolute top-0.5 left-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -460,9 +460,9 @@ function TimelineItem({
         )}
       </div>
       <div>
-        <p className="font-medium text-gray-900">{title}</p>
-        <p className="text-sm text-gray-500">{description}</p>
-        {date && <p className="text-xs text-gray-400 mt-1">{date}</p>}
+        <p className="font-medium text-[#2f2922]">{title}</p>
+        <p className="text-sm text-[#7a7672]">{description}</p>
+        {date && <p className="text-xs text-[#a09d9a] mt-1">{date}</p>}
       </div>
     </div>
   )

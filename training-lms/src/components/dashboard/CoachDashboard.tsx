@@ -178,18 +178,18 @@ function AssessmentFormModal({ isOpen, onClose, formUrl, formName, traineeName, 
       <div className="relative min-h-screen flex items-center justify-center p-4">
         <div className="relative bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-indigo-50">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#eae9e8] bg-[#2f2922]">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">{formName}</h2>
+              <h2 className="text-lg font-semibold text-white">{formName}</h2>
               {traineeName && (
-                <p className="text-sm text-gray-600">Scoring: {traineeName}</p>
+                <p className="text-sm text-[#c5c3c1]">Scoring: {traineeName}</p>
               )}
             </div>
             <button
               onClick={handleClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-white/10 rounded-full transition-colors"
             >
-              <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-[#c5c3c1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -199,18 +199,18 @@ function AssessmentFormModal({ isOpen, onClose, formUrl, formName, traineeName, 
           <div className="flex-1 overflow-auto p-4">
             {showConfirmation ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-16 h-16 bg-[#e9f0fd] rounded-full flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Score Submitted!</h3>
-                <p className="text-gray-600 mb-6">
+                <h3 className="text-xl font-semibold text-[#2f2922] mb-2">Score submitted!</h3>
+                <p className="text-[#55504a] mb-6">
                   The score will be reflected in the trainee's profile shortly.
                 </p>
                 <button
                   onClick={handleClose}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  className="px-6 py-2 bg-[#2a6ee8] text-white rounded-lg hover:bg-[#2563d0] transition-colors"
                 >
                   Close & Refresh Scores
                 </button>
@@ -222,20 +222,20 @@ function AssessmentFormModal({ isOpen, onClose, formUrl, formName, traineeName, 
 
           {/* Footer - only show when form is visible */}
           {!showConfirmation && (
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
-              <p className="text-sm text-gray-500">
+            <div className="px-6 py-4 border-t border-[#eae9e8] bg-[#f5f5f4] flex justify-between items-center">
+              <p className="text-sm text-[#7a7672]">
                 Fill out the form above, then click "I've Submitted"
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={handleClose}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                  className="px-4 py-2 text-[#55504a] hover:bg-[#eae9e8] rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleMarkSubmitted}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-[#ff9419] text-white rounded-lg hover:bg-[#ff630f] transition-colors flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -491,7 +491,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
       {/* Simplified Welcome Header */}
       <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border border-amber-100 rounded-lg shadow-sm p-6">
         <h1 className="text-2xl font-bold text-[var(--sh-black)]">Welcome, {coachName}!</h1>
-        <p className="text-slate-600 mt-1">
+        <p className="text-[#55504a] mt-1">
           {selectedRole === 'all'
             ? 'Manage your trainees and track their progress'
             : <>Viewing <span className="font-semibold text-orange-600">{selectedRole}</span> trainees</>
@@ -505,18 +505,18 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
         <button
           onClick={() => needsAttentionCount > 0 && setStatPopup('attention')}
           className={`bg-gradient-to-br from-red-50 to-pink-100 border-2 rounded-xl p-5 text-left transition-all hover:shadow-md ${
-            needsAttentionCount > 0 ? 'border-red-300 cursor-pointer' : 'border-pink-200 cursor-default'
+            needsAttentionCount > 0 ? 'border-[#ffcfd7] cursor-pointer' : 'border-pink-200 cursor-default'
           }`}
         >
           <div className="flex items-center gap-3">
             <span className="text-2xl">🔥</span>
             <div>
-              <p className="text-3xl font-bold text-red-700">{needsAttentionCount}</p>
-              <p className="text-sm font-medium text-red-600">Needs Attention</p>
+              <p className="text-3xl font-bold text-[#ff546f]">{needsAttentionCount}</p>
+              <p className="text-sm font-medium text-[#ff546f]">Needs Attention</p>
             </div>
           </div>
           {needsAttentionCount > 0 && (
-            <p className="text-xs text-red-500 mt-2">Click to see who</p>
+            <p className="text-xs text-[#ff546f] mt-2">Click to see who</p>
           )}
         </button>
 
@@ -530,26 +530,26 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
           <div className="flex items-center gap-3">
             <span className="text-2xl">📝</span>
             <div>
-              <p className="text-3xl font-bold text-amber-700">{needsScoring.length}</p>
-              <p className="text-sm font-medium text-amber-600">Pending Scores</p>
+              <p className="text-3xl font-bold text-[#ff9419]">{needsScoring.length}</p>
+              <p className="text-sm font-medium text-[#ff9419]">Pending Scores</p>
             </div>
           </div>
           {needsScoring.length > 0 && (
-            <p className="text-xs text-amber-500 mt-2">Click to score now</p>
+            <p className="text-xs text-[#ff9419] mt-2">Click to score now</p>
           )}
         </button>
 
         {/* On Track */}
-        <div className="bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-green-200 rounded-xl p-5 text-left">
+        <div className="bg-gradient-to-br from-emerald-50 to-green-100 border-2 border-[#c4d7f9] rounded-xl p-5 text-left">
           <div className="flex items-center gap-3">
             <span className="text-2xl">✅</span>
             <div>
-              <p className="text-3xl font-bold text-green-700">{onTrack.length}</p>
-              <p className="text-sm font-medium text-green-600">On Track</p>
+              <p className="text-3xl font-bold text-[#2a6ee8]">{onTrack.length}</p>
+              <p className="text-sm font-medium text-[#2a6ee8]">On Track</p>
             </div>
           </div>
           {onTrack.length > 0 && (
-            <p className="text-xs text-green-500 mt-2">Healthy progress</p>
+            <p className="text-xs text-[#2a6ee8] mt-2">Healthy progress</p>
           )}
         </div>
       </div>
@@ -559,12 +559,12 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-black/50" onClick={() => setStatPopup(null)} />
           <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 max-h-[80vh] overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-200 bg-gradient-to-r from-red-50 to-pink-50 flex items-center justify-between">
+            <div className="px-5 py-4 border-b border-[#c5c3c1] bg-gradient-to-r from-red-50 to-pink-50 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-xl">🔥</span>
-                <h3 className="font-semibold text-gray-900">Needs Attention ({needsAttentionCount})</h3>
+                <h3 className="font-semibold text-[#2f2922]">Needs Attention ({needsAttentionCount})</h3>
               </div>
-              <button onClick={() => setStatPopup(null)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setStatPopup(null)} className="text-[#a09d9a] hover:text-[#55504a]">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -576,15 +576,15 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                   key={trainee.email}
                   href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
                   onClick={() => setStatPopup(null)}
-                  className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all"
+                  className="flex items-center justify-between p-3 rounded-lg border border-[#c5c3c1] hover:border-[#ffcfd7] hover:bg-[#ffeef0] transition-all"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-red-400 to-red-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
                       {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900 text-sm">{trainee.fullName}</p>
-                      <p className="text-xs text-gray-500">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
+                      <p className="font-medium text-[#2f2922] text-sm">{trainee.fullName}</p>
+                      <p className="text-xs text-[#7a7672]">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
                     </div>
                   </div>
                   <RiskBadge trainee={trainee} size="sm" />
@@ -592,7 +592,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
               ))}
               {alerts.length > 0 && (
                 <>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide pt-2">Alerts</p>
+                  <p className="text-xs font-medium text-[#7a7672] tracking-wide pt-2">Alerts</p>
                   {alerts.map((alert, i) => (
                     <Link
                       key={alert.alertId || i}
@@ -600,15 +600,15 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                       onClick={() => setStatPopup(null)}
                       className={`flex items-center justify-between p-3 rounded-lg border transition-all ${
                         alert.alertType === 'RED'
-                          ? 'border-red-200 hover:bg-red-50'
+                          ? 'border-[#ffcfd7] hover:bg-[#ffeef0]'
                           : 'border-orange-200 hover:bg-orange-50'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-lg">{alert.alertType === 'RED' ? '🔴' : '🟠'}</span>
                         <div>
-                          <p className="font-medium text-gray-900 text-sm">{alert.traineeName}</p>
-                          <p className="text-xs text-gray-500">{alert.alertReason}</p>
+                          <p className="font-medium text-[#2f2922] text-sm">{alert.traineeName}</p>
+                          <p className="text-xs text-[#7a7672]">{alert.alertReason}</p>
                         </div>
                       </div>
                     </Link>
@@ -625,12 +625,12 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-black/50" onClick={() => setStatPopup(null)} />
           <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 max-h-[80vh] overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50 flex items-center justify-between">
+            <div className="px-5 py-4 border-b border-[#c5c3c1] bg-gradient-to-r from-amber-50 to-orange-50 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-xl">📝</span>
-                <h3 className="font-semibold text-gray-900">Pending Scores ({needsScoring.length})</h3>
+                <h3 className="font-semibold text-[#2f2922]">Pending Scores ({needsScoring.length})</h3>
               </div>
-              <button onClick={() => setStatPopup(null)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setStatPopup(null)} className="text-[#a09d9a] hover:text-[#55504a]">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -646,22 +646,22 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                       setActiveTab('scoring')
                       setStatPopup(null)
                     }}
-                    className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-amber-300 hover:bg-amber-50 transition-all text-left"
+                    className="w-full flex items-center justify-between p-3 rounded-lg border border-[#c5c3c1] hover:border-amber-300 hover:bg-[#fff4e8] transition-all text-left"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
                         {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900 text-sm">{trainee.fullName}</p>
-                        <p className="text-xs text-gray-500">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
+                        <p className="font-medium text-[#2f2922] text-sm">{trainee.fullName}</p>
+                        <p className="text-xs text-[#7a7672]">{trainee.department} • Day {trainee.daysSinceTrainingStart}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                      <span className="px-2 py-1 bg-[#fff4e8] text-[#ff9419] rounded-full text-xs font-medium">
                         {pendingCount} pending
                       </span>
-                      <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-4 h-4 text-[#a09d9a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
@@ -683,7 +683,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
               placeholder="Search trainees..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300 text-sm"
+              className="w-full px-4 py-2 border border-[#c5c3c1] rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300 text-sm"
             />
           </div>
           {/* Role Filter Pills */}
@@ -694,7 +694,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                   selectedRole === 'all'
                     ? 'bg-orange-500 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-[#eae9e8] text-[#55504a] hover:bg-[#c5c3c1]'
                 }`}
               >
                 All ({activeTrainees.length})
@@ -708,7 +708,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                       selectedRole === role
                         ? 'bg-orange-500 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        : 'bg-[#eae9e8] text-[#55504a] hover:bg-[#c5c3c1]'
                     }`}
                   >
                     {role} ({count})
@@ -722,19 +722,19 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
 
       {/* 3 Focused Tabs */}
       <div className="bg-white rounded-lg shadow">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-[#c5c3c1]">
           <nav className="flex -mb-px">
             <button
               onClick={() => setActiveTab('trainees')}
               className={`px-6 py-4 text-sm font-medium border-b-2 flex items-center gap-2 ${
                 activeTab === 'trainees'
                   ? 'border-orange-500 text-orange-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-[#7a7672] hover:text-[#55504a] hover:border-[#a09d9a]'
               }`}
             >
               📋 My Trainees
               <span className={`px-2 py-0.5 rounded-full text-xs ${
-                activeTab === 'trainees' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
+                activeTab === 'trainees' ? 'bg-orange-100 text-orange-700' : 'bg-[#eae9e8] text-[#55504a]'
               }`}>
                 {activeTrainees.length}
               </span>
@@ -743,13 +743,13 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
               onClick={() => setActiveTab('scoring')}
               className={`px-6 py-4 text-sm font-medium border-b-2 flex items-center gap-2 ${
                 activeTab === 'scoring'
-                  ? 'border-amber-500 text-amber-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-amber-500 text-[#ff9419]'
+                  : 'border-transparent text-[#7a7672] hover:text-[#55504a] hover:border-[#a09d9a]'
               }`}
             >
               📝 Score Now
               {needsScoring.length > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-700 animate-pulse">
+                <span className="px-2 py-0.5 rounded-full text-xs bg-[#fff4e8] text-[#ff9419] animate-pulse">
                   {needsScoring.length}
                 </span>
               )}
@@ -765,7 +765,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
               {activeTrainees.length > 0 ? (
                 <div>
                   {/* Table Header */}
-                  <div className="grid grid-cols-12 gap-4 px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-200 mb-2">
+                  <div className="grid grid-cols-12 gap-4 px-3 py-2 text-xs font-semibold text-[#7a7672] tracking-wide border-b border-[#c5c3c1] mb-2">
                     <div className="col-span-4">Trainee</div>
                     <div className="col-span-2 text-center">Status</div>
                     <div className="col-span-3 text-center">Progress</div>
@@ -781,7 +781,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                       return (
                         <div
                           key={trainee.email}
-                          className="grid grid-cols-12 gap-4 items-center p-3 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all"
+                          className="grid grid-cols-12 gap-4 items-center p-3 rounded-lg border border-[#c5c3c1] hover:border-[#a09d9a] hover:bg-[#f5f5f4] transition-all"
                         >
                           {/* Trainee */}
                           <div className="col-span-4 flex items-center gap-3">
@@ -789,8 +789,8 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                               {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                             </div>
                             <div className="min-w-0">
-                              <p className="font-medium text-gray-900 text-sm truncate">{trainee.fullName}</p>
-                              <p className="text-xs text-gray-500 truncate">
+                              <p className="font-medium text-[#2f2922] text-sm truncate">{trainee.fullName}</p>
+                              <p className="text-xs text-[#7a7672] truncate">
                                 {trainee.department} • Day {trainee.daysSinceTrainingStart}
                               </p>
                             </div>
@@ -803,15 +803,15 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
 
                           {/* Progress */}
                           <div className="col-span-3 flex items-center justify-center gap-2">
-                            <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="w-20 h-2 bg-[#c5c3c1] rounded-full overflow-hidden">
                               <div
                                 className={`h-full rounded-full ${
-                                  progress >= 100 ? 'bg-green-500' : progress >= 50 ? 'bg-orange-500' : 'bg-yellow-500'
+                                  progress >= 100 ? 'bg-[#e9f0fd]' : progress >= 50 ? 'bg-orange-500' : 'bg-[#fff4e8]'
                                 }`}
                                 style={{ width: `${Math.min(progress, 100)}%` }}
                               />
                             </div>
-                            <span className="text-xs text-gray-500 w-8">{trainee.totalAssessmentsCompleted}/{trainee.totalAssessmentsRequired}</span>
+                            <span className="text-xs text-[#7a7672] w-8">{trainee.totalAssessmentsCompleted}/{trainee.totalAssessmentsRequired}</span>
                           </div>
 
                           {/* Quick Actions */}
@@ -820,7 +820,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                               <div className="relative">
                                 <button
                                   onClick={() => setScoreDropdown(scoreDropdown === trainee.email ? null : trainee.email)}
-                                  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
+                                  className="px-3 py-1.5 bg-[#fff4e8] hover:bg-[#fff4e8] text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1"
                                 >
                                   Submit Score
                                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -828,7 +828,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                                   </svg>
                                 </button>
                                 {scoreDropdown === trainee.email && (
-                                  <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10 py-1">
+                                  <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-[#c5c3c1] z-10 py-1">
                                     {assessments.map((link, i) => (
                                       <button
                                         key={i}
@@ -836,7 +836,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                                           openFormModal(link.url, link.name, trainee.fullName, trainee.email)
                                           setScoreDropdown(null)
                                         }}
-                                        className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700"
+                                        className="w-full text-left px-3 py-2 text-sm text-[#55504a] hover:bg-[#fff4e8] hover:text-[#ff9419]"
                                       >
                                         {link.name}
                                       </button>
@@ -847,7 +847,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                             )}
                             <Link
                               href={`/dashboard/trainees/${encodeURIComponent(trainee.email)}`}
-                              className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium transition-colors"
+                              className="px-3 py-1.5 bg-[#eae9e8] hover:bg-[#c5c3c1] text-[#55504a] rounded-lg text-xs font-medium transition-colors"
                             >
                               View
                             </Link>
@@ -858,8 +858,8 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-500">
-                  <svg className="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="text-center py-12 text-[#7a7672]">
+                  <svg className="w-12 h-12 mx-auto text-[#a09d9a] mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <p className="font-medium">No active trainees</p>
@@ -903,14 +903,14 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                               {trainee.fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                             </div>
                             <div>
-                              <p className="font-semibold text-gray-900">{trainee.fullName}</p>
-                              <p className="text-xs text-gray-500">
+                              <p className="font-semibold text-[#2f2922]">{trainee.fullName}</p>
+                              <p className="text-xs text-[#7a7672]">
                                 {trainee.department} • Day {trainee.daysSinceTrainingStart}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className="px-3 py-1 bg-amber-200 text-amber-800 rounded-full text-sm font-semibold">
+                            <span className="px-3 py-1 bg-[#fff4e8] text-[#ff9419] rounded-full text-sm font-semibold">
                               {pendingCount} pending
                             </span>
                           </div>
@@ -918,14 +918,14 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
 
                         {/* Submitted Scores Summary */}
                         {summary && summary.assessmentScores.length > 0 && (
-                          <div className="mb-4 bg-white/80 rounded-lg p-3 border border-green-200">
+                          <div className="mb-4 bg-white/80 rounded-lg p-3 border border-[#c4d7f9]">
                             <div className="flex items-center justify-between mb-3">
-                              <p className="text-xs font-medium text-green-700">✅ Scores Already Submitted</p>
+                              <p className="text-xs font-medium text-[#2a6ee8]">✅ Scores Already Submitted</p>
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500">Current Score:</span>
+                                <span className="text-xs text-[#7a7672]">Current Score:</span>
                                 <span className={`text-sm font-bold ${
-                                  summary.learningScore >= 80 ? 'text-green-600' :
-                                  summary.learningScore >= 60 ? 'text-amber-600' : 'text-red-500'
+                                  summary.learningScore >= 80 ? 'text-[#2a6ee8]' :
+                                  summary.learningScore >= 60 ? 'text-[#ff9419]' : 'text-[#ff546f]'
                                 }`}>
                                   {summary.learningScore}%
                                 </span>
@@ -939,19 +939,19 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                                 return (
                                   <div key={i} className="flex items-center gap-2">
                                     <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
-                                      score.passed ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                                      score.passed ? 'bg-[#e9f0fd] text-[#2a6ee8]' : 'bg-[#ffeef0] text-[#ff546f]'
                                     }`}>
                                       {score.passed ? '✓' : '✗'}
                                     </span>
-                                    <span className="text-xs text-gray-700 flex-1 truncate">{score.name}</span>
-                                    <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <span className="text-xs text-[#55504a] flex-1 truncate">{score.name}</span>
+                                    <div className="w-16 h-2 bg-[#c5c3c1] rounded-full overflow-hidden">
                                       <div
-                                        className={`h-full rounded-full ${score.passed ? 'bg-green-400' : 'bg-red-400'}`}
+                                        className={`h-full rounded-full ${score.passed ? 'bg-[#e9f0fd]' : 'bg-[#ffeef0]'}`}
                                         style={{ width: `${percentage}%` }}
                                       />
                                     </div>
                                     <span className={`text-xs font-medium w-10 text-right ${
-                                      score.passed ? 'text-green-600' : 'text-red-500'
+                                      score.passed ? 'text-[#2a6ee8]' : 'text-[#ff546f]'
                                     }`}>
                                       {percentage}%
                                     </span>
@@ -964,7 +964,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
 
                         {/* Assessment List */}
                         <div className="mb-4">
-                          <p className="text-xs font-medium text-gray-600 mb-2">📋 Assessments to Score:</p>
+                          <p className="text-xs font-medium text-[#55504a] mb-2">📋 Assessments to Score:</p>
                           <div className="space-y-2">
                             {assessments.map((link, i) => {
                               // Check if this assessment is already scored
@@ -980,12 +980,12 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                                   key={i}
                                   className="flex items-center justify-between bg-white rounded-lg px-3 py-2 border border-amber-200"
                                 >
-                                  <span className="text-sm text-gray-700">{link.name}</span>
+                                  <span className="text-sm text-[#55504a]">{link.name}</span>
                                   <div className="flex items-center gap-3">
-                                    <span className="text-xs text-amber-600 font-medium">Pending</span>
+                                    <span className="text-xs text-[#ff9419] font-medium">Pending</span>
                                     <button
                                       onClick={() => openFormModal(link.url, link.name, trainee.fullName, trainee.email)}
-                                      className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-medium transition-colors"
+                                      className="px-3 py-1 bg-[#fff4e8] hover:bg-[#fff4e8] text-white rounded text-xs font-medium transition-colors"
                                     >
                                       Score Now
                                     </button>
@@ -999,15 +999,15 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                         {/* Latest Reflection */}
                         {latestReflection && (
                           <div className="bg-white/70 rounded-lg p-3 border border-amber-100">
-                            <p className="text-xs font-medium text-gray-600 mb-2">💭 Their reflection (Day {latestReflection.day_number}):</p>
+                            <p className="text-xs font-medium text-[#55504a] mb-2">💭 Their reflection (Day {latestReflection.day_number}):</p>
                             {latestReflection.confusing_topic && (
-                              <p className="text-sm text-gray-700 italic mb-2">"{latestReflection.confusing_topic}"</p>
+                              <p className="text-sm text-[#55504a] italic mb-2">"{latestReflection.confusing_topic}"</p>
                             )}
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-gray-500">Confidence:</span>
+                              <span className="text-xs text-[#7a7672]">Confidence:</span>
                               <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map(star => (
-                                  <span key={star} className={star <= latestReflection.confidence_level ? 'text-amber-400' : 'text-gray-300'}>
+                                  <span key={star} className={star <= latestReflection.confidence_level ? 'text-[#ff9419]' : 'text-[#a09d9a]'}>
                                     ★
                                   </span>
                                 ))}
@@ -1026,12 +1026,12 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                               setNoteTrainee(trainee.email)
                               setNewNote(e.target.value)
                             }}
-                            className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300"
+                            className="flex-1 px-3 py-2 text-sm border border-[#c5c3c1] rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300"
                           />
                           <button
                             onClick={() => saveNote(trainee.email)}
                             disabled={savingNote || !newNote.trim() || noteTrainee !== trainee.email}
-                            className="px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-2 bg-[#fff4e8] text-white rounded-lg text-sm font-medium hover:bg-[#fff4e8] disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Save
                           </button>
@@ -1041,7 +1041,7 @@ export default function CoachDashboard({ trainees, coachEmail, coachName }: Coac
                   })}
                 </div>
               ) : (
-                <div className="text-center py-12 text-gray-500">
+                <div className="text-center py-12 text-[#7a7672]">
                   <span className="text-4xl mb-4 block">✅</span>
                   <p className="font-medium">All caught up!</p>
                   <p className="text-sm mt-1">No trainees need scoring right now</p>

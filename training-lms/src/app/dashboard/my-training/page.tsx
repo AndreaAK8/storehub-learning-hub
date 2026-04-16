@@ -568,13 +568,96 @@ export default function MyTrainingPage() {
     return false // All days accessible so trainees can preview upcoming content
   }
 
-  // Loading state
+  // Loading state — skeleton screen (no spinners per design rules)
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-500">Loading your training schedule...</p>
+      <div className="min-h-screen" style={{ background: '#f5f5f4' }}>
+        {/* Header skeleton */}
+        <div className="bg-white border-b sticky top-0 z-30">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex flex-col gap-2">
+              <div className="skeleton h-6 w-32" />
+              <div className="skeleton h-4 w-48" />
+            </div>
+            <div className="skeleton h-9 w-56 rounded-lg" />
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Main column */}
+            <div className="lg:col-span-3 space-y-6">
+              {/* Roadmap skeleton */}
+              <div className="bg-white rounded-xl border border-[#c5c3c1] p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="skeleton w-10 h-10 rounded-lg" />
+                  <div className="flex flex-col gap-2">
+                    <div className="skeleton h-5 w-40" />
+                    <div className="skeleton h-3 w-28" />
+                  </div>
+                </div>
+                <div className="flex justify-between px-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="flex flex-col items-center gap-2">
+                      <div className="skeleton w-8 h-8 rounded-full" style={{ borderRadius: '50%' }} />
+                      <div className="skeleton h-3 w-10" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Day header skeleton */}
+              <div className="bg-white rounded-xl border border-[#c5c3c1] overflow-hidden">
+                <div className="p-6 border-b" style={{ background: '#fff4e8', borderColor: '#ffe1bf' }}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex flex-col gap-3 flex-1">
+                      <div className="skeleton h-6 w-16 rounded-full" />
+                      <div className="skeleton h-7 w-64" />
+                      <div className="skeleton h-4 w-80" />
+                    </div>
+                    <div className="skeleton w-16 h-16 rounded-full" style={{ borderRadius: '50%' }} />
+                  </div>
+                </div>
+
+                {/* Activity card skeletons */}
+                <div className="p-4 space-y-3">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="rounded-2xl border-2 border-[#c5c3c1] overflow-hidden">
+                      <div className="flex items-center justify-between px-4 py-2.5 border-b bg-[#f5f5f4] border-[#c5c3c1]">
+                        <div className="skeleton h-6 w-20 rounded-full" />
+                        <div className="skeleton h-5 w-28 rounded-full" />
+                      </div>
+                      <div className="p-4 flex items-start gap-4">
+                        <div className="skeleton w-12 h-12 rounded-full flex-shrink-0" style={{ borderRadius: '50%' }} />
+                        <div className="flex-1 flex flex-col gap-2">
+                          <div className="skeleton h-5 w-3/4" />
+                          <div className="skeleton h-4 w-full" />
+                          <div className="skeleton h-4 w-2/3" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar skeleton */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-xl border border-[#c5c3c1] p-5 space-y-4">
+                <div className="skeleton h-5 w-32" />
+                <div className="skeleton h-3 w-full rounded-full" />
+                <div className="skeleton h-3 w-4/5 rounded-full" />
+                <div className="mt-4 flex flex-col gap-3">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <div className="skeleton h-4 w-16" />
+                      <div className="skeleton h-4 w-24" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -585,16 +668,16 @@ export default function MyTrainingPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-[#ffeef0] rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-[#ff546f]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Unable to Load Training</h2>
-          <p className="text-gray-500 mb-4">{error || 'Something went wrong'}</p>
+          <h2 className="text-xl font-bold text-[#2f2922] mb-2">Unable to Load Training</h2>
+          <p className="text-[#7a7672] mb-4">{error || 'Something went wrong'}</p>
           <button
             onClick={fetchTraineeData}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-[#2a6ee8] text-white px-4 py-2 rounded-lg hover:bg-[#2a6ee8] transition-colors"
           >
             Try Again
           </button>
@@ -606,15 +689,15 @@ export default function MyTrainingPage() {
   // Transition screen between gift and certificate
   if (showTransition) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+      <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: '#2f2922' }}>
         <div className="text-center animate-pulse">
           <div className="text-8xl mb-6">🎓</div>
           <h2 className="text-2xl font-bold text-white mb-2">Preparing your certificate...</h2>
-          <p className="text-purple-200">Just a moment</p>
+          <p style={{ color: '#a09d9a' }}>Just a moment</p>
           <div className="mt-8 flex justify-center gap-2">
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            <div className="w-3 h-3 rounded-full animate-bounce" style={{ background: '#ff9419', animationDelay: '0ms' }}></div>
+            <div className="w-3 h-3 rounded-full animate-bounce" style={{ background: '#ff9419', animationDelay: '150ms' }}></div>
+            <div className="w-3 h-3 rounded-full animate-bounce" style={{ background: '#ff9419', animationDelay: '300ms' }}></div>
           </div>
         </div>
       </div>
@@ -649,7 +732,7 @@ export default function MyTrainingPage() {
         <div className="fixed top-4 right-4 z-50">
           <button
             onClick={() => setViewMode('activities')}
-            className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm text-slate-700 rounded-xl shadow-lg hover:bg-white hover:scale-105 transition-all border border-slate-200"
+            className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm text-[#55504a] rounded-xl shadow-lg hover:bg-white hover:scale-105 transition-all border border-[#c5c3c1]"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -680,23 +763,24 @@ export default function MyTrainingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ background: '#f5f5f4' }}>
       {/* Training Completed Banner */}
       {isTrainingComplete && (
-        <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+        <div style={{ background: '#2a6ee8' }} className="text-white">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.2)' }}>
                 <span className="text-xl">🎓</span>
               </div>
               <div>
-                <p className="font-bold">Training Completed!</p>
-                <p className="text-sm text-green-100">You earned {totalXP.toLocaleString()} XP</p>
+                <p className="font-bold">Training complete!</p>
+                <p className="text-sm" style={{ color: '#c4d7f9' }}>You finished all {traineeData.totalDays} days</p>
               </div>
             </div>
             <button
               onClick={() => setViewMode('certificate')}
-              className="flex items-center gap-2 px-4 py-2 bg-white text-green-600 rounded-xl font-semibold hover:bg-green-50 transition-all shadow-lg"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all shadow-lg"
+              style={{ background: 'white', color: '#2a6ee8' }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
@@ -712,12 +796,12 @@ export default function MyTrainingPage() {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">My Training</h1>
-              <p className="text-gray-500 text-sm">{traineeData.roleName}</p>
+              <h1 className="text-2xl font-bold" style={{ color: '#2f2922' }}>My Training</h1>
+              <p className="text-sm" style={{ color: '#7a7672' }}>{traineeData.roleName}</p>
             </div>
             <button
               onClick={() => setShowTour(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#7a7672] hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
               title="Take a quick tour of the dashboard"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

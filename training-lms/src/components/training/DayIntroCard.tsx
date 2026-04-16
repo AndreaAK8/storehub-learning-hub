@@ -101,7 +101,7 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
         <div className="flex items-center gap-3">
           <span className="text-xl">📋</span>
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.labelColor }}>
+            <span className="text-xs font-semibold tracking-wide" style={{ color: theme.labelColor }}>
               Day {dayNumber} Briefing
             </span>
             <h3 className="font-bold text-sm" style={{ color: theme.titleColor }}>{data.title}</h3>
@@ -131,13 +131,13 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
                 />
               </div>
             )}
-            <p className="text-sm text-slate-600 leading-relaxed">{data.summary}</p>
+            <p className="text-sm text-[#55504a] leading-relaxed">{data.summary}</p>
           </div>
 
           {/* Milestones */}
           {data.milestones.length > 0 && (
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: theme.milestoneColor }}>
+              <h4 className="text-xs font-semibold tracking-wide mb-2" style={{ color: theme.milestoneColor }}>
                 🎯 Milestones today
               </h4>
               <div className="space-y-1.5">
@@ -147,9 +147,9 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
                     className="flex items-center gap-3 rounded-lg px-3 py-2 shadow-sm"
                     style={{ background: 'rgba(255,255,255,0.75)', border: `1px solid ${theme.border}` }}
                   >
-                    <span className="text-xs font-mono font-semibold whitespace-nowrap" style={{ color: theme.milestoneColor }}>{m.time}</span>
+                    <span className="text-xs font-semibold whitespace-nowrap" style={{ color: theme.milestoneColor }}>{m.time}</span>
                     <div className="w-px h-4" style={{ background: theme.border }} />
-                    <span className="text-sm text-slate-700">{m.label}</span>
+                    <span className="text-sm text-[#55504a]">{m.label}</span>
                   </div>
                 ))}
               </div>
@@ -159,10 +159,10 @@ export function DayIntroCard({ dayNumber, data }: DayIntroCardProps) {
           {/* Notes */}
           {data.notes && (
             <div className="rounded-xl px-4 py-3" style={{ background: 'rgba(255,255,255,0.6)', border: `1px solid ${theme.border}` }}>
-              <h4 className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: theme.labelColor }}>
+              <h4 className="text-xs font-semibold tracking-wide mb-1.5" style={{ color: theme.labelColor }}>
                 💡 Good to know
               </h4>
-              <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">{data.notes}</p>
+              <p className="text-xs text-[#55504a] leading-relaxed whitespace-pre-line">{data.notes}</p>
             </div>
           )}
         </div>

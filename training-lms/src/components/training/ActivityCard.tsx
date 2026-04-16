@@ -87,8 +87,8 @@ const activityTypeConfig: Record<string, { label: string; color: string; bgColor
   coach_review:   { label: 'Coach Review',  color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '✍️' },
   mock_test:      { label: 'Mock Test',     color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '🎯' },
   handover:       { label: 'Graduation',    color: 'text-[#ff630f]', bgColor: 'bg-[#fff4e8]', icon: '🎓' },
-  lunch:          { label: 'Break',         color: 'text-slate-500',  bgColor: 'bg-slate-100', icon: '☕' },
-  break:          { label: 'Break',         color: 'text-slate-500',  bgColor: 'bg-slate-100', icon: '☕' },
+  lunch:          { label: 'Break',         color: 'text-[#7a7672]',  bgColor: 'bg-[#eae9e8]', icon: '☕' },
+  break:          { label: 'Break',         color: 'text-[#7a7672]',  bgColor: 'bg-[#eae9e8]', icon: '☕' },
 }
 
 // Progress Ring Component
@@ -105,7 +105,7 @@ function ProgressRing({ progress, size = 48, strokeWidth = 4, status }: {
   const getColors = () => {
     switch (status) {
       case 'completed':
-        return { stroke: '#ff9419', bg: '#fff4e8', icon: '✓', iconColor: '#ff630f' }
+        return { stroke: '#2a6ee8', bg: '#e9f0fd', icon: '✓', iconColor: '#2a6ee8' }
       case 'in_progress':
         return { stroke: '#ff9419', bg: '#fff4e8', icon: '▶', iconColor: '#ff9419' }
       default:
@@ -153,7 +153,7 @@ function ProgressRing({ progress, size = 48, strokeWidth = 4, status }: {
         ) : status === 'in_progress' ? (
           <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse" />
         ) : (
-          <span className="text-slate-400">○</span>
+          <span className="text-[#a09d9a]">○</span>
         )}
       </div>
     </div>
@@ -168,8 +168,8 @@ function DurationBadge({ durationHours, completed }: { durationHours: number; co
   return (
     <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-300 ${
       completed
-        ? 'bg-[#fff4e8] text-[#ff630f] border-[#ffce95]'
-        : 'bg-slate-50 text-slate-500 border-slate-200'
+        ? 'bg-[#e9f0fd] text-[#2a6ee8] border-[#c4d7f9]'
+        : 'bg-[#f5f5f4] text-[#7a7672] border-[#c5c3c1]'
     }`}>
       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -196,7 +196,7 @@ function CompletionFlash({ onComplete }: { onComplete: () => void }) {
         </div>
         <div>
           <div className="font-bold text-sm" style={{ color: '#2f2922' }}>Module complete</div>
-          <div className="text-xs text-slate-400">Progress saved</div>
+          <div className="text-xs text-[#a09d9a]">Progress saved</div>
         </div>
       </div>
     </div>
@@ -390,11 +390,11 @@ export function ActivityCard({
   // Break card - simple version
   if (activityType === 'lunch' || activityType === 'break') {
     return (
-      <div className="flex items-center gap-4 py-3 px-4 bg-slate-50 rounded-xl border border-slate-100">
-        <div className="text-slate-400 text-sm font-medium w-24">
+      <div className="flex items-center gap-4 py-3 px-4 bg-[#f5f5f4] rounded-xl border border-[#eae9e8]">
+        <div className="text-[#a09d9a] text-sm font-medium w-24">
           {startTime} - {endTime}
         </div>
-        <div className="flex items-center gap-2 text-slate-500">
+        <div className="flex items-center gap-2 text-[#7a7672]">
           <span className="text-lg">{typeConfig.icon}</span>
           <span>{title || 'Break'}</span>
         </div>
@@ -409,12 +409,12 @@ export function ActivityCard({
       className={`
         relative rounded-2xl border-2 transition-all duration-300 overflow-hidden
         ${isLocked
-          ? 'opacity-50 bg-slate-50 border-slate-200 grayscale'
+          ? 'opacity-50 bg-[#f5f5f4] border-[#c5c3c1] grayscale'
           : status === 'completed'
-            ? 'border-[#ffce95] shadow-sm'
+            ? 'border-[#c4d7f9] shadow-sm'
             : status === 'in_progress'
               ? 'bg-[#fffaf4] border-[#ffaa55] shadow-md shadow-orange-50 ring-2 ring-[#ffe1bf] ring-offset-2'
-              : 'bg-white border-slate-200 hover:border-[#ffce95] hover:shadow-md'
+              : 'bg-white border-[#c5c3c1] hover:border-[#ffce95] hover:shadow-md'
         }
       `}
     >
@@ -425,16 +425,16 @@ export function ActivityCard({
 
       {/* Activity Meta Bar */}
       <div className={`flex items-center justify-between px-4 py-2.5 border-b ${
-        status === 'completed' ? 'bg-[#fff4e8] border-[#ffce95]'
+        status === 'completed' ? 'bg-[#e9f0fd] border-[#c4d7f9]'
         : status === 'in_progress' ? 'bg-[#fff9f2] border-[#ffbb6c]'
-        : 'bg-slate-50 border-slate-200'
+        : 'bg-[#f5f5f4] border-[#c5c3c1]'
       }`}>
         <DurationBadge durationHours={durationHours} completed={status === 'completed'} />
         <div className="flex items-center gap-2 text-xs">
           <span className={`${typeConfig.bgColor} ${typeConfig.color} px-2.5 py-1 rounded-full font-semibold`}>
             {typeConfig.icon} {typeConfig.label}
           </span>
-          <span className="text-slate-400">{startTime}–{endTime}</span>
+          <span className="text-[#a09d9a]">{startTime}–{endTime}</span>
         </div>
       </div>
 
@@ -450,7 +450,7 @@ export function ActivityCard({
           />
 
           <div className="flex-1 min-w-0">
-            <h3 className={`font-bold text-lg leading-tight ${isLocked ? 'text-slate-400' : 'text-slate-900'}`}>
+            <h3 className={`font-bold text-lg leading-tight ${isLocked ? 'text-[#a09d9a]' : 'text-[#2f2922]'}`}>
               {title}
             </h3>
 
@@ -462,7 +462,7 @@ export function ActivityCard({
 
             {/* Brief description preview - first 100 chars */}
             {description && !isLocked && (
-              <p className="text-sm text-slate-600 mt-2 line-clamp-2">
+              <p className="text-sm text-[#55504a] mt-2 line-clamp-2">
                 {description.slice(0, 120)}{description.length > 120 ? '...' : ''}
               </p>
             )}
@@ -518,23 +518,23 @@ export function ActivityCard({
         <div className="border-t px-4 py-4 bg-[#fffaf4] border-[#ffe1bf]">
           {/* Timer Display - Only for Self Study, Assignment, Assessment */}
           {status === 'in_progress' && timeRemaining !== null && showTimerAndStart && (
-            <div className={`mb-4 p-4 rounded-xl border ${isOvertime ? 'bg-red-50 border-red-200' : 'bg-white border-[#ffe1bf]'}`}>
+            <div className={`mb-4 p-4 rounded-xl border ${isOvertime ? 'bg-[#ffeef0] border-[#ffcfd7]' : 'bg-white border-[#ffe1bf]'}`}>
               <div className="flex items-center gap-3 mb-3">
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isOvertime ? 'bg-red-100' : 'bg-[#fff4e8]'}`}>
-                  <svg className={`w-4 h-4 ${isOvertime ? 'text-red-600' : 'text-[#ff9419]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isOvertime ? 'bg-[#ffeef0]' : 'bg-[#fff4e8]'}`}>
+                  <svg className={`w-4 h-4 ${isOvertime ? 'text-[#ff546f]' : 'text-[#ff9419]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
-                  <div className={`text-xs font-semibold uppercase tracking-wide ${isOvertime ? 'text-red-600' : 'text-[#ff9419]'}`}>
-                    {isOvertime ? 'Overtime' : 'Time Remaining'}
+                  <div className={`text-xs font-semibold tracking-wide ${isOvertime ? 'text-[#ff546f]' : 'text-[#ff9419]'}`}>
+                    {isOvertime ? 'Overtime' : 'Time remaining'}
                   </div>
-                  <div className={`text-xl font-bold font-mono ${isOvertime ? 'text-red-600' : 'text-[#2f2922]'}`}>
+                  <div className={`text-xl font-bold ${isOvertime ? 'text-[#ff546f]' : 'text-[#2f2922]'}`}>
                     {isOvertime && '+'}{formatTimeRemaining(timeRemaining).display}
                   </div>
                 </div>
               </div>
-              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div className="w-full h-2 bg-[#eae9e8] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-1000"
                   style={{
@@ -544,16 +544,16 @@ export function ActivityCard({
                 />
               </div>
               {isOvertime && (
-                <p className="mt-2 text-xs text-red-500">Take your time — quality over speed.</p>
+                <p className="mt-2 text-xs text-[#ff546f]">Take your time — quality over speed.</p>
               )}
             </div>
           )}
 
           <div className="flex items-center justify-between">
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-[#7a7672]">
               {status === 'pending' && (
-                <span className="flex items-center gap-2 text-slate-400">
-                  <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+                <span className="flex items-center gap-2 text-[#a09d9a]">
+                  <span className="w-2 h-2 rounded-full bg-[#a09d9a]"></span>
                   Ready to start
                 </span>
               )}
@@ -580,7 +580,7 @@ export function ActivityCard({
                   onClick={handleMarkComplete}
                   disabled={isCompleting}
                   className={`px-6 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2 ${
-                    isCompleting ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'text-white hover:opacity-90 hover:scale-105 shadow-sm'
+                    isCompleting ? 'bg-[#c5c3c1] text-[#a09d9a] cursor-not-allowed' : 'text-white hover:opacity-90 hover:scale-105 shadow-sm'
                   }`}
                   style={!isCompleting ? { backgroundColor: '#2f2922' } : {}}
                 >
@@ -597,8 +597,8 @@ export function ActivityCard({
 
       {/* Completed Footer */}
       {status === 'completed' && !isLocked && (
-        <div className="border-t px-4 py-3 bg-[#fff4e8]" style={{ borderColor: '#ffce95' }}>
-          <div className="flex items-center justify-center gap-2 font-semibold" style={{ color: '#ff630f' }}>
+        <div className="border-t px-4 py-3" style={{ background: '#e9f0fd', borderColor: '#c4d7f9' }}>
+          <div className="flex items-center justify-center gap-2 font-semibold" style={{ color: '#2a6ee8' }}>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
@@ -609,8 +609,8 @@ export function ActivityCard({
 
       {/* Locked Overlay */}
       {isLocked && (
-        <div className="px-4 py-3 bg-slate-100 border-t-2 border-slate-200">
-          <div className="text-sm text-slate-500 flex items-center justify-center gap-2">
+        <div className="px-4 py-3 bg-[#eae9e8] border-t-2 border-[#c5c3c1]">
+          <div className="text-sm text-[#7a7672] flex items-center justify-center gap-2">
             <span className="text-lg">🔒</span>
             <span>Complete previous activities to unlock</span>
           </div>

@@ -111,13 +111,13 @@ export default async function ReportsPage() {
 
       {/* Demo Mode Banner */}
       {isDemo && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
-          <svg className="w-5 h-5 text-amber-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="bg-[#fff4e8] border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+          <svg className="w-5 h-5 text-[#ff9419] mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div>
-            <p className="text-amber-800 font-medium">Demo Mode</p>
-            <p className="text-amber-700 text-sm">Showing sample data. Real data will appear once connected to n8n.</p>
+            <p className="text-[#ff9419] font-medium">Demo Mode</p>
+            <p className="text-[#ff9419] text-sm">Showing sample data. Real data will appear once connected to n8n.</p>
           </div>
         </div>
       )}
@@ -190,8 +190,8 @@ export default async function ReportsPage() {
             {recentCompletions.map((trainee) => (
               <div key={trainee.email} className="p-4 flex items-center justify-between hover:bg-[var(--orange-100)]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-10 h-10 rounded-full bg-[#e9f0fd] flex items-center justify-center">
+                    <svg className="w-5 h-5 text-[#2a6ee8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
