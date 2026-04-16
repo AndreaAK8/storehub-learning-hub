@@ -56,7 +56,7 @@ export function ForkIntroModal({ data, onComplete }: ForkIntroModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
 
         {/* Header */}
         <div className="px-6 py-5 text-white" style={{ background: '#2f2922' }}>
