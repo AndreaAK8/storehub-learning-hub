@@ -54,6 +54,7 @@ export default function MyTrainingPage() {
   const [error, setError] = useState<string | null>(null)
   const [traineeData, setTraineeData] = useState<TraineeData | null>(null)
   const [selectedDay, setSelectedDay] = useState(1)
+  const [expandedDays, setExpandedDays] = useState<Set<number>>(new Set([1]))
   const [showReflection, setShowReflection] = useState(false)
   const [completedDayForReflection, setCompletedDayForReflection] = useState<number | null>(null)
   const [surveyCompleted, setSurveyCompleted] = useState(false)
@@ -220,14 +221,18 @@ export default function MyTrainingPage() {
         const requestedDay = parseInt(dayOverride)
         if (requestedDay >= 1 && requestedDay <= data.role.totalDays) {
           setSelectedDay(requestedDay)
+          setExpandedDays(new Set([requestedDay]))
         } else {
           // Fallback to current active day
-          setSelectedDay(findCurrentDay(data.trainingDays))
+          const currentDay = findCurrentDay(data.trainingDays)
+          setSelectedDay(currentDay)
+          setExpandedDays(new Set([currentDay]))
         }
       } else {
         // Auto-select the current active day
         const currentDay = findCurrentDay(data.trainingDays)
         setSelectedDay(currentDay)
+        setExpandedDays(new Set([currentDay]))
       }
     } catch (err) {
       console.error('Error fetching trainee data:', err)
@@ -538,6 +543,37 @@ export default function MyTrainingPage() {
     return traineeData?.trainingDays.find((d) => d.dayNumber === selectedDay)
   }, [traineeData, selectedDay])
 
+  // Find next incomplete module across all days
+  const nextUpModule = useMemo(() => {
+    if (!traineeData) return null
+    for (const day of traineeData.trainingDays) {
+      for (const activity of day.activities) {
+        if (
+          activity.activityType !== 'lunch' &&
+          activity.activityType !== 'break' &&
+          activity.status !== 'completed'
+        ) {
+          return { activity, dayNumber: day.dayNumber }
+        }
+      }
+    }
+    return null // All done
+  }, [traineeData])
+
+  // When selectedDay changes (e.g. roadmap click), expand that day
+  useEffect(() => {
+    setExpandedDays(prev => new Set([...prev, selectedDay]))
+  }, [selectedDay])
+
+  const toggleDay = (dayNumber: number) => {
+    setExpandedDays(prev => {
+      const next = new Set(prev)
+      if (next.has(dayNumber)) next.delete(dayNumber)
+      else next.add(dayNumber)
+      return next
+    })
+  }
+
   // Calculate total XP (1h = 100 XP)
   const totalXP = useMemo(() => {
     if (!traineeData) return 0
@@ -801,7 +837,7 @@ export default function MyTrainingPage() {
             </div>
             <button
               onClick={() => setShowTour(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#7a7672] hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-[#7a7672] hover:text-[#ff9419] hover:bg-[#fff4e8] rounded-lg transition-colors"
               title="Take a quick tour of the dashboard"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -815,6 +851,59 @@ export default function MyTrainingPage() {
             onResultClick={handleSearchResultClick}
           />
         </div>
+
+        {/* Next up banner */}
+        {nextUpModule ? (
+          <div
+            className="border-t border-l-4 px-4 py-3"
+            style={{ background: '#fff4e8', borderTopColor: '#ffe1bf', borderLeftColor: '#ff9419' }}
+          >
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style={{ color: '#ff9419' }}>
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <div className="min-w-0">
+                  <span className="text-xs font-bold mr-2" style={{ color: '#ff9419', fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
+                    Next up
+                  </span>
+                  <span className="text-sm font-bold truncate" style={{ color: '#2f2922', fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
+                    {nextUpModule.activity.title}
+                  </span>
+                  <span className="ml-2 text-xs hidden sm:inline" style={{ color: '#7a7672' }}>
+                    {nextUpModule.activity.durationHours
+                      ? `${Math.round(nextUpModule.activity.durationHours * 60)} min`
+                      : ''}
+                    {nextUpModule.dayNumber !== selectedDay ? ` · Day ${nextUpModule.dayNumber}` : ''}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedDay(nextUpModule.dayNumber)
+                  handleStartActivity(nextUpModule.activity.id)
+                }}
+                className="flex-shrink-0 px-4 py-1.5 rounded-lg text-sm font-semibold text-white transition-colors hover:opacity-90"
+                style={{ background: '#ff9419', fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}
+              >
+                Begin →
+              </button>
+            </div>
+          </div>
+        ) : !isTrainingComplete ? null : (
+          <div
+            className="border-t border-l-4 px-4 py-3"
+            style={{ background: '#e9f0fd', borderTopColor: '#c4d7f9', borderLeftColor: '#2a6ee8' }}
+          >
+            <div className="max-w-7xl mx-auto flex items-center gap-3">
+              <span className="text-base">🎉</span>
+              <span className="text-sm font-semibold" style={{ color: '#2a6ee8', fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}>
+                Training complete —{' '}
+                <a href="/dashboard/my-scores" className="underline hover:opacity-80">Check your scores →</a>
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Main Content */}
@@ -835,22 +924,100 @@ export default function MyTrainingPage() {
               />
             </div>
 
-            {/* Day Schedule */}
-            {currentDayData && (
-              <div data-tour="activities">
-                <DaySchedule
-                  dayNumber={currentDayData.dayNumber}
-                  title={currentDayData.title}
-                  description={currentDayData.description}
-                  activities={currentDayData.activities}
-                  dueDate={getDueDate(currentDayData.dayNumber)}
-                  isLocked={isDayLocked(currentDayData.dayNumber)}
-                  dayIntro={dayIntros[currentDayData.dayNumber] || null}
-                  onMarkComplete={handleMarkComplete}
-                  onStartActivity={handleStartActivity}
-                />
-              </div>
-            )}
+            {/* Day Sections — collapsible, current day expanded by default */}
+            {traineeData.trainingDays.map((day, idx) => {
+              const isExpanded = expandedDays.has(day.dayNumber)
+              const isCurrent = day.dayNumber === findCurrentDay(traineeData.trainingDays)
+              const totalTasks = day.activities.filter(
+                a => a.activityType !== 'lunch' && a.activityType !== 'break'
+              ).length
+              const completedTasks = day.activities.filter(
+                a => a.status === 'completed' && a.activityType !== 'lunch' && a.activityType !== 'break'
+              ).length
+              const pct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+
+              return (
+                <div key={day.dayNumber} data-tour={idx === 0 ? 'activities' : undefined}
+                  id={`day-${day.dayNumber}`}>
+                  {!isExpanded ? (
+                    /* Collapsed header */
+                    <button
+                      onClick={() => toggleDay(day.dayNumber)}
+                      className="w-full text-left bg-white rounded-xl shadow-sm border border-[#c5c3c1] px-5 py-4 flex items-center justify-between gap-4 hover:bg-[#fff4e8] transition-colors group"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span
+                          className="flex-shrink-0 px-2.5 py-0.5 rounded-full text-xs font-semibold text-white"
+                          style={{ background: '#ff9419' }}
+                        >
+                          Day {day.dayNumber}
+                        </span>
+                        <span
+                          className="font-bold text-base truncate"
+                          style={{ color: '#2f2922', fontFamily: 'var(--font-barlow), system-ui, sans-serif' }}
+                        >
+                          {day.title}
+                        </span>
+                        {isCurrent && (
+                          <span className="flex-shrink-0 text-xs px-2 py-0.5 rounded-full font-medium"
+                            style={{ background: '#fff4e8', color: '#ff9419' }}>
+                            Today
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <span
+                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                          style={
+                            pct === 100
+                              ? { background: '#e9f0fd', color: '#2a6ee8' }
+                              : pct > 0
+                              ? { background: '#fff4e8', color: '#ff9419' }
+                              : { background: '#eae9e8', color: '#7a7672' }
+                          }
+                        >
+                          {pct}%
+                        </span>
+                        <span className="text-xs" style={{ color: '#a09d9a' }}>
+                          {completedTasks}/{totalTasks} tasks
+                        </span>
+                        <svg
+                          className="w-4 h-4 transition-transform group-hover:text-[#ff9419]"
+                          style={{ color: '#a09d9a' }}
+                          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </button>
+                  ) : (
+                    /* Expanded — full DaySchedule with a collapse toggle in the header */
+                    <div>
+                      <button
+                        onClick={() => toggleDay(day.dayNumber)}
+                        className="w-full text-left mb-1 flex items-center gap-2 px-1 py-0.5 text-xs font-medium text-[#a09d9a] hover:text-[#ff9419] transition-colors"
+                      >
+                        <svg className="w-3.5 h-3.5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                        Collapse day {day.dayNumber}
+                      </button>
+                      <DaySchedule
+                        dayNumber={day.dayNumber}
+                        title={day.title}
+                        description={day.description}
+                        activities={day.activities}
+                        dueDate={getDueDate(day.dayNumber)}
+                        isLocked={isDayLocked(day.dayNumber)}
+                        dayIntro={dayIntros[day.dayNumber] || null}
+                        onMarkComplete={handleMarkComplete}
+                        onStartActivity={handleStartActivity}
+                      />
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
 
           {/* Sidebar */}
