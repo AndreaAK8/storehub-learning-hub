@@ -48,15 +48,20 @@ interface ActivityDetailModalProps {
 }
 
 const activityTypeConfig: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
-  self_study: { label: 'Self-Study', color: 'text-[#2f2922]', bgColor: 'bg-[#2f2922]', icon: '📚' },
-  trainer_led: { label: 'Trainer Led', color: 'text-[#55504a]', bgColor: 'bg-[#55504a]', icon: '👨‍🏫' },
-  coach_led: { label: 'Coach Led', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '🧑‍💼' },
-  buddy_led: { label: 'Buddy Session', color: 'text-pink-700', bgColor: 'bg-pink-100', icon: '👥' },
-  assessment: { label: 'Assessment', color: 'text-[#ff9419]', bgColor: 'bg-[#fff4e8]', icon: '📝' },
-  assignment: { label: 'Assignment', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: '✏️' },
-  briefing: { label: 'Briefing', color: 'text-[#55504a]', bgColor: 'bg-[#eae9e8]', icon: '📋' },
-  lunch: { label: 'Break', color: 'text-[#55504a]', bgColor: 'bg-[#eae9e8]', icon: '☕' },
-  break: { label: 'Break', color: 'text-[#55504a]', bgColor: 'bg-[#eae9e8]', icon: '☕' },
+  self_study:     { label: 'Self Study',     color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '📖' },
+  assignment:     { label: 'Assignment',     color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '📋' },
+  assessment:     { label: 'Assessment',     color: 'text-[#ff630f]', bgColor: 'bg-[#fff4e8]', icon: '📝' },
+  trainer_led:    { label: 'Trainer Led',    color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '👨‍🏫' },
+  coach_led:      { label: 'Coach Led',      color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '🧑‍💼' },
+  buddy_led:      { label: 'Buddy Led',      color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '👥' },
+  briefing:       { label: 'Briefing',       color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '📢' },
+  buddy_session:  { label: 'Buddy Session',  color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '👥' },
+  review_session: { label: 'Review',         color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', icon: '💬' },
+  coach_review:   { label: 'Coach Review',   color: 'text-[#2f2922]', bgColor: 'bg-[#f0ede9]', icon: '✍️' },
+  mock_test:      { label: 'Mock Test',      color: 'text-[#c43155]', bgColor: 'bg-[#ffeef0]', icon: '🎯' },
+  handover:       { label: 'Graduation',     color: 'text-[#ff630f]', bgColor: 'bg-[#fff4e8]', icon: '🎓' },
+  lunch:          { label: 'Break',          color: 'text-[#7a7672]', bgColor: 'bg-[#eae9e8]', icon: '☕' },
+  break:          { label: 'Break',          color: 'text-[#7a7672]', bgColor: 'bg-[#eae9e8]', icon: '☕' },
 }
 
 // Group resources by region
