@@ -134,15 +134,13 @@ export function ActivityDetailModal({
       {/* Modal - wider for better form/video viewing */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-fade-in">
         {/* Header */}
-        <div className={`
-          px-6 py-4 border-b flex items-start justify-between
-          ${activity.status === 'completed'
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-[#c4d7f9]'
-            : activity.status === 'in_progress'
-              ? 'bg-gradient-to-r from-orange-50 to-amber-50 border-orange-200'
-              : 'bg-gradient-to-r from-slate-50 to-white border-[#c5c3c1]'
-          }
-        `}>
+        <div
+          className="px-6 py-4 border-b flex items-start justify-between"
+          style={{
+            background: activity.status === 'completed' ? '#e9f0fd' : activity.status === 'in_progress' ? '#fff4e8' : '#f5f5f4',
+            borderColor: activity.status === 'completed' ? '#c4d7f9' : activity.status === 'in_progress' ? '#ffe1bf' : '#c5c3c1',
+          }}
+        >
           <div className="flex-1 min-w-0 pr-4">
             <div className="flex items-center gap-2 mb-2">
               <span className={`${typeConfig.bgColor} ${typeConfig.color} px-2.5 py-1 rounded-full text-xs font-semibold`}>
@@ -154,7 +152,7 @@ export function ActivityDetailModal({
                 </span>
               )}
               {activity.status === 'in_progress' && (
-                <span className="bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full text-xs font-semibold animate-pulse">
+                <span className="px-2.5 py-1 rounded-full text-xs font-semibold" style={{ background: '#fff4e8', color: '#ff9419' }}>
                   ● In Progress
                 </span>
               )}
@@ -220,7 +218,7 @@ export function ActivityDetailModal({
 
           {/* Success Criteria - Structured Display */}
           {activity.parsedCriteria && activity.parsedCriteria.length > 0 ? (
-            <div className="p-4 bg-gradient-to-r from-[#2f2922] to-blue-50 rounded-xl border border-indigo-200">
+            <div className="p-4 rounded-xl" style={{ background: '#e9f0fd', border: '1px solid #c4d7f9' }}>
               <div className="flex items-start gap-3">
                 <span className="text-2xl">🎯</span>
                 <div className="flex-1">
@@ -285,7 +283,7 @@ export function ActivityDetailModal({
             </div>
           ) : activity.successCriteria && activity.successCriteria.length > 0 ? (
             // Fallback to simple list
-            <div className="p-4 bg-gradient-to-r from-[#2f2922] to-blue-50 rounded-xl border border-indigo-200">
+            <div className="p-4 rounded-xl" style={{ background: '#e9f0fd', border: '1px solid #c4d7f9' }}>
               <div className="flex items-start gap-3">
                 <span className="text-2xl">🎯</span>
                 <div className="flex-1">
@@ -307,7 +305,7 @@ export function ActivityDetailModal({
 
           {/* Checklist (for BackOffice Assignment, etc.) */}
           {activity.checklist && activity.checklist.length > 0 && (
-            <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
+            <div className="p-4 rounded-xl" style={{ background: '#fff4e8', border: '1px solid #ffe1bf' }}>
               <div className="flex items-start gap-3">
                 <span className="text-2xl">✅</span>
                 <div className="flex-1">
@@ -336,7 +334,7 @@ export function ActivityDetailModal({
 
           {/* Resources - Grouped by Region */}
           {hasResources && (
-            <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl border border-emerald-200">
+            <div className="p-4 rounded-xl" style={{ background: '#f5f5f4', border: '1px solid #c5c3c1' }}>
               <div className="text-sm font-bold text-[#2a6ee8] mb-4 flex items-center gap-2">
                 <span className="text-lg">📎</span>
                 <span>Resources</span>
@@ -446,7 +444,7 @@ export function ActivityDetailModal({
 
         {/* Footer Actions */}
         {activity.status !== 'completed' && (
-          <div className="px-6 py-4 border-t border-[#c5c3c1] bg-gradient-to-r from-slate-50 to-white">
+          <div className="px-6 py-4 border-t border-[#c5c3c1]" style={{ background: '#f5f5f4' }}>
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={onClose}
@@ -461,7 +459,8 @@ export function ActivityDetailModal({
                     onStart()
                     onClose()
                   }}
-                  className="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-[#2f2922] to-blue-600 text-white hover:from-[#2f2922] hover:to-blue-700 rounded-xl transition-all shadow-lg shadow-indigo-200 hover:shadow-xl flex items-center gap-2"
+                  className="px-6 py-2.5 text-sm font-bold text-white rounded-xl transition-all flex items-center gap-2 hover:opacity-90"
+                  style={{ background: '#ff9419' }}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -477,7 +476,8 @@ export function ActivityDetailModal({
                     onComplete()
                     onClose()
                   }}
-                  className="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 rounded-xl transition-all shadow-lg shadow-green-200 hover:shadow-xl flex items-center gap-2"
+                  className="px-6 py-2.5 text-sm font-bold text-white rounded-xl transition-all flex items-center gap-2 hover:opacity-90"
+                  style={{ background: '#2a6ee8' }}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -313,14 +313,14 @@ function HowItWorksStep() {
         </div>
 
         {/* We've Got Your Back */}
-        <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-[#2f2922] border border-blue-200">
+        <div className="p-5 rounded-xl" style={{ background: '#e9f0fd', border: '1px solid #c4d7f9' }}>
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#c4d7f9' }}>
               <span className="text-2xl">🤝</span>
             </div>
             <div>
-              <h4 className="font-semibold text-blue-800 mb-2">We've Got Your Back</h4>
-              <p className="text-sm text-blue-700 leading-relaxed">
+              <h4 className="font-semibold mb-2" style={{ color: '#2a6ee8' }}>We've Got Your Back</h4>
+              <p className="text-sm leading-relaxed" style={{ color: '#55504a' }}>
                 While you're learning independently, you're not alone: daily check-ins with your trainer, a questions sheet for your burning questions, and trainer review sessions built into the schedule.
               </p>
             </div>
@@ -328,14 +328,14 @@ function HowItWorksStep() {
         </div>
 
         {/* Time Matters */}
-        <div className="p-5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+        <div className="p-5 rounded-xl" style={{ background: '#fff4e8', border: '1px solid #ffe1bf' }}>
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#fff4e8] flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#ffe1bf' }}>
               <span className="text-2xl">⏰</span>
             </div>
             <div>
-              <h4 className="font-semibold text-[#ff9419] mb-2">Time Matters!</h4>
-              <p className="text-sm text-[#ff9419] leading-relaxed">
+              <h4 className="font-semibold mb-2" style={{ color: '#ff9419' }}>Time Matters!</h4>
+              <p className="text-sm leading-relaxed" style={{ color: '#55504a' }}>
                 Every task has a set time limit, so managing your schedule is key. Check the training agenda to stay on track. If you fall behind, tasks can pile up—fast.
               </p>
             </div>
@@ -343,14 +343,14 @@ function HowItWorksStep() {
         </div>
 
         {/* Some Parts Might Get Tricky */}
-        <div className="p-5 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-50 border border-purple-200">
+        <div className="p-5 rounded-xl" style={{ background: '#f5f5f4', border: '1px solid #c5c3c1' }}>
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-full bg-[#55504a] flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#eae9e8' }}>
               <span className="text-2xl">🧩</span>
             </div>
             <div>
-              <h4 className="font-semibold text-[#55504a] mb-2">Some Parts Might Get Tricky</h4>
-              <p className="text-sm text-[#55504a] leading-relaxed">
+              <h4 className="font-semibold mb-2" style={{ color: '#2f2922' }}>Some Parts Might Get Tricky</h4>
+              <p className="text-sm leading-relaxed" style={{ color: '#55504a' }}>
                 Stay engaged, take notes, and don't hesitate to ask questions. Your trainer will go through them during check-ins—no question is too big or too small.
               </p>
             </div>
