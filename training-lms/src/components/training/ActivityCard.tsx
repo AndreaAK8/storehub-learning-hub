@@ -233,6 +233,12 @@ export function ActivityCard({
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null)
   const [isOvertime, setIsOvertime] = useState(false)
   const [showCelebration, setShowCelebration] = useState(false)
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>(() => {
+    if (typeof window === 'undefined') return {}
+    try {
+      return JSON.parse(localStorage.getItem(`checklist_${id}`) || '{}')
+    } catch { return {} }
+  })
 
   const typeConfig = activityTypeConfig[activityType] || activityTypeConfig.self_study
 
@@ -387,6 +393,14 @@ export function ActivityCard({
     }
   }, [onStartActivity, id, durationHours, storageKey])
 
+  const toggleChecklistItem = useCallback((itemId: string) => {
+    setCheckedItems(prev => {
+      const next = { ...prev, [itemId]: !prev[itemId] }
+      localStorage.setItem(`checklist_${id}`, JSON.stringify(next))
+      return next
+    })
+  }, [id])
+
   // Break card - simple version
   if (activityType === 'lunch' || activityType === 'break') {
     return (
@@ -495,6 +509,54 @@ export function ActivityCard({
             </p>
           </div>
         )}
+
+        {/* Inline Checklist */}
+        {checklist && checklist.length > 0 && !isLocked && (() => {
+          const doneCount = checklist.filter(item => checkedItems[item.id]).length
+          const remaining = checklist.length - doneCount
+          const allDone = remaining === 0
+          return (
+            <div className="mt-4 rounded-xl border overflow-hidden" style={{ borderColor: allDone ? '#c4d7f9' : '#e8e7e5' }}>
+              <div className="px-3 py-2 flex items-center gap-2 border-b" style={{ background: allDone ? '#e9f0fd' : '#f5f5f4', borderColor: allDone ? '#c4d7f9' : '#e8e7e5' }}>
+                <span className="text-sm">✅</span>
+                <span className="text-xs font-semibold" style={{ color: allDone ? '#2a6ee8' : '#55504a' }}>
+                  {allDone ? 'All done!' : `${remaining} item${remaining !== 1 ? 's' : ''} left — let's go`}
+                </span>
+                {doneCount > 0 && !allDone && (
+                  <span className="ml-auto text-xs" style={{ color: '#a09d9a' }}>{doneCount}/{checklist.length}</span>
+                )}
+              </div>
+              <div className="divide-y" style={{ divideColor: '#eae9e8' }}>
+                {checklist.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => toggleChecklistItem(item.id)}
+                    className="w-full flex items-start gap-3 px-3 py-2.5 text-left transition-colors hover:bg-[#fafaf9]"
+                    style={{ background: checkedItems[item.id] ? '#f0f5ff' : 'white' }}
+                  >
+                    <div className="flex-shrink-0 mt-0.5 w-4 h-4 rounded border-2 flex items-center justify-center transition-all"
+                      style={{
+                        borderColor: checkedItems[item.id] ? '#2a6ee8' : '#c5c3c1',
+                        background: checkedItems[item.id] ? '#2a6ee8' : 'transparent'
+                      }}>
+                      {checkedItems[item.id] && (
+                        <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-sm flex-1" style={{
+                      color: checkedItems[item.id] ? '#a09d9a' : '#2f2922',
+                      textDecoration: checkedItems[item.id] ? 'line-through' : 'none'
+                    }}>
+                      {item.text}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )
+        })()}
 
         {/* View Details Button - Opens Modal */}
         {hasExpandableContent && !isLocked && (

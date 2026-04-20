@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Parse details to extract description, success criteria, and scorecard
-      const { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl } = parseDetails(module.details || '')
+      const { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl, checklist } = parseDetails(module.details || '')
 
       // Parse resource URLs (might have multiple separated by newlines)
       let resourceLinks = parseResourceLinks(module.resource_url)
@@ -160,6 +160,7 @@ export async function GET(request: NextRequest) {
         successCriteriaRaw: successCriteriaRaw, // Full text with formatting
         parsedCriteria: parsedCriteria, // Structured format
         scorecardUrl: scorecardUrl, // For coach/trainer view
+        checklist: checklist, // Interactive checklist items (☐ prefix lines)
         hideTimer: hideTimer,
       })
     })
@@ -314,12 +315,14 @@ function parseDetails(details: string): {
   successCriteriaRaw: string | null
   parsedCriteria: ParsedCriteriaItem[]
   scorecardUrl: string | null
+  checklist: { id: string; text: string }[]
 } {
   let description = details
   let successCriteria: string[] = []
   let successCriteriaRaw: string | null = null
   let parsedCriteria: ParsedCriteriaItem[] = []
   let scorecardUrl: string | null = null
+  const checklist: { id: string; text: string }[] = []
 
   // Extract success criteria
   const successMatch = details.split('---SUCCESS_CRITERIA---')
@@ -405,7 +408,20 @@ function parseDetails(details: string): {
     }
   }
 
-  return { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl }
+  // Extract ☐ checklist items from description
+  const descLines = description.split('\n')
+  const nonChecklistLines: string[] = []
+  descLines.forEach((line) => {
+    const trimmed = line.trim()
+    if (trimmed.startsWith('☐')) {
+      checklist.push({ id: `cl-${checklist.length}`, text: trimmed.replace(/^☐\s*/, '') })
+    } else {
+      nonChecklistLines.push(line)
+    }
+  })
+  if (checklist.length > 0) description = nonChecklistLines.join('\n').trim()
+
+  return { description, successCriteria, successCriteriaRaw, parsedCriteria, scorecardUrl, checklist }
 }
 
 // Parse resource URL field to extract multiple links

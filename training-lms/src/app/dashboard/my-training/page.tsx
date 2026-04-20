@@ -28,6 +28,7 @@ interface Activity {
   pic: string
   resourceLinks?: { title: string; url: string }[]
   successCriteria?: string[]
+  checklist?: { id: string; text: string }[]
   tldr?: string
 }
 

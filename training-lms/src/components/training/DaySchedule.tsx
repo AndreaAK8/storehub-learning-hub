@@ -24,6 +24,7 @@ interface Activity {
   successCriteria?: string[]
   successCriteriaRaw?: string
   parsedCriteria?: ParsedCriteriaItem[]
+  checklist?: { id: string; text: string }[]
   hideTimer?: boolean
 }
 
