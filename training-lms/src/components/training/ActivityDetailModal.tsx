@@ -121,18 +121,23 @@ export function ActivityDetailModal({
     }
   }, [isOpen, handleKeyDown])
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div
+      className="fixed inset-0 z-50 flex justify-end"
+      style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+    >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-[250ms]"
+        style={{ opacity: isOpen ? 1 : 0 }}
         onClick={onClose}
       />
 
-      {/* Modal - wider for better form/video viewing */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-fade-in">
+      {/* Drawer — slides in from right */}
+      <div
+        className="relative bg-white w-[480px] max-w-full h-full shadow-2xl flex flex-col transition-transform duration-[250ms] ease-out"
+        style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}
+      >
         {/* Header */}
         <div
           className="px-6 py-4 border-b flex items-start justify-between"

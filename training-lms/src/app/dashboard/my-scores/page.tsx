@@ -186,11 +186,9 @@ export default function MyScoresPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full border-2 border-[#eae9e8] border-t-[#ff9419] animate-spin mx-auto mb-4" />
-          <p className="text-[#7a7672]">Loading your scores...</p>
-        </div>
+      <div className="space-y-6">
+        <div className="skeleton rounded-2xl" style={{ height: 200 }} />
+        <div className="skeleton rounded-xl" style={{ height: 300 }} />
       </div>
     )
   }

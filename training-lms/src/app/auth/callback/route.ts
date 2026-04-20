@@ -18,12 +18,12 @@ export async function GET(request: Request) {
         // Check if profile exists
         const { data: existingProfile } = await supabase
           .from('profiles')
-          .select('id')
+          .select('id, role')
           .eq('id', user.id)
           .single()
 
-        // If no profile, create one with default 'trainee' role
         if (!existingProfile) {
+          // First login — create profile, send trainee to My Training (tour auto-shows)
           await supabase.from('profiles').insert({
             id: user.id,
             email: user.email,
@@ -31,7 +31,21 @@ export async function GET(request: Request) {
             role: 'trainee',
             google_sheet_email: user.email,
           })
+          // If a specific next was requested, honour it; otherwise → My Training
+          const destination = next !== '/dashboard' ? next : '/dashboard/my-training'
+          return NextResponse.redirect(`${origin}${destination}`)
         }
+
+        // Returning user — if a specific next was requested, honour it
+        if (next !== '/dashboard') {
+          return NextResponse.redirect(`${origin}${next}`)
+        }
+
+        // Default redirect based on role
+        if (existingProfile.role === 'trainee') {
+          return NextResponse.redirect(`${origin}/dashboard/home`)
+        }
+        return NextResponse.redirect(`${origin}/dashboard`)
       }
 
       return NextResponse.redirect(`${origin}${next}`)

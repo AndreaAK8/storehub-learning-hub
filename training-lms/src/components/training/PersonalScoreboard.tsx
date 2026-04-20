@@ -242,13 +242,13 @@ export function PersonalScoreboard({
   // Show "In Progress" if training is not complete
   const grade = useMemo(() => {
     if (!allAssessmentsComplete) {
-      return { letter: '...', color: '#3b82f6', label: 'In Progress' }
+      return { letter: '...', color: '#2a6ee8', label: 'In Progress' }
     }
     if (learningScore >= 90) return { letter: 'A', color: '#2a6ee8', label: 'Excellent' }
-    if (learningScore >= 80) return { letter: 'B', color: '#22c55e', label: 'Passed' }
+    if (learningScore >= 80) return { letter: 'B', color: '#2a6ee8', label: 'Passed' }
     if (learningScore >= 70) return { letter: 'C', color: '#ff9419', label: 'Almost There' }
-    if (learningScore >= 60) return { letter: 'D', color: '#f59e0b', label: 'Needs Work' }
-    return { letter: 'F', color: '#ef4444', label: 'At Risk' }
+    if (learningScore >= 60) return { letter: 'D', color: '#ff9419', label: 'Needs Work' }
+    return { letter: 'F', color: '#ff546f', label: 'At Risk' }
   }, [learningScore, allAssessmentsComplete])
 
   // Max activities in a day for chart scaling
@@ -270,7 +270,7 @@ export function PersonalScoreboard({
   return (
     <div className="space-y-6">
       {/* Score Header */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-white">
+      <div className="rounded-2xl p-6 text-white" style={{ background: '#2f2922' }}>
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[#a09d9a] text-sm mb-1">Learning Score</p>

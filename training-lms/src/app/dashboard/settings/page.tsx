@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import ProfileSettings from '@/components/dashboard/ProfileSettings'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -27,24 +28,13 @@ export default async function SettingsPage() {
         <p className="text-[#55504a] mt-1">Manage your account and application settings</p>
       </div>
 
-      {/* Profile Section */}
-      <div className="bg-white rounded-lg shadow p6">
-        <h2 className="text-lg font-semibold text-[#2f2922] mb-4">Your Profile</h2>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-[#2a6ee8] flex items-center justify-center">
-            <span className="text-[#2a6ee8] text-xl font-bold">
-              {profile?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || user?.email?.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <div>
-            <p className="font-medium text-[#2f2922]">{profile?.full_name || 'Not set'}</p>
-            <p className="text-sm text-[#7a7672]">{user?.email}</p>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#2a6ee8] text-[#2a6ee8] mt-1 capitalize">
-              {profile?.role || 'trainee'}
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Account Settings — editable profile */}
+      <ProfileSettings
+        initialName={profile?.full_name || ''}
+        email={user?.email || ''}
+        role={profile?.role || 'trainee'}
+        userId={user?.id || ''}
+      />
 
       {/* Admin Section: User Management */}
       {profile?.role === 'admin' && (
