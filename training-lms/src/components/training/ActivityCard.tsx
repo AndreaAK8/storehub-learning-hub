@@ -513,8 +513,8 @@ export function ActivityCard({
 
       </div>
 
-      {/* Action Footer */}
-      {!isLocked && status !== 'completed' && (
+      {/* Action Footer — hidden for passive types (trainer/coach-led) when still pending */}
+      {!isLocked && status !== 'completed' && (status !== 'pending' || showTimerAndStart) && (
         <div className="border-t px-4 py-4 bg-[#fffaf4] border-[#ffe1bf]">
           {/* Timer Display - Only for Self Study, Assignment, Assessment */}
           {status === 'in_progress' && timeRemaining !== null && showTimerAndStart && (

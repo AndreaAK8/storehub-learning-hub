@@ -453,7 +453,7 @@ export function ActivityDetailModal({
                 Close
               </button>
 
-              {activity.status === 'pending' && onStart && (
+              {activity.status === 'pending' && onStart && !isTrainerOrCoachLed && (
                 <button
                   onClick={() => {
                     onStart()
