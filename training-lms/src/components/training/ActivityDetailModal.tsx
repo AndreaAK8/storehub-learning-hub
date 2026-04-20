@@ -293,7 +293,7 @@ export function ActivityDetailModal({
                 <span className="text-2xl">🎯</span>
                 <div className="flex-1">
                   <div className="text-sm font-bold text-[#2f2922] mb-3">Your Goal</div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2 list-none">
                     {activity.successCriteria.map((criteria, index) => (
                       <li key={index} className="flex items-start gap-3 text-base text-[#2f2922]">
                         <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5" style={{ background: '#2a6ee8', color: 'white' }}>
