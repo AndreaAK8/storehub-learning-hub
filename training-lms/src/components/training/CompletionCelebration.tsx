@@ -82,9 +82,9 @@ export default function CompletionCelebration({
 
       {/* Survey Section */}
       <div className="max-w-3xl mx-auto mt-10">
-        <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 border border-[#c5c3c1]">
+        <div className="rounded-2xl p-8 border border-[#c5c3c1]" style={{ background: '#f5f5f4' }}>
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-[#55504a] flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#2a6ee8' }}>
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
@@ -115,7 +115,8 @@ export default function CompletionCelebration({
                     // Call the handler to trigger workflow and mark as completed
                     onTakeSurvey()
                   }}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-[#55504a] text-white font-semibold rounded-xl hover:from-violet-700 hover:to-[#55504a] transition-all hover:scale-105 shadow-lg shadow-violet-500/25"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-xl transition-all hover:scale-105 hover:opacity-90"
+                  style={{ background: '#2a6ee8' }}
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

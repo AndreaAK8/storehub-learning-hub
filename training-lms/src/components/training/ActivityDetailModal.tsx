@@ -361,7 +361,7 @@ export function ActivityDetailModal({
                           href={resource.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 px-4 py-3 bg-white text-[#2a6ee8] hover:text-[#2a6ee8] rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
+                          className="flex items-center gap-3 px-4 py-3 bg-white text-[#2a6ee8] hover:text-[#2a6ee8] rounded-lg border border-[#c5c3c1] hover:border-[#2a6ee8] transition-all hover:shadow-sm"
                         >
                           <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -395,7 +395,7 @@ export function ActivityDetailModal({
                             href={resource.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 px-4 py-3 bg-white text-[#2a6ee8] hover:text-[#2a6ee8] rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
+                            className="flex items-center gap-3 px-4 py-3 bg-white text-[#2a6ee8] hover:text-[#2a6ee8] rounded-lg border border-[#c5c3c1] hover:border-[#2a6ee8] transition-all hover:shadow-sm"
                           >
                             <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -430,7 +430,7 @@ export function ActivityDetailModal({
                             href={resource.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 px-4 py-3 bg-white text-[#2a6ee8] hover:text-[#2a6ee8] rounded-lg border border-emerald-200 hover:border-emerald-300 transition-all hover:shadow-md"
+                            className="flex items-center gap-3 px-4 py-3 bg-white text-[#2a6ee8] hover:text-[#2a6ee8] rounded-lg border border-[#c5c3c1] hover:border-[#2a6ee8] transition-all hover:shadow-sm"
                           >
                             <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

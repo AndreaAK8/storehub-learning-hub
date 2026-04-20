@@ -75,7 +75,7 @@ export function ReflectionModal({
 
         {/* Header */}
         <div className="text-center mb-6 mt-2">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: '#fff4e8' }}>
             <span className="text-3xl">🎉</span>
           </div>
           <h2 className="text-2xl font-bold text-[#2f2922]">Day {dayNumber} Complete!</h2>
@@ -83,10 +83,10 @@ export function ReflectionModal({
         </div>
 
         {/* Info Banner */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-5">
+        <div className="rounded-xl p-3 mb-5" style={{ background: '#e9f0fd', border: '1px solid #c4d7f9' }}>
           <div className="flex items-start gap-2">
-            <span className="text-blue-500 text-lg">💡</span>
-            <p className="text-sm text-blue-700">
+            <span className="text-lg">💡</span>
+            <p className="text-sm" style={{ color: '#2a6ee8' }}>
               Please complete this reflection before continuing. It helps your coach understand your progress and provide better support.
             </p>
           </div>
@@ -108,7 +108,7 @@ export function ReflectionModal({
                 w-full px-3 py-2 border rounded-lg outline-none resize-none text-sm transition-colors
                 ${showValidation && confusingTopic.trim().length < 10
                   ? 'border-[#ffcfd7] bg-[#ffeef0] focus:ring-2 focus:ring-red-500 focus:border-[#ffcfd7]'
-                  : 'border-[#a09d9a] focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                  : 'border-[#a09d9a] focus:ring-2 focus:ring-[#ff9419] focus:border-[#ff9419]'
                 }
               `}
             />
@@ -131,7 +131,7 @@ export function ReflectionModal({
                 w-full px-3 py-2 border rounded-lg outline-none resize-none text-sm transition-colors
                 ${showValidation && improvement.trim().length < 10
                   ? 'border-[#ffcfd7] bg-[#ffeef0] focus:ring-2 focus:ring-red-500 focus:border-[#ffcfd7]'
-                  : 'border-[#a09d9a] focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                  : 'border-[#a09d9a] focus:ring-2 focus:ring-[#ff9419] focus:border-[#ff9419]'
                 }
               `}
             />
@@ -150,15 +150,14 @@ export function ReflectionModal({
                 <button
                   key={level}
                   onClick={() => setConfidenceLevel(level)}
-                  className={`
-                    w-12 h-12 rounded-full text-lg font-medium transition-all
-                    ${confidenceLevel === level
-                      ? 'bg-gradient-to-br from-blue-500 to-[#2f2922] text-white scale-110 shadow-lg'
-                      : showValidation && confidenceLevel === 0
-                        ? 'bg-[#ffeef0] text-[#ff546f] border-2 border-[#ffcfd7] hover:bg-[#ffeef0]'
-                        : 'bg-[#eae9e8] text-[#55504a] hover:bg-[#c5c3c1]'
-                    }
-                  `}
+                  className={`w-12 h-12 rounded-full text-lg font-medium transition-all ${
+                    showValidation && confidenceLevel === 0 && confidenceLevel !== level
+                      ? 'bg-[#ffeef0] text-[#ff546f] border-2 border-[#ffcfd7]'
+                      : confidenceLevel !== level
+                      ? 'bg-[#eae9e8] text-[#55504a] hover:bg-[#c5c3c1]'
+                      : 'scale-110 shadow-lg text-white'
+                  }`}
+                  style={confidenceLevel === level ? { background: '#ff9419' } : {}}
                 >
                   {level}
                 </button>
@@ -182,7 +181,8 @@ export function ReflectionModal({
           </div>
           <div className="w-full h-2 bg-[#c5c3c1] rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-300 ${isFormComplete ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-blue-400 to-[#2f2922]'}`}
+              style={{ background: isFormComplete ? '#2a6ee8' : '#ff9419' }}
+              className="h-full rounded-full transition-all duration-300"
               style={{
                 width: `${((confusingTopic.trim().length >= 10 ? 1 : 0) + (improvement.trim().length >= 10 ? 1 : 0) + (confidenceLevel > 0 ? 1 : 0)) / 3 * 100}%`
               }}
@@ -194,19 +194,12 @@ export function ReflectionModal({
         <button
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className={`
-            w-full py-4 px-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2
-            ${isFormComplete
-              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-600 hover:to-emerald-600 shadow-lg shadow-green-200 hover:shadow-xl hover:scale-[1.02]'
-              : 'bg-gradient-to-r from-blue-500 to-[#2f2922] text-white hover:from-blue-600 hover:to-[#2f2922] shadow-lg shadow-blue-200'
-            }
-            ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}
-          `}
+          className="w-full py-4 px-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 text-white disabled:cursor-not-allowed"
+          style={{ background: isFormComplete ? '#2a6ee8' : '#ff9419', opacity: isSubmitting ? 0.7 : 1 }}
         >
           {isSubmitting ? (
             <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Submitting...
+              <span className="text-sm">Saving...</span>
             </>
           ) : isFormComplete ? (
             <>

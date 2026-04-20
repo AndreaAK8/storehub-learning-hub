@@ -227,7 +227,7 @@ export default function GiftReveal({
             {/* Continue button */}
             <button
               onClick={handleContinue}
-              className="mt-8 px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold text-lg rounded-2xl shadow-lg shadow-green-500/30 hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 mx-auto relative z-20 cursor-pointer"
+              className="mt-8 px-8 py-4 text-white font-bold text-lg rounded-2xl hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 mx-auto relative z-20 cursor-pointer" style={{ background: '#2a6ee8' }}
             >
               <span>View My Certificate</span>
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
