@@ -250,7 +250,7 @@ export function ActivityDetailModal({
                             className="flex items-start gap-2 text-base text-[#2f2922]"
                             style={{ paddingLeft: `${item.indent * 1}rem` }}
                           >
-                            <span className="w-5 h-5 rounded-full bg-[#2f2922] text-[#2f2922] flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                            <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5" style={{ background: '#2a6ee8', color: 'white' }}>
                               {activity.parsedCriteria!.filter((i, idx) => idx <= index && i.type === 'numbered' && i.indent === item.indent).length}
                             </span>
                             <span>{item.text}</span>
@@ -296,7 +296,7 @@ export function ActivityDetailModal({
                   <ul className="space-y-2">
                     {activity.successCriteria.map((criteria, index) => (
                       <li key={index} className="flex items-start gap-3 text-base text-[#2f2922]">
-                        <span className="w-6 h-6 rounded-full bg-[#2f2922] text-[#2f2922] flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                        <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5" style={{ background: '#2a6ee8', color: 'white' }}>
                           {index + 1}
                         </span>
                         <span>{criteria}</span>
