@@ -526,7 +526,7 @@ export function ActivityCard({
                   <span className="ml-auto text-xs" style={{ color: '#a09d9a' }}>{doneCount}/{checklist.length}</span>
                 )}
               </div>
-              <div className="divide-y" style={{ divideColor: '#eae9e8' }}>
+              <div className="divide-y divide-[#eae9e8]">
                 {checklist.map(item => (
                   <button
                     key={item.id}
