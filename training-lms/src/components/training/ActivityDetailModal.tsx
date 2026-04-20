@@ -265,7 +265,7 @@ export function ActivityDetailModal({
                             className="flex items-start gap-2 text-sm text-[#2f2922]"
                             style={{ paddingLeft: `${(item.indent + 1) * 1}rem` }}
                           >
-                            <span className="text-[#2f2922] flex-shrink-0 mt-0.5">•</span>
+                            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style={{ background: '#2a6ee8' }} />
                             <span>{item.text}</span>
                           </div>
                         )
