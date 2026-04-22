@@ -181,9 +181,9 @@ export function ReflectionModal({
           </div>
           <div className="w-full h-2 bg-[#c5c3c1] rounded-full overflow-hidden">
             <div
-              style={{ background: isFormComplete ? '#2a6ee8' : '#ff9419' }}
               className="h-full rounded-full transition-all duration-300"
               style={{
+                background: isFormComplete ? '#2a6ee8' : '#ff9419',
                 width: `${((confusingTopic.trim().length >= 10 ? 1 : 0) + (improvement.trim().length >= 10 ? 1 : 0) + (confidenceLevel > 0 ? 1 : 0)) / 3 * 100}%`
               }}
             />
