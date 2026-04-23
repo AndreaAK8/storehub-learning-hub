@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/welcome-email",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/assessment-digest",
+      "schedule": "30 1 * * 1-5"
+    },
+    {
+      "path": "/api/cron/calendar-scheduler",
+      "schedule": "0 3 * * 1-5"
+    }
+  ]
+}
