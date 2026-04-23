@@ -19,10 +19,12 @@ export const maxDuration = 30
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify cron secret
+    // Verify cron secret (via header or query param for manual testing)
     const authHeader = request.headers.get('authorization')
+    const { searchParams } = new URL(request.url)
+    const querySecret = searchParams.get('secret')
     const cronSecret = process.env.CRON_SECRET
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}` && querySecret !== cronSecret) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
