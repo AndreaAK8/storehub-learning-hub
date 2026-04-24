@@ -48,14 +48,18 @@ export interface ScoreRow {
 // ─── Read helpers ────────────────────────────────────────────────────────────
 
 /**
- * Read a range from a Google Sheet tab using the API key (read-only).
+ * Read a range from a Google Sheet tab using Service Account auth.
  * Returns rows as arrays of strings.
  */
 async function readRange(tabName: string, range?: string): Promise<string[][]> {
   const fullRange = range ? `${tabName}!${range}` : tabName
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(fullRange)}?key=${GOOGLE_API_KEY}`
+  const accessToken = await getAccessToken()
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(fullRange)}`
 
-  const response = await fetch(url, { cache: 'no-store' })
+  const response = await fetch(url, {
+    cache: 'no-store',
+    headers: { 'Authorization': `Bearer ${accessToken}` },
+  })
 
   if (!response.ok) {
     const errorText = await response.text()
