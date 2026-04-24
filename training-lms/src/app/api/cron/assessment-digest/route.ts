@@ -345,7 +345,7 @@ function buildCoachCard(
 
   return {
     header: {
-      template: 'grey',
+      template: 'orange',
       title: { tag: 'plain_text', content: "📋 Today's Training Assessments" },
       subtitle: { tag: 'plain_text', content: prettyDate },
     },
@@ -407,7 +407,7 @@ function buildTraineeCard(
 
   return {
     header: {
-      template: 'grey',
+      template: 'orange',
       title: { tag: 'plain_text', content: "📋 Today's Assessments" },
       subtitle: { tag: 'plain_text', content: prettyDate },
     },
