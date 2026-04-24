@@ -187,13 +187,23 @@ export async function POST(request: NextRequest) {
 
       // Send coach/trainer assessments + all scores to Alerts group
       if (coachAssessments.length > 0 || recentScores.length > 0) {
-        const coachCard = buildDigestCard(today, coachAssessments, recentScores)
+        const coachCard = buildCoachCard(today, coachAssessments, recentScores)
         sendPromises.push(sendCardMessage(LARK_CHAT_GROUP, coachCard))
       }
 
-      // Send trainee-submitted reminders to each batch group chat (no scores)
+      // Send trainee-submitted reminders to each batch group chat (no scores, simplified card)
       for (const [chatId, assessments] of Object.entries(traineeAssessmentsByBatch)) {
-        const traineeCard = buildDigestCard(today, assessments, [])
+        // Collect all unique pending assessments for this batch
+        const allPendingAssessments: Array<{ config: AssessmentConfigRow; submitted: boolean }> = []
+        for (const ta of assessments) {
+          for (const a of ta.assessmentsDue) {
+            // Avoid duplicating the same assessment (same form for all trainees)
+            if (!allPendingAssessments.some(existing => existing.config.assessmentName === a.config.assessmentName)) {
+              allPendingAssessments.push(a)
+            }
+          }
+        }
+        const traineeCard = buildTraineeCard(today, allPendingAssessments)
         sendPromises.push(sendCardMessage(chatId, traineeCard))
       }
 
@@ -229,36 +239,37 @@ export async function GET(request: NextRequest) {
   return POST(request)
 }
 
-// ─── Card Builder ───────────────────────────────────────────────────────────
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
-function buildDigestCard(
+function formatPrettyDate(date: string): string {
+  const dateObj = new Date(date + 'T00:00:00+08:00')
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  return `${days[dateObj.getDay()]}, ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`
+}
+
+// ─── Coach Card (Alerts Group) ──────────────────────────────────────────────
+
+function buildCoachCard(
   date: string,
   traineeAssessments: TraineeAssessment[],
   recentScores: RecentScore[]
 ): Record<string, unknown> {
-  // Format date nicely: "Thursday, 24 April 2026"
-  const dateObj = new Date(date + 'T00:00:00+08:00')
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const prettyDate = `${days[dateObj.getDay()]}, ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`
-
+  const prettyDate = formatPrettyDate(date)
   const elements: Record<string, unknown>[] = []
 
-  // ── UPCOMING section ──
+  // ── Upcoming section ──
   if (traineeAssessments.length > 0) {
-    // Section header
     elements.push({
       tag: 'div',
       text: { tag: 'lark_md', content: '**Upcoming**' },
     })
-
     elements.push({ tag: 'hr' })
 
     for (const ta of traineeAssessments) {
       const { trainee, trainingDay, assessmentsDue } = ta
       const coachDisplay = trainee.coachName || 'Unassigned'
 
-      // Trainee info block
       elements.push({
         tag: 'div',
         text: {
@@ -267,7 +278,6 @@ function buildDigestCard(
         },
       })
 
-      // Assessment items
       for (const assessment of assessmentsDue) {
         const { config, submitted, score, passFail } = assessment
         const evaluator = config.evaluateBy || 'Coach'
@@ -282,53 +292,36 @@ function buildDigestCard(
             },
           })
         } else {
-          const actionElements: Record<string, unknown>[] = [
-            {
-              tag: 'div',
-              text: {
-                tag: 'lark_md',
-                content: `⏳ ${config.assessmentName} [${evaluator}]`,
-              },
+          elements.push({
+            tag: 'div',
+            text: {
+              tag: 'lark_md',
+              content: `⏳ ${config.assessmentName} [${evaluator}]`,
             },
-          ]
-
+          })
           if (config.formLink) {
-            actionElements.push({
+            elements.push({
               tag: 'action',
-              actions: [
-                {
-                  tag: 'button',
-                  text: { tag: 'plain_text', content: 'Open Form →' },
-                  type: 'primary',
-                  url: config.formLink,
-                },
-              ],
+              actions: [{
+                tag: 'button',
+                text: { tag: 'plain_text', content: 'Open Form →' },
+                type: 'primary',
+                url: config.formLink,
+              }],
             })
-          }
-
-          for (const el of actionElements) {
-            elements.push(el)
           }
         }
       }
-
       elements.push({ tag: 'hr' })
     }
-  } else {
-    elements.push({
-      tag: 'div',
-      text: { tag: 'plain_text', content: 'No assessments scheduled for today.' },
-    })
-    elements.push({ tag: 'hr' })
   }
 
-  // ── SUBMITTED section ──
+  // ── Submitted section (scores visible to coaches only) ──
   if (recentScores.length > 0) {
     elements.push({
       tag: 'div',
       text: { tag: 'lark_md', content: '**Submitted** (Last 24h)' },
     })
-
     elements.push({ tag: 'hr' })
 
     for (const s of recentScores) {
@@ -342,30 +335,81 @@ function buildDigestCard(
         },
       })
     }
-
     elements.push({ tag: 'hr' })
   }
 
-  // ── Footer ──
   elements.push({
     tag: 'div',
-    text: {
-      tag: 'lark_md',
-      content: 'Please submit all scores by end of day.',
-    },
+    text: { tag: 'lark_md', content: 'Please submit all scores by end of day.' },
   })
 
   return {
     header: {
-      template: 'blue',
-      title: {
-        tag: 'plain_text',
-        content: `📋 Today's Training Assessments`,
-      },
-      subtitle: {
-        tag: 'plain_text',
-        content: prettyDate,
-      },
+      template: 'grey',
+      title: { tag: 'plain_text', content: "📋 Today's Training Assessments" },
+      subtitle: { tag: 'plain_text', content: prettyDate },
+    },
+    elements,
+  }
+}
+
+// ─── Trainee Card (Batch Group) ─────────────────────────────────────────────
+
+function buildTraineeCard(
+  date: string,
+  assessments: Array<{ config: AssessmentConfigRow; submitted: boolean }>
+): Record<string, unknown> {
+  const prettyDate = formatPrettyDate(date)
+  const elements: Record<string, unknown>[] = []
+
+  const pending = assessments.filter(a => !a.submitted)
+
+  if (pending.length > 0) {
+    for (const assessment of pending) {
+      elements.push({
+        tag: 'div',
+        text: {
+          tag: 'lark_md',
+          content: `⏳ **${assessment.config.assessmentName}**`,
+        },
+      })
+
+      if (assessment.config.instructions) {
+        elements.push({
+          tag: 'div',
+          text: {
+            tag: 'plain_text',
+            content: assessment.config.instructions,
+          },
+        })
+      }
+
+      if (assessment.config.formLink) {
+        elements.push({
+          tag: 'action',
+          actions: [{
+            tag: 'button',
+            text: { tag: 'plain_text', content: 'Open Form →' },
+            type: 'primary',
+            url: assessment.config.formLink,
+          }],
+        })
+      }
+
+      elements.push({ tag: 'hr' })
+    }
+  }
+
+  elements.push({
+    tag: 'div',
+    text: { tag: 'lark_md', content: '⏰ Please complete by **6:00 PM** today.' },
+  })
+
+  return {
+    header: {
+      template: 'grey',
+      title: { tag: 'plain_text', content: "📋 Today's Assessments" },
+      subtitle: { tag: 'plain_text', content: prettyDate },
     },
     elements,
   }
