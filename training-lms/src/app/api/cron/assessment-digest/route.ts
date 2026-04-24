@@ -10,7 +10,7 @@ import {
   type AssessmentConfigRow,
   type ScoreRow,
 } from '@/lib/google/sheets'
-import { sendMessage, LARK_CHAT_ANDREA, LARK_CHAT_GROUP } from '@/lib/lark/client'
+import { sendCardMessage, LARK_CHAT_ANDREA, LARK_CHAT_GROUP } from '@/lib/lark/client'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -153,15 +153,15 @@ export async function POST(request: NextRequest) {
         passFail: s.passFail,
       }))
 
-    // 5. Build the digest message
+    // 5. Build and send the digest
     const today = formatDate(new Date())
-    const message = buildDigestMessage(today, traineeAssessments, recentScores)
 
-    // 6. Send to Lark
+    // 6. Send to Lark as interactive card
     if (traineeAssessments.length > 0 || recentScores.length > 0) {
+      const card = buildDigestCard(today, traineeAssessments, recentScores)
       const sendResults = await Promise.allSettled([
-        sendMessage(LARK_CHAT_ANDREA, message),
-        sendMessage(LARK_CHAT_GROUP, message),
+        sendCardMessage(LARK_CHAT_ANDREA, card),
+        sendCardMessage(LARK_CHAT_GROUP, card),
       ])
 
       for (const result of sendResults) {
@@ -195,80 +195,144 @@ export async function GET(request: NextRequest) {
   return POST(request)
 }
 
-// ─── Message Builder ─────────────────────────────────────────────────────────
+// ─── Card Builder ───────────────────────────────────────────────────────────
 
-function buildDigestMessage(
+function buildDigestCard(
   date: string,
   traineeAssessments: TraineeAssessment[],
   recentScores: RecentScore[]
-): string {
-  const lines: string[] = []
+): Record<string, unknown> {
+  // Format date nicely: "Thursday, 24 April 2026"
+  const dateObj = new Date(date + 'T00:00:00+08:00')
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const prettyDate = `${days[dateObj.getDay()]}, ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`
 
-  lines.push(`Assessment Digest — ${date}`)
-  lines.push('——————————————————————————')
-  lines.push('')
+  const elements: Record<string, unknown>[] = []
 
-  // Today's assessments section
+  // ── UPCOMING section ──
   if (traineeAssessments.length > 0) {
-    lines.push("TODAY'S ASSESSMENTS")
-    lines.push('')
+    // Section header
+    elements.push({
+      tag: 'div',
+      text: { tag: 'plain_text', content: 'UPCOMING' },
+    })
+
+    elements.push({ tag: 'hr' })
 
     for (const ta of traineeAssessments) {
       const { trainee, trainingDay, assessmentsDue } = ta
       const coachDisplay = trainee.coachName || 'Unassigned'
 
-      lines.push(
-        `${trainee.fullName} (${trainee.role}, Day ${trainingDay})`
-      )
-      lines.push(`Coach: ${coachDisplay}`)
+      // Trainee info block
+      elements.push({
+        tag: 'div',
+        text: {
+          tag: 'lark_md',
+          content: `**Trainee:** ${trainee.fullName}\n**Role:** ${trainee.role}\n**Day:** ${trainingDay}\n**Coach:** ${coachDisplay}`,
+        },
+      })
 
+      // Assessment items
       for (const assessment of assessmentsDue) {
         const { config, submitted, score, passFail } = assessment
-
-        // Determine who submits: Trainee, Trainer, or Coach (default)
-        const evaluator = config.evaluateBy
-          ? config.evaluateBy
-          : 'Coach'
+        const evaluator = config.evaluateBy || 'Coach'
 
         if (submitted) {
-          const passIcon = passFail?.toLowerCase() === 'pass' ? 'Pass' : 'Fail'
-          lines.push(
-            `  - ${config.assessmentName} — ${score}% (${passIcon}) [${evaluator}]`
-          )
+          const icon = passFail?.toLowerCase() === 'pass' ? '✅' : '❌'
+          elements.push({
+            tag: 'div',
+            text: {
+              tag: 'lark_md',
+              content: `${icon} ${config.assessmentName} — ${score}% (${passFail}) [${evaluator}]`,
+            },
+          })
         } else {
-          lines.push(
-            `  - ${config.assessmentName} — Not yet submitted [${evaluator}]`
-          )
+          const actionElements: Record<string, unknown>[] = [
+            {
+              tag: 'div',
+              text: {
+                tag: 'lark_md',
+                content: `⏳ ${config.assessmentName} [${evaluator}]`,
+              },
+            },
+          ]
+
           if (config.formLink) {
-            lines.push(`    Form: ${config.formLink}`)
+            actionElements.push({
+              tag: 'action',
+              actions: [
+                {
+                  tag: 'button',
+                  text: { tag: 'plain_text', content: 'Open Form →' },
+                  type: 'primary',
+                  url: config.formLink,
+                },
+              ],
+            })
+          }
+
+          for (const el of actionElements) {
+            elements.push(el)
           }
         }
       }
 
-      lines.push('')
+      elements.push({ tag: 'hr' })
     }
   } else {
-    lines.push('No assessments scheduled for today.')
-    lines.push('')
+    elements.push({
+      tag: 'div',
+      text: { tag: 'plain_text', content: 'No assessments scheduled for today.' },
+    })
+    elements.push({ tag: 'hr' })
   }
 
-  // Recent scores section
+  // ── SUBMITTED section ──
   if (recentScores.length > 0) {
-    lines.push('SCORES SUBMITTED (Last 24h)')
+    elements.push({
+      tag: 'div',
+      text: { tag: 'plain_text', content: 'SUBMITTED (Last 24h)' },
+    })
 
-    for (const score of recentScores) {
-      const passThreshold = 80
-      const passIcon = score.score >= passThreshold ? 'Pass' : 'Fail'
-      const checkmark = score.score >= passThreshold ? '✅' : '❌'
-      lines.push(
-        `${checkmark} ${score.traineeName}: ${score.assessmentName} — ${score.score}% (${passIcon})`
-      )
+    elements.push({ tag: 'hr' })
+
+    for (const s of recentScores) {
+      const icon = s.score >= 80 ? '✅' : '❌'
+      const result = s.score >= 80 ? 'Pass' : 'Fail'
+      elements.push({
+        tag: 'div',
+        text: {
+          tag: 'lark_md',
+          content: `${icon} **${s.traineeName || 'Unknown'}:** ${s.assessmentName} — ${s.score}% (${result})`,
+        },
+      })
     }
 
-    lines.push('')
+    elements.push({ tag: 'hr' })
   }
 
-  lines.push('Please submit all scores by end of day.')
+  // ── Footer ──
+  elements.push({
+    tag: 'div',
+    text: {
+      tag: 'lark_md',
+      content: 'Please submit all scores by end of day.',
+    },
+  })
 
-  return lines.join('\n')
+  return {
+    header: {
+      template: 'blue',
+      title: {
+        tag: 'plain_text',
+        content: `📋 Today's Training Assessments`,
+      },
+      subtitle: {
+        tag: 'plain_text',
+        content: prettyDate,
+      },
+    },
+    elements,
+  }
 }

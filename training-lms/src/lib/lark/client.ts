@@ -108,6 +108,47 @@ export async function sendMessage(
 }
 
 /**
+ * Send a Lark Interactive Card message to a chat.
+ * @param chatId - The chat_id (oc_xxx) to send to
+ * @param card - The card JSON object
+ */
+export async function sendCardMessage(
+  chatId: string,
+  card: Record<string, unknown>
+): Promise<SendMessageResponse> {
+  const token = await getTenantToken()
+
+  const response = await fetch(
+    'https://open.larksuite.com/open-apis/im/v1/messages?receive_id_type=chat_id',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        receive_id: chatId,
+        msg_type: 'interactive',
+        content: JSON.stringify(card),
+      }),
+    }
+  )
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(`Lark send card failed: ${response.status} ${errorText}`)
+  }
+
+  const data: SendMessageResponse = await response.json()
+
+  if (data.code !== 0) {
+    throw new Error(`Lark card error: ${data.code} ${data.msg}`)
+  }
+
+  return data
+}
+
+/**
  * Send messages to both Andrea's bot chat and the group chat.
  * Useful for important notifications that need both visibility.
  */
@@ -120,6 +161,22 @@ export async function sendToAndreaAndGroup(text: string): Promise<void> {
   for (const result of results) {
     if (result.status === 'rejected') {
       console.error('Lark message failed:', result.reason)
+    }
+  }
+}
+
+/**
+ * Send card messages to both Andrea's bot chat and the group chat.
+ */
+export async function sendCardToAndreaAndGroup(card: Record<string, unknown>): Promise<void> {
+  const results = await Promise.allSettled([
+    sendCardMessage(LARK_CHAT_ANDREA, card),
+    sendCardMessage(LARK_CHAT_GROUP, card),
+  ])
+
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      console.error('Lark card message failed:', result.reason)
     }
   }
 }
