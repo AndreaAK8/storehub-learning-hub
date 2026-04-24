@@ -10,7 +10,7 @@ import {
   type AssessmentConfigRow,
   type ScoreRow,
 } from '@/lib/google/sheets'
-import { sendCardMessage, LARK_CHAT_ANDREA, LARK_CHAT_GROUP } from '@/lib/lark/client'
+import { sendCardMessage, LARK_CHAT_GROUP } from '@/lib/lark/client'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
@@ -156,14 +156,48 @@ export async function POST(request: NextRequest) {
     // 5. Build and send the digest
     const today = formatDate(new Date())
 
-    // 6. Send to Lark as interactive card
+    // 6. Send to Lark — split by audience
     if (traineeAssessments.length > 0 || recentScores.length > 0) {
-      const card = buildDigestCard(today, traineeAssessments, recentScores)
-      const sendResults = await Promise.allSettled([
-        sendCardMessage(LARK_CHAT_ANDREA, card),
-        sendCardMessage(LARK_CHAT_GROUP, card),
-      ])
+      // Separate trainee-submitted vs coach/trainer-submitted assessments
+      const coachAssessments = traineeAssessments.map(ta => ({
+        ...ta,
+        assessmentsDue: ta.assessmentsDue.filter(a => {
+          const evaluator = (a.config.evaluateBy || '').toLowerCase()
+          return evaluator !== 'trainee' && evaluator !== 'new hire'
+        }),
+      })).filter(ta => ta.assessmentsDue.length > 0)
 
+      const traineeAssessmentsByBatch: Record<string, TraineeAssessment[]> = {}
+      for (const ta of traineeAssessments) {
+        const traineeItems = ta.assessmentsDue.filter(a => {
+          const evaluator = (a.config.evaluateBy || '').toLowerCase()
+          return evaluator === 'trainee' || evaluator === 'new hire'
+        })
+        if (traineeItems.length === 0) continue
+        const chatId = ta.trainee.batchChatId
+        if (!chatId) continue
+        if (!traineeAssessmentsByBatch[chatId]) traineeAssessmentsByBatch[chatId] = []
+        traineeAssessmentsByBatch[chatId].push({
+          ...ta,
+          assessmentsDue: traineeItems,
+        })
+      }
+
+      const sendPromises: Promise<unknown>[] = []
+
+      // Send coach/trainer assessments + all scores to Alerts group
+      if (coachAssessments.length > 0 || recentScores.length > 0) {
+        const coachCard = buildDigestCard(today, coachAssessments, recentScores)
+        sendPromises.push(sendCardMessage(LARK_CHAT_GROUP, coachCard))
+      }
+
+      // Send trainee-submitted reminders to each batch group chat (no scores)
+      for (const [chatId, assessments] of Object.entries(traineeAssessmentsByBatch)) {
+        const traineeCard = buildDigestCard(today, assessments, [])
+        sendPromises.push(sendCardMessage(chatId, traineeCard))
+      }
+
+      const sendResults = await Promise.allSettled(sendPromises)
       for (const result of sendResults) {
         if (result.status === 'rejected') {
           console.error('[assessment-digest] Lark send failed:', result.reason)
@@ -215,7 +249,7 @@ function buildDigestCard(
     // Section header
     elements.push({
       tag: 'div',
-      text: { tag: 'plain_text', content: 'UPCOMING' },
+      text: { tag: 'lark_md', content: '**Upcoming**' },
     })
 
     elements.push({ tag: 'hr' })
@@ -292,7 +326,7 @@ function buildDigestCard(
   if (recentScores.length > 0) {
     elements.push({
       tag: 'div',
-      text: { tag: 'plain_text', content: 'SUBMITTED (Last 24h)' },
+      text: { tag: 'lark_md', content: '**Submitted** (Last 24h)' },
     })
 
     elements.push({ tag: 'hr' })

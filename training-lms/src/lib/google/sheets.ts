@@ -19,6 +19,7 @@ export interface TraineeRow {
   emailSentDate: string
   coachName: string
   coachEmail: string
+  batchChatId: string
 }
 
 export interface AssessmentConfigRow {
@@ -234,6 +235,7 @@ export async function getTrainees(): Promise<TraineeRow[]> {
       emailSentDate: row[headers.indexOf('Email Sent Date')] || '',
       coachName: row[headers.indexOf('Coach Name')] || '',
       coachEmail: row[headers.indexOf('Coach Email')] || '',
+      batchChatId: row[headers.indexOf('Batch Chat ID')] || '',
     }))
 }
 
