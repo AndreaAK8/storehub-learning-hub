@@ -77,18 +77,18 @@ interface TraineeScoreSummary {
 // Assessment form links by role (from Assessment Schedule Configuration)
 const ASSESSMENT_LINKS: Record<string, { name: string; url: string }[]> = {
   'Merchant Care': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Advance System Quiz', url: 'https://forms.gle/Jwec7XCXsd9JDc4f7' },
     { name: 'Hardware Assessment', url: 'https://forms.gle/4uqyPthsVweeZPqx6' },
     { name: 'Care Mock Test', url: 'https://forms.gle/FKaQMgkzC6waDdhh8' },
   ],
   'Onboarding Coordinator': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Advance System Quiz', url: 'https://forms.gle/Jwec7XCXsd9JDc4f7' },
     { name: 'Hardware Assessment', url: 'https://forms.gle/4uqyPthsVweeZPqx6' },
   ],
   'Merchant Onboarding Manager': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Advance System Quiz', url: 'https://forms.gle/Jwec7XCXsd9JDc4f7' },
     { name: 'Hardware Assessment', url: 'https://forms.gle/4uqyPthsVweeZPqx6' },
     { name: 'Training Assessment (F&B)', url: 'https://forms.gle/PoWWciHpStBQyoy2A' },
@@ -99,14 +99,14 @@ const ASSESSMENT_LINKS: Record<string, { name: string; url: string }[]> = {
     { name: 'Training Mock (Retail)', url: 'https://forms.gle/F5SaX7CURqrNoEV66' },
   ],
   'Customer Success Manager': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Advance System Quiz', url: 'https://forms.gle/Jwec7XCXsd9JDc4f7' },
     { name: 'Hardware Assessment', url: 'https://forms.gle/4uqyPthsVweeZPqx6' },
     { name: 'CSM Assessment', url: 'https://forms.gle/89McoPTBytfjnh78A' },
     { name: 'Roleplay 1 & 2', url: 'https://forms.gle/SDGiQgRzWkWKAj7f6' },
   ],
   'Onboarding Specialist': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Advance System Quiz', url: 'https://forms.gle/Jwec7XCXsd9JDc4f7' },
     { name: 'Hardware Assessment', url: 'https://forms.gle/4uqyPthsVweeZPqx6' },
     { name: 'Training Assessment (F&B)', url: 'https://forms.gle/PoWWciHpStBQyoy2A' },
@@ -115,7 +115,7 @@ const ASSESSMENT_LINKS: Record<string, { name: string; url: string }[]> = {
     { name: 'Training Mock (Retail)', url: 'https://forms.gle/F5SaX7CURqrNoEV66' },
   ],
   'Business Consultant': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Pitching (F&B/Retail)', url: 'https://forms.gle/T8r3RasUErBVoN2K9' },
     { name: 'SPIN Assessment', url: 'https://forms.gle/bRwtLNVJ1iM5iAdS6' },
     { name: 'Closing Skills', url: 'https://forms.gle/HWRkF7SEQhLqdFJ28' },
@@ -123,16 +123,16 @@ const ASSESSMENT_LINKS: Record<string, { name: string; url: string }[]> = {
     { name: 'Mock Test', url: 'https://forms.gle/BiZNVduMTUREzCvt5' },
   ],
   'Sales Coordinator': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
     { name: 'Full Call Assessment', url: 'https://forms.gle/s7LqdJuvj2FgGdJ76' },
     { name: 'Objection Handling', url: 'https://forms.gle/yBY7NnSxnsQtm8dy5' },
     { name: 'SC Mock Test', url: 'https://forms.gle/LtAdSwy6LpmQnBzK7' },
   ],
   'Marketing': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
   ],
   'Ops': [
-    { name: 'All in One Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
+    { name: 'Foundation Quiz', url: 'https://forms.gle/dAiBZXvPqpfg5fjK8' },
   ],
 }
 

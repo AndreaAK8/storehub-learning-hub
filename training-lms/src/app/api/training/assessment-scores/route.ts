@@ -4,22 +4,22 @@ import { NextRequest, NextResponse } from 'next/server'
 // Weightage configuration by role
 const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
   'Onboarding Coodinator': {
-    'All in One Quiz': 50,
+    'Foundation Quiz': 50,
     'Advance System & Networking Quiz': 35,
     'Hardware Assessment': 15,
   },
   'Onboarding Coordinator': {
-    'All in One Quiz': 50,
+    'Foundation Quiz': 50,
     'Advance System & Networking Quiz': 35,
     'Hardware Assessment': 15,
   },
   'OC': {
-    'All in One Quiz': 50,
+    'Foundation Quiz': 50,
     'Advance System & Networking Quiz': 35,
     'Hardware Assessment': 15,
   },
   'Onboarding Specialist': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 10,
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
@@ -27,7 +27,7 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Mock Test': 45,
   },
   'OS': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 10,
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
@@ -35,19 +35,19 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Mock Test': 45,
   },
   'Merchant Care': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 15,
     'Hardware Assessment': 20,
     'Care Mock Test': 45,
   },
   'MC': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 15,
     'Hardware Assessment': 20,
     'Care Mock Test': 45,
   },
   'Merchant Onboarding Manager': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 10,
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
@@ -59,7 +59,7 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Training Mock Test (Retail)': 11.25,
   },
   'MOM': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 10,
     'Hardware Assessment': 5,
     'Training Assessment (F&B)': 10,
@@ -71,21 +71,21 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Training Mock Test (Retail)': 11.25,
   },
   'Customer Success Manager': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 10,
     'Hardware Assessment': 5,
     'CSM Assessment': 20,
     'Mock Test': 45,
   },
   'CSM': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'Advance System & Networking Quiz': 10,
     'Hardware Assessment': 5,
     'CSM Assessment': 20,
     'Mock Test': 45,
   },
   'Business Consultant': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'BC Pitching Assessment - F&B': 5,
     'BC Pitching Assessment - Retail': 5,
     'BC SPIN Assessment - Session 2': 5,
@@ -96,7 +96,7 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Mock Test': 35,
   },
   'BC': {
-    'All in One Quiz': 20,
+    'Foundation Quiz': 20,
     'BC Pitching Assessment - F&B': 5,
     'BC Pitching Assessment - Retail': 5,
     'BC SPIN Assessment - Session 2': 5,
@@ -107,24 +107,24 @@ const WEIGHTAGE_CONFIG: Record<string, Record<string, number>> = {
     'Mock Test': 35,
   },
   'Sales Coordinator': {
-    'All in One Quiz': 15,
+    'Foundation Quiz': 15,
     'Full Call Assessment': 10,
     'Objection Handling - F&B': 15,
     'Objection Handling - Retail': 15,
     'Mock Test': 45,
   },
   'SC': {
-    'All in One Quiz': 15,
+    'Foundation Quiz': 15,
     'Full Call Assessment': 10,
     'Objection Handling - F&B': 15,
     'Objection Handling - Retail': 15,
     'Mock Test': 45,
   },
   'Marketing': {
-    'All in One Quiz': 100,
+    'Foundation Quiz': 100,
   },
   'Ops': {
-    'All in One Quiz': 100,
+    'Foundation Quiz': 100,
   },
 }
 

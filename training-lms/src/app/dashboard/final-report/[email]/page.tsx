@@ -33,16 +33,16 @@ interface TraineeData {
 // Mock weightage data (in production, fetch from API)
 const WEIGHTAGE_CONFIG: WeightageConfig[] = [
   // Merchant Care
-  { role: 'Merchant Care', assessmentName: 'All in One Quiz', weightage: 20, passingRate: 80 },
+  { role: 'Merchant Care', assessmentName: 'Foundation Quiz', weightage: 20, passingRate: 80 },
   { role: 'Merchant Care', assessmentName: 'Advance System & Networking Quiz', weightage: 15, passingRate: 80 },
   { role: 'Merchant Care', assessmentName: 'Hardware Assessment', weightage: 20, passingRate: 80 },
   { role: 'Merchant Care', assessmentName: 'Care Mock Test', weightage: 45, passingRate: 80 },
   // Onboarding Coordinator
-  { role: 'Onboarding Coordinator', assessmentName: 'All in One Quiz', weightage: 50, passingRate: 80 },
+  { role: 'Onboarding Coordinator', assessmentName: 'Foundation Quiz', weightage: 50, passingRate: 80 },
   { role: 'Onboarding Coordinator', assessmentName: 'Advance System & Networking Quiz', weightage: 35, passingRate: 80 },
   { role: 'Onboarding Coordinator', assessmentName: 'Hardware Assessment', weightage: 15, passingRate: 80 },
   // Business Consultant
-  { role: 'Business Consultant', assessmentName: 'All in One Quiz', weightage: 20, passingRate: 80 },
+  { role: 'Business Consultant', assessmentName: 'Foundation Quiz', weightage: 20, passingRate: 80 },
   { role: 'Business Consultant', assessmentName: 'BC Pitching Assessment - F&B', weightage: 5, passingRate: 80 },
   { role: 'Business Consultant', assessmentName: 'BC Pitching Assessment - Retail', weightage: 5, passingRate: 80 },
   { role: 'Business Consultant', assessmentName: 'BC SPIN Assessment - Session 2', weightage: 5, passingRate: 80 },

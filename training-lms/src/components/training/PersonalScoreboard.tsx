@@ -208,7 +208,7 @@ export function PersonalScoreboard({
 
   // Learning Score based on weighted assessment scores
   // Formula: sum of (score% × weightage%) for each completed assessment
-  // Example: 85% on All-in-One Quiz (50% weight) = 85 × 0.50 = 42.5 points toward 100
+  // Example: 85% on Foundation Quiz (50% weight) = 85 × 0.50 = 42.5 points toward 100
   const learningScore = useMemo(() => {
     if (assessmentScores.length === 0) {
       // No individual scores available - show 0 until assessments are graded
