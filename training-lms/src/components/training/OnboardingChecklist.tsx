@@ -724,7 +724,7 @@ function getRoleContent(roleCode: string): RoleContent {
       phases: [
         { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
         { name: 'Deep Dive', days: 'Day 3-5', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
-        { name: 'Practice', days: 'Day 6-8', color: 'text-[#55504a]', bgColor: 'bg-[#55504a]', borderColor: 'border-purple-200' },
+        { name: 'Practice', days: 'Day 6-8', color: 'text-[#55504a]', bgColor: 'bg-[#f5f4f3]', borderColor: 'border-[#c5c3c1]' },
         { name: 'Validation', days: 'Day 9-10', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
       ],
       dayDetails: [
@@ -801,7 +801,7 @@ function getRoleContent(roleCode: string): RoleContent {
       phases: [
         { name: 'Foundation', days: 'Day 1-2', color: 'text-[#2a6ee8]', bgColor: 'bg-[#e9f0fd]', borderColor: 'border-[#c4d7f9]' },
         { name: 'Advanced System', days: 'Day 3', color: 'text-orange-700', bgColor: 'bg-orange-100', borderColor: 'border-orange-200' },
-        { name: 'Buddy & Practice', days: 'Day 4', color: 'text-[#55504a]', bgColor: 'bg-[#55504a]', borderColor: 'border-purple-200' },
+        { name: 'Buddy & Practice', days: 'Day 4', color: 'text-[#55504a]', bgColor: 'bg-[#f5f4f3]', borderColor: 'border-[#c5c3c1]' },
         { name: 'Training Assessments', days: 'Day 5', color: 'text-[#ff9419]', bgColor: 'bg-[#fff4e8]', borderColor: 'border-amber-200' },
         { name: 'Mock Tests', days: 'Day 6', color: 'text-blue-700', bgColor: 'bg-blue-100', borderColor: 'border-blue-200' },
       ],
