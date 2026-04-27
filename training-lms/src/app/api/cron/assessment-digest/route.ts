@@ -329,18 +329,34 @@ function buildCoachCard(
     })
     elements.push({ tag: 'hr' })
 
-    // Build score table: Trainee | Assessment | Score | Result
-    let tableRows = '| Trainee | Assessment | Score | Result |\n|---|---|---|---|'
+    // Column header row
+    elements.push({
+      tag: 'column_set',
+      flex_mode: 'none',
+      background_style: 'grey',
+      columns: [
+        { tag: 'column', width: 'weighted', weight: 2, elements: [{ tag: 'div', text: { tag: 'lark_md', content: '**Trainee**' } }] },
+        { tag: 'column', width: 'weighted', weight: 3, elements: [{ tag: 'div', text: { tag: 'lark_md', content: '**Assessment**' } }] },
+        { tag: 'column', width: 'weighted', weight: 1, elements: [{ tag: 'div', text: { tag: 'lark_md', content: '**Score**' } }] },
+        { tag: 'column', width: 'weighted', weight: 1, elements: [{ tag: 'div', text: { tag: 'lark_md', content: '**Result**' } }] },
+      ],
+    })
+
+    // Score rows
     for (const s of recentScores) {
       const icon = s.score >= 80 ? '✅' : '❌'
       const result = s.score >= 80 ? 'Pass' : 'Fail'
-      tableRows += `\n| ${s.traineeName || 'Unknown'} | ${s.assessmentName} | ${s.score}% | ${icon} ${result} |`
+      elements.push({
+        tag: 'column_set',
+        flex_mode: 'none',
+        columns: [
+          { tag: 'column', width: 'weighted', weight: 2, elements: [{ tag: 'div', text: { tag: 'plain_text', content: s.traineeName || 'Unknown' } }] },
+          { tag: 'column', width: 'weighted', weight: 3, elements: [{ tag: 'div', text: { tag: 'plain_text', content: s.assessmentName } }] },
+          { tag: 'column', width: 'weighted', weight: 1, elements: [{ tag: 'div', text: { tag: 'plain_text', content: `${s.score}%` } }] },
+          { tag: 'column', width: 'weighted', weight: 1, elements: [{ tag: 'div', text: { tag: 'plain_text', content: `${icon} ${result}` } }] },
+        ],
+      })
     }
-
-    elements.push({
-      tag: 'div',
-      text: { tag: 'lark_md', content: tableRows },
-    })
     elements.push({ tag: 'hr' })
   }
 
