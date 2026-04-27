@@ -325,7 +325,7 @@ function buildCoachCard(
   if (recentScores.length > 0) {
     elements.push({
       tag: 'div',
-      text: { tag: 'lark_md', content: '**Submitted**' },
+      text: { tag: 'lark_md', content: '**Submitted Scores**' },
     })
     elements.push({ tag: 'hr' })
 
