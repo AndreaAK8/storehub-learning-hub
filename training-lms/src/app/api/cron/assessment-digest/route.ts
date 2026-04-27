@@ -6,6 +6,7 @@ import {
   calculateTrainingDay,
   formatDate,
   isBusinessDay,
+  getNowMYT,
   type TraineeRow,
   type AssessmentConfigRow,
   type ScoreRow,
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Get scores submitted in last 24 hours
-    const now = new Date()
+    const now = getNowMYT()
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 
     const recentScores: RecentScore[] = allScores
@@ -154,7 +155,7 @@ export async function POST(request: NextRequest) {
       }))
 
     // 5. Build and send the digest
-    const today = formatDate(new Date())
+    const today = formatDate(getNowMYT())
 
     // 6. Send to Lark — split by audience
     if (traineeAssessments.length > 0 || recentScores.length > 0) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getTrainees, formatDate, isBusinessDay } from '@/lib/google/sheets'
+import { getTrainees, formatDate, isBusinessDay, getNowMYT } from '@/lib/google/sheets'
 import { sendMessage, LARK_CHAT_ANDREA } from '@/lib/lark/client'
 
 export const dynamic = 'force-dynamic'
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     // 1. Get all trainees
     const allTrainees = await getTrainees()
-    const today = formatDate(new Date())
+    const today = formatDate(getNowMYT())
 
     // 2. Find trainees starting today with Status = "Email Sent"
     const startingToday = allTrainees.filter((t) => {

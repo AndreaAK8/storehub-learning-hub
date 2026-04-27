@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getTrainees, updateTraineeStatus, formatDate } from '@/lib/google/sheets'
+import { getTrainees, updateTraineeStatus, formatDate, getNowMYT } from '@/lib/google/sheets'
 import { sendEmail } from '@/lib/email/send'
 import { generateWelcomeEmailHTML } from '@/lib/email/templates'
 import { sendMessage, LARK_CHAT_ANDREA } from '@/lib/lark/client'
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
         // Update Google Sheet status (even if email fails to dry-run mode, we still update)
         if (emailResult.success) {
           try {
-            const now = formatDate(new Date())
+            const now = formatDate(getNowMYT())
             await updateTraineeStatus(trainee.email, 'Email Sent', now)
             result.sheetUpdated = true
           } catch (sheetError) {

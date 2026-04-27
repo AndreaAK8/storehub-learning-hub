@@ -338,40 +338,51 @@ export async function updateTraineeStatus(
 export function calculateTrainingDay(trainingStartDate: string): number {
   if (!trainingStartDate) return 0
 
-  const start = new Date(trainingStartDate)
-  start.setHours(0, 0, 0, 0)
+  const start = new Date(trainingStartDate + 'T00:00:00+08:00')
+  const todayMYT = getNowMYT()
+  const todayDate = new Date(Date.UTC(todayMYT.getUTCFullYear(), todayMYT.getUTCMonth(), todayMYT.getUTCDate()))
+  const startDate = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate()))
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  if (today < start) return 0
+  if (todayDate < startDate) return 0
 
   let businessDays = 0
-  const current = new Date(start)
+  const current = new Date(startDate)
 
-  while (current <= today) {
-    const dayOfWeek = current.getDay()
+  while (current <= todayDate) {
+    const dayOfWeek = current.getUTCDay()
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       businessDays++
     }
-    current.setDate(current.getDate() + 1)
+    current.setUTCDate(current.getUTCDate() + 1)
   }
 
   return businessDays
 }
 
 /**
- * Format a date as YYYY-MM-DD.
+ * Get current date/time in Malaysia timezone (GMT+8).
  */
-export function formatDate(date: Date): string {
-  return date.toISOString().split('T')[0]
+export function getNowMYT(): Date {
+  const now = new Date()
+  // Convert UTC to MYT by adding 8 hours
+  return new Date(now.getTime() + 8 * 60 * 60 * 1000)
 }
 
 /**
- * Check if today is a business day (Mon-Fri).
+ * Format a date as YYYY-MM-DD.
+ */
+export function formatDate(date: Date): string {
+  const y = date.getUTCFullYear()
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0')
+  const d = String(date.getUTCDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+/**
+ * Check if today (MYT) is a business day (Mon-Fri).
  */
 export function isBusinessDay(date?: Date): boolean {
-  const d = date || new Date()
-  const day = d.getDay()
+  const d = date || getNowMYT()
+  const day = d.getUTCDay()
   return day !== 0 && day !== 6
 }
