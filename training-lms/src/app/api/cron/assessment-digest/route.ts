@@ -137,15 +137,13 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 4. Get scores submitted in last 24 hours
-    const now = getNowMYT()
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+    // 4. Get all submitted scores for active trainees
+    const activeEmails = new Set(activeTrainees.map(t => t.email.toLowerCase().trim()))
 
     const recentScores: RecentScore[] = allScores
       .filter((s) => {
-        if (!s.timestamp) return false
-        const scoreDate = new Date(s.timestamp)
-        return scoreDate >= twentyFourHoursAgo && scoreDate <= now
+        const email = (s.email || '').toLowerCase().trim()
+        return activeEmails.has(email)
       })
       .map((s) => ({
         traineeName: s.traineeName,
@@ -321,7 +319,7 @@ function buildCoachCard(
   if (recentScores.length > 0) {
     elements.push({
       tag: 'div',
-      text: { tag: 'lark_md', content: '**Submitted** (Last 24h)' },
+      text: { tag: 'lark_md', content: '**Submitted**' },
     })
     elements.push({ tag: 'hr' })
 
