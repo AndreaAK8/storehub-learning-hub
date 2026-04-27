@@ -241,10 +241,16 @@ export async function GET(request: NextRequest) {
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
 function formatPrettyDate(date: string): string {
-  const dateObj = new Date(date + 'T00:00:00+08:00')
+  // Parse YYYY-MM-DD directly to avoid timezone conversion issues
+  const [yearStr, monthStr, dayStr] = date.split('-')
+  const year = parseInt(yearStr)
+  const month = parseInt(monthStr) - 1 // 0-indexed
+  const day = parseInt(dayStr)
+  // Create date at noon UTC to avoid any day boundary issues
+  const dateObj = new Date(Date.UTC(year, month, day, 12, 0, 0))
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  return `${days[dateObj.getDay()]}, ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`
+  return `${days[dateObj.getUTCDay()]}, ${dateObj.getUTCDate()} ${months[dateObj.getUTCMonth()]} ${dateObj.getUTCFullYear()}`
 }
 
 // ─── Coach Card (Alerts Group) ──────────────────────────────────────────────
@@ -323,17 +329,18 @@ function buildCoachCard(
     })
     elements.push({ tag: 'hr' })
 
+    // Build score table: Trainee | Assessment | Score | Result
+    let tableRows = '| Trainee | Assessment | Score | Result |\n|---|---|---|---|'
     for (const s of recentScores) {
       const icon = s.score >= 80 ? '✅' : '❌'
       const result = s.score >= 80 ? 'Pass' : 'Fail'
-      elements.push({
-        tag: 'div',
-        text: {
-          tag: 'lark_md',
-          content: `${icon} **${s.traineeName || 'Unknown'}:** ${s.assessmentName} — ${s.score}% (${result})`,
-        },
-      })
+      tableRows += `\n| ${s.traineeName || 'Unknown'} | ${s.assessmentName} | ${s.score}% | ${icon} ${result} |`
     }
+
+    elements.push({
+      tag: 'div',
+      text: { tag: 'lark_md', content: tableRows },
+    })
     elements.push({ tag: 'hr' })
   }
 
