@@ -212,7 +212,7 @@ export default function TrainingOverview({ roleName, roleCode, totalDays, curren
                     <ul className="space-y-2 text-sm text-[#55504a]">
                       <li className="flex items-start gap-2">
                         <span className="text-[var(--sh-orange)] mt-0.5">•</span>
-                        <span><strong>All-in-One Quiz</strong> (Day 2) - Weighted based on your role</span>
+                        <span><strong>Foundation Quiz</strong> (Day 2) - Weighted based on your role</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-[var(--sh-orange)] mt-0.5">•</span>

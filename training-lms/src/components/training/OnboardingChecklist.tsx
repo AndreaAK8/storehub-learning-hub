@@ -408,7 +408,7 @@ function ScoringStep() {
               <ul className="space-y-2 text-sm text-[#55504a]">
                 <li className="flex items-start gap-2">
                   <span className="text-[var(--sh-orange)] mt-0.5">•</span>
-                  <span><strong>All-in-One Quiz</strong> (Day 2)</span>
+                  <span><strong>Foundation Quiz</strong> (Day 2)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[var(--sh-orange)] mt-0.5">•</span>
@@ -499,7 +499,7 @@ function RoleMissionStep({ roleCode, roleName, content }: { roleCode: string, ro
     <div className="p-8">
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-[var(--orange-100)] flex items-center justify-center">
             <span className="text-2xl">🎯</span>
           </div>
           <div>
@@ -509,8 +509,8 @@ function RoleMissionStep({ roleCode, roleName, content }: { roleCode: string, ro
         </div>
       </div>
 
-      <div className="mb-6 p-5 rounded-xl bg-gradient-to-br from-[#55504a] to-violet-50 border border-purple-100">
-        <p className="text-[#55504a] leading-relaxed">{content.missionIntro}</p>
+      <div className="mb-6 p-5 rounded-xl bg-[var(--orange-100)] border border-[var(--orange-200)]">
+        <p className="text-[var(--sh-black)] leading-relaxed">{content.missionIntro}</p>
       </div>
 
       {/* Core Pillars */}
